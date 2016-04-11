@@ -5,15 +5,23 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  *
  * @author marcelo.lima
  */
-public class ValorAlmoco {
+@Entity
+public class ValorAlmoco implements Serializable {
+    @Id
+    @GeneratedValue
     private int id;
     private double valorAlmoco;
+    private Date dataValor;
 
     /**
      * @return the id
@@ -45,4 +53,18 @@ public class ValorAlmoco {
 
     public ValorAlmoco(Date dataCredito) {
     }        
+
+    /**
+     * @return the dataValor
+     */
+    public Date getDataValor() {
+        return dataValor;
+    }
+
+    /**
+     * @param dataValor the dataValor to set
+     */
+    public void setDataValor(Date dataValor) {
+        this.dataValor = dataValor;
+    }
 }

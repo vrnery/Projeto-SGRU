@@ -5,17 +5,21 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import javax.persistence.Entity;
+
 /**
  *
  * @author marcelo.lima
  */
-public class OperadorCaixa extends Pessoa {
+@Entity
+public class OperadorCaixa extends Pessoa {        
     private int id;
     private CaixaRU caixaRU;
-
+    
     /**
      * @return the id
      */
+    @Override
     public int getId() {
         return id;
     }
@@ -23,10 +27,11 @@ public class OperadorCaixa extends Pessoa {
     /**
      * @param id the id to set
      */
+    @Override
     public void setId(int id) {
         this.id = id;
-    }    
-
+    }
+    
     /**
      * @return the caixaRU
      */

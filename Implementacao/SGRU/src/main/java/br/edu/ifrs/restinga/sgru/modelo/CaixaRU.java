@@ -5,18 +5,28 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
 
 /**
  *
  * @author marcelo.lima
  */
-public class CaixaRU {
+@Entity
+public class CaixaRU implements Serializable {
+    @Id
+    @GeneratedValue
     private int id;
-    private Date data;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date dataAbertura;
     private double valorAbertura;
     private double valorFechamento;
-    private VendaAlmoco vendaAlmoco;
+    private List<VendaAlmoco> vendaAlmoco;
 
     /**
      * @return the id
@@ -33,17 +43,17 @@ public class CaixaRU {
     }
 
     /**
-     * @return the data
+     * @return the dataAbertura
      */
-    public Date getData() {
-        return data;
+    public Date getDataAbertura() {
+        return dataAbertura;
     }
 
     /**
-     * @param data the data to set
+     * @param dataAbertura the dataAbertura to set
      */
-    public void setData(Date data) {
-        this.data = data;
+    public void setDataAbertura(Date dataAbertura) {
+        this.dataAbertura = dataAbertura;
     }
 
     /**
@@ -77,15 +87,14 @@ public class CaixaRU {
     /**
      * @return the vendaAlmoco
      */
-    public VendaAlmoco getVendaAlmoco() {
+    public List<VendaAlmoco> getVendaAlmoco() {
         return vendaAlmoco;
     }
 
     /**
      * @param vendaAlmoco the vendaAlmoco to set
      */
-    public void setVendaAlmoco(VendaAlmoco vendaAlmoco) {
+    public void setVendaAlmoco(List<VendaAlmoco> vendaAlmoco) {
         this.vendaAlmoco = vendaAlmoco;
     }
-    
 }

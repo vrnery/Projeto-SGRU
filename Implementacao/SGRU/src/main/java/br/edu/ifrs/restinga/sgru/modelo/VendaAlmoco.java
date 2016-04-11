@@ -5,14 +5,24 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  *
  * @author marcelo.lima
  */
-public class VendaAlmoco {
+@Entity
+public class VendaAlmoco implements Serializable {
+    @Id
+    @GeneratedValue
     private int id;
     private String formaPagamento;
     private ValorAlmoco valorAlmoco;
+    private Ticket ticket;
+    private Cartao cartao;
 
     /**
      * @return the id
@@ -54,6 +64,34 @@ public class VendaAlmoco {
      */
     public void setValorAlmoco(ValorAlmoco valorAlmoco) {
         this.valorAlmoco = valorAlmoco;
+    }
+
+    /**
+     * @return the ticket
+     */
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    /**
+     * @param ticket the ticket to set
+     */
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
+    }
+
+    /**
+     * @return the cartao
+     */
+    public Cartao getCartao() {
+        return cartao;
+    }
+
+    /**
+     * @param cartao the cartao to set
+     */
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
     }
     
 }

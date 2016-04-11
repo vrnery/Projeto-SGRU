@@ -5,12 +5,20 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  *
  * @author marcelo.lima
  */
-public class Pessoa {
-    private int idPessoa;
+@Entity
+public class Pessoa implements Serializable {
+    @Id
+    @GeneratedValue
+    private int id;
     private String nome;
     private String telefone;
     private String email;
@@ -18,17 +26,17 @@ public class Pessoa {
     private String senha;
 
     /**
-     * @return the idPessoa
+     * @return the id
      */
-    public int getIdPessoa() {
-        return idPessoa;
+    public int getId() {
+        return id;
     }
 
     /**
-     * @param idPessoa the idPessoa to set
+     * @param id the id to set
      */
-    public void setIdPessoa(int idPessoa) {
-        this.idPessoa = idPessoa;
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**

@@ -17,14 +17,15 @@ import javax.persistence.Temporal;
  * @author marcelo.lima
  */
 @Entity
-public class Recarga implements Serializable {
+public class Ticket implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    private double valorRecarregado;
+    private double valor;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataCredito;
-    private boolean utilizado;
+    private Date dataCriado;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date dataUtilizado;
 
     /**
      * @return the id
@@ -41,45 +42,44 @@ public class Recarga implements Serializable {
     }
 
     /**
-     * @return the valorRecarregado
+     * @return the valor
      */
-    public double getValorRecarregado() {
-        return valorRecarregado;
+    public double getValor() {
+        return valor;
     }
 
     /**
-     * @param valorRecarregado the valorRecarregado to set
+     * @param valor the valor to set
      */
-    public void setValorRecarregado(double valorRecarregado) {
-        this.valorRecarregado = valorRecarregado;
+    public void setValor(double valor) {
+        this.valor = valor;
     }
 
     /**
-     * @return the dataCredito
+     * @return the dataCriado
      */
-    public Date getDataCredito() {
-        return dataCredito;
+    public Date getDataCriado() {
+        return dataCriado;
     }
 
     /**
-     * @param dataCredito the dataCredito to set
+     * @param dataCriado the dataCriado to set
      */
-    public void setDataCredito(Date dataCredito) {
-        this.dataCredito = dataCredito;
+    public void setDataCriado(Date dataCriado) {
+        this.dataCriado = dataCriado;
     }
 
     /**
-     * @return the utilizado
+     * @return the dataUtilizado
      */
-    public boolean isUtilizado() {
-        return utilizado;
+    public Date getDataUtilizado() {
+        return dataUtilizado;
     }
 
     /**
-     * @param utilizado the utilizado to set
+     * @param dataUtilizado the dataUtilizado to set
      */
-    public void setUtilizado(boolean utilizado) {
-        this.utilizado = utilizado;
+    public void setDataUtilizado(Date dataUtilizado) {
+        this.dataUtilizado = dataUtilizado;
     }
-    
 }

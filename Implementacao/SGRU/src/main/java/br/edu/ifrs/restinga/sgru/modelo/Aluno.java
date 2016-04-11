@@ -5,19 +5,23 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import javax.persistence.Entity;
+
 /**
  *
  * @author marcelo.lima
  */
-public class Aluno extends Pessoa {
+@Entity
+public class Aluno extends Pessoa {        
     private int id;
     private String matricula;
     private String caminhoFoto;
     private Cartao cartao;
-
+    
     /**
      * @return the id
      */
+    @Override
     public int getId() {
         return id;
     }
@@ -25,9 +29,10 @@ public class Aluno extends Pessoa {
     /**
      * @param id the id to set
      */
+    @Override
     public void setId(int id) {
         this.id = id;
-    }
+    }    
 
     /**
      * @return the matricula
@@ -69,6 +74,5 @@ public class Aluno extends Pessoa {
      */
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
-    }
-    
+    }  
 }

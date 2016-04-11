@@ -5,16 +5,27 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
 
 /**
  *
  * @author marcelo.lima
  */
-public class Cartao {
+@Entity
+public class Cartao implements Serializable {
+    @Id
+    @GeneratedValue
     private int id;
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataExpiracao;
     private double saldo;
+    private List<Recarga> recarga;
 
     /**
      * @return the id
@@ -56,6 +67,20 @@ public class Cartao {
      */
     public void setSaldo(double saldo) {
         this.saldo = saldo;
+    }
+
+    /**
+     * @return the recarga
+     */
+    public List<Recarga> getRecarga() {
+        return recarga;
+    }
+
+    /**
+     * @param recarga the recarga to set
+     */
+    public void setRecarga(List<Recarga> recarga) {
+        this.recarga = recarga;
     }
     
 }
