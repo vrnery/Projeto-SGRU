@@ -104,9 +104,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SGRU`.`CaixaRU` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `data` DATETIME NOT NULL,
-  `valorAbertura` DECIMAL(8,2) NOT NULL DEFAULT 0,
-  `valorFechamento` DECIMAL(8,2) NOT NULL DEFAULT 0,
+  `dataAbertura` DATETIME NOT NULL,
+  `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT 0,
+  `valorFechamento` DECIMAL(6,2) NOT NULL DEFAULT 0,
   `idOperadorCaixa` INT UNSIGNED NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idOperadorCaixa` ASC),
@@ -123,8 +123,20 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SGRU`.`ValorAlmoco` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `valorAlmoco` DECIMAL(5,2) NOT NULL,
-  `data` DATE NOT NULL,
+  `valorAlmoco` DECIMAL(6,2) NOT NULL,
+  `dataValor` DATETIME NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `SGRU`.`Ticket`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SGRU`.`Ticket` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `valor` DECIMAL(6,2) NOT NULL,
+  `dataCriado` DATETIME NOT NULL,
+  `dataUtilizado` DATETIME NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -135,26 +147,33 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SGRU`.`VendaAlmoco` (
   `id` INT NOT NULL,
   `formaPagamento` VARCHAR(15) NOT NULL,
-  `idCartao` INT UNSIGNED NOT NULL,
-  `idCaixaRU` INT UNSIGNED NOT NULL,
+  `idCartao` INT UNSIGNED NULL,
   `idValorAlmoco` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`, `idCaixaRU`),
+  `idTicket` INT NULL,
+  `idCaixaRU` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
   INDEX `fk_VendaAlmoco_Cartao1_idx` (`idCartao` ASC),
-  INDEX `fk_VendaAlmoco_CaixaRU1_idx` (`idCaixaRU` ASC),
   INDEX `fk_VendaAlmoco_ValorAlmoco1_idx` (`idValorAlmoco` ASC),
+  INDEX `fk_VendaAlmoco_Ticket1_idx` (`idTicket` ASC),
+  INDEX `fk_VendaAlmoco_CaixaRU1_idx` (`idCaixaRU` ASC),
   CONSTRAINT `fk_VendaAlmoco_Cartao1`
     FOREIGN KEY (`idCartao`)
     REFERENCES `SGRU`.`Cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_VendaAlmoco_CaixaRU1`
-    FOREIGN KEY (`idCaixaRU`)
-    REFERENCES `SGRU`.`CaixaRU` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_VendaAlmoco_ValorAlmoco1`
     FOREIGN KEY (`idValorAlmoco`)
     REFERENCES `SGRU`.`ValorAlmoco` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_VendaAlmoco_Ticket1`
+    FOREIGN KEY (`idTicket`)
+    REFERENCES `SGRU`.`Ticket` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_VendaAlmoco_CaixaRU1`
+    FOREIGN KEY (`idCaixaRU`)
+    REFERENCES `SGRU`.`CaixaRU` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
