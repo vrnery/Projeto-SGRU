@@ -6,34 +6,19 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  *
  * @author marcelo.lima
  */
 @Entity
+@PrimaryKeyJoinColumn(name="id")
 public class Aluno extends Pessoa {        
-    private int id;
     private String matricula;
-    private String caminhoFoto;
-    private Cartao cartao;
+    private String caminhoFoto;    
+    //private Cartao cartao;
     
-    /**
-     * @return the id
-     */
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }    
-
     /**
      * @return the matricula
      */
@@ -65,14 +50,14 @@ public class Aluno extends Pessoa {
     /**
      * @return the cartao
      */
-    public Cartao getCartao() {
-        return cartao;
-    }
+    //public Cartao getCartao() {
+    //    return cartao;
+    //}
 
     /**
      * @param cartao the cartao to set
      */
-    public void setCartao(Cartao cartao) {
-        this.cartao = cartao;
-    }  
+    //public void setCartao(Cartao cartao) {
+    //    this.cartao = cartao;
+    //}  
 }

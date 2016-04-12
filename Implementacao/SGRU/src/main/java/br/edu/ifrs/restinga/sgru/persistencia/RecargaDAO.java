@@ -3,38 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package persistencia;
+package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.Cartao;
+import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import org.hibernate.Session;
 
 /**
  *
  * @author marcelo.lima
  */
-public class CartaoDAO {
+public class RecargaDAO {
     private final Session sessao;
 
-    public CartaoDAO() {
+    public RecargaDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
         sessao.beginTransaction();
-    }        
+    }
     
     /**
-     * Persiste o cartão enviado na base de dados
-     * @param cartao O cartão a ser persistido
+     * Pesquisa uma recarga com o id informado
+     * @param id O id da regarga a ser pesquisada
+     * @return Um objeto Recarga
      */
-    public void salvar(Cartao cartao) {
-        sessao.saveOrUpdate(cartao);        
-    }  
-    
-    /**
-     * Pesquisa um cartão com o id informado
-     * @param id O id do cartão a ser pesquisado
-     * @return Um objeto Cartao
-     */
-    public Cartao carregar(int id) {
-        return (Cartao) sessao.load(Cartao.class, id);
+    public Recarga carregar(int id) {
+        return (Recarga) sessao.load(Recarga.class, id);
     }    
     
     /**
@@ -43,5 +35,5 @@ public class CartaoDAO {
      */        
     public void encerrar() {
         sessao.getTransaction().commit();
-    }            
+    }                
 }

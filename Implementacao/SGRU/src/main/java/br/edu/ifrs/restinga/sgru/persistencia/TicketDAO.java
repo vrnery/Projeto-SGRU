@@ -3,44 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package persistencia;
+package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.Ticket;
 import org.hibernate.Session;
 
 /**
  *
  * @author marcelo.lima
  */
-public class CaixaRUDAO {
+public class TicketDAO {
     private final Session sessao;
 
-    public CaixaRUDAO() {
+    public TicketDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
         sessao.beginTransaction();
     }
     
     /**
-     * Persiste um objeto CaixaRU no banco de dados
-     * @param caixaRU O caixa a ser cadastrado no sistema
+     * Persiste o ticket enviado na base de dados
+     * @param ticket O ticket a ser salvo na base de dados
      */
-    public void salvar(CaixaRU caixaRU) {
-        sessao.saveOrUpdate(caixaRU);        
+    public void salvar(Ticket ticket) {
+        sessao.saveOrUpdate(ticket);        
     }  
     
     /**
-     * Procura um caixa do RU que contenha o id informado
-     * @param id O id do caixa do RU
-     * @return Um objeto CaixaRU
+     * Pesquisa um ticket com o id informado
+     * @param id O id do ticket a ser pesquisado
+     * @return Um objeto Ticket
      */
-    public CaixaRU carregar(int id) {
-        return (CaixaRU) sessao.load(CaixaRU.class, id);
+    public Ticket carregar(int id) {
+        return (Ticket) sessao.load(Ticket.class, id);
     }    
     
     /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.
-     */    
+     */        
     public void encerrar() {
         sessao.getTransaction().commit();
     }            

@@ -12,25 +12,8 @@ import javax.persistence.Entity;
  * @author marcelo.lima
  */
 @Entity
-public class OperadorCaixa extends Pessoa {        
-    private int id;
+public class OperadorCaixa extends Pessoa {            
     private CaixaRU caixaRU;
-    
-    /**
-     * @return the id
-     */
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
     
     /**
      * @return the caixaRU

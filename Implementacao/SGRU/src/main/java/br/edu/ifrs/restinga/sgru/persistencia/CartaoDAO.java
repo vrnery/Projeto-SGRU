@@ -3,45 +3,45 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package persistencia;
+package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.Aluno;
+import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import org.hibernate.Session;
 
 /**
  *
  * @author marcelo.lima
  */
-public class AlunoDAO {
+public class CartaoDAO {
     private final Session sessao;
 
-    public AlunoDAO() {
+    public CartaoDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
         sessao.beginTransaction();
-    }
+    }        
     
     /**
-     * Pesquisa um aluno baseado no número de matrícula enviada
-     * @param matricula Número de matrícula do aluno
-     * @return um objeto Aluno
+     * Persiste o cartão enviado na base de dados
+     * @param cartao O cartão a ser persistido
      */
-    public Aluno carregar(String matricula) {
-        return (Aluno) sessao.load(Aluno.class, matricula);
+    public void salvar(Cartao cartao) {
+        sessao.saveOrUpdate(cartao);        
+    }  
+    
+    /**
+     * Pesquisa um cartão com o id informado
+     * @param id O id do cartão a ser pesquisado
+     * @return Um objeto Cartao
+     */
+    public Cartao carregar(int id) {
+        return (Cartao) sessao.load(Cartao.class, id);
     }    
-    
-    /**
-     * Persiste um objeto Aluno no banco de dados
-     * @param aluno O aluno a ser cadastrado no sistema
-     */
-    public void salvar(Aluno aluno) {
-        sessao.saveOrUpdate(aluno);        
-    }      
     
     /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.
-     */    
+     */        
     public void encerrar() {
         sessao.getTransaction().commit();
-    }        
+    }            
 }

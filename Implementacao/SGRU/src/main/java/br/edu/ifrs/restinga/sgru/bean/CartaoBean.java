@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bean;
+package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import persistencia.CartaoDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.CartaoDAO;
 
 /**
  *

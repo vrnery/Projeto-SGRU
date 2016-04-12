@@ -3,50 +3,51 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bean;
+package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import persistencia.CaixaRUDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
 
 /**
  *
  * @author marcelo.lima
  */
-public class CaixaRUBean {
-    private CaixaRU caixaRU;
-    private CaixaRUDAO dao = new CaixaRUDAO();
+public class AlunoBean {
+    private Aluno aluno = new Aluno();
+    private AlunoDAO dao = new AlunoDAO();
 
     /**
-     * @return the caixaRU
+     * @return the aluno
      */
-    public CaixaRU getCaixaRU() {
-        return caixaRU;
+    public Aluno getAluno() {
+        return aluno;        
     }
 
     /**
-     * @param caixaRU the caixaRU to set
+     * @param aluno the aluno to set
      */
-    public void setCaixaRU(CaixaRU caixaRU) {
-        this.caixaRU = caixaRU;
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
     
     /**
-     * Solicita à camada de persistência o cadastro de um CaixaRU
+     * Solicita à camada de persistência o cadastro de um aluno
      */
     public void salvar() {
-        dao.salvar(caixaRU);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
-    }
+        dao.salvar(aluno);
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Aluno cadastrado com sucesso!");
+    }    
     
     /**
-     * Solicita a pesquisa de um CaixaRU com o id informado à camada de persistência
-     * @param id O id do CaixaRU a ser pesquisado
+     * Solicita a pesquisa de um aluno para a camada de persistência
+     * @param matricula A matricula do aluno a ser pesquisada
      */
-    public void carregar(int id) {
-        caixaRU = dao.carregar(id);
+    public void carregar(String matricula) {
+        aluno = dao.carregar(matricula);
+        
     }
     
     /**
@@ -57,10 +58,10 @@ public class CaixaRUBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }
-        
+    }        
+    
     @PreDestroy
     public void encerrar() {
         dao.encerrar();
-    }               
+    }    
 }

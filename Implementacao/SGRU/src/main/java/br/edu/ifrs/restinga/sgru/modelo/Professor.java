@@ -12,27 +12,10 @@ import javax.persistence.Entity;
  * @author marcelo.lima
  */
 @Entity
-public class Professor extends Pessoa {
-    private int id;
+public class Professor extends Pessoa {    
     private String matricula;
     private String caminhoFoto;
     private Cartao cartao;
-
-    /**
-     * @return the id
-     */
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
 
     /**
      * @return the matricula

@@ -3,51 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bean;
+package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.modelo.Aluno;
+import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import persistencia.AlunoDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 
 /**
  *
  * @author marcelo.lima
  */
-public class AlunoBean {
-    private Aluno aluno = new Aluno();
-    private AlunoDAO dao = new AlunoDAO();
+public class CaixaRUBean {
+    private CaixaRU caixaRU;
+    private CaixaRUDAO dao = new CaixaRUDAO();
 
     /**
-     * @return the aluno
+     * @return the caixaRU
      */
-    public Aluno getAluno() {
-        return aluno;
+    public CaixaRU getCaixaRU() {
+        return caixaRU;
     }
 
     /**
-     * @param aluno the aluno to set
+     * @param caixaRU the caixaRU to set
      */
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
+    public void setCaixaRU(CaixaRU caixaRU) {
+        this.caixaRU = caixaRU;
     }
     
     /**
-     * Solicita à camada de persistência o cadastro de um aluno
+     * Solicita à camada de persistência o cadastro de um CaixaRU
      */
     public void salvar() {
-        dao.salvar(aluno);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Aluno cadastrado com sucesso!");
-    }    
+        dao.salvar(caixaRU);
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
+    }
     
     /**
-     * Solicita a pesquisa de um aluno para a camada de persistência
-     * @param matricula A matricula do aluno a ser pesquisada
+     * Solicita a pesquisa de um CaixaRU com o id informado à camada de persistência
+     * @param id O id do CaixaRU a ser pesquisado
      */
-    public void carregar(String matricula) {
-        aluno = dao.carregar(matricula);
-        
+    public void carregar(int id) {
+        caixaRU = dao.carregar(id);
     }
     
     /**
@@ -58,10 +57,10 @@ public class AlunoBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }        
-    
+    }
+        
     @PreDestroy
     public void encerrar() {
         dao.encerrar();
-    }    
+    }               
 }
