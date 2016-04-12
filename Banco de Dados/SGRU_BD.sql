@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema SGRU
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `SGRU` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `SGRU` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `SGRU` ;
 
 -- -----------------------------------------------------
@@ -43,21 +43,20 @@ ENGINE = InnoDB;
 -- Table `SGRU`.`Aluno`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SGRU`.`Aluno` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL,
   `idCartao` INT UNSIGNED NOT NULL,
-  `idPessoa` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
   INDEX `fk_Aluno_Cartao_idx` (`idCartao` ASC),
-  INDEX `fk_Aluno_Pessoa1_idx` (`idPessoa` ASC),
+  INDEX `fk_Aluno_Pessoa1_idx` (`id` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_Aluno_Cartao`
     FOREIGN KEY (`idCartao`)
     REFERENCES `SGRU`.`Cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Aluno_Pessoa1`
-    FOREIGN KEY (`idPessoa`)
+    FOREIGN KEY (`id`)
     REFERENCES `SGRU`.`Pessoa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -87,10 +86,9 @@ ENGINE = InnoDB;
 -- Table `SGRU`.`OperadorCaixa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SGRU`.`OperadorCaixa` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `idPessoa` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
   INDEX `fk_OperadorCaixa_Pessoa1_idx` (`idPessoa` ASC),
+  PRIMARY KEY (`idPessoa`),
   CONSTRAINT `fk_OperadorCaixa_Pessoa1`
     FOREIGN KEY (`idPessoa`)
     REFERENCES `SGRU`.`Pessoa` (`id`)
@@ -107,12 +105,12 @@ CREATE TABLE IF NOT EXISTS `SGRU`.`CaixaRU` (
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT 0,
   `valorFechamento` DECIMAL(6,2) NOT NULL DEFAULT 0,
-  `idOperadorCaixa` INT UNSIGNED NULL,
+  `idPessoa` INT UNSIGNED NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idOperadorCaixa` ASC),
+  INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idPessoa` ASC),
   CONSTRAINT `fk_CaixaRU_OperadorCaixa1`
-    FOREIGN KEY (`idOperadorCaixa`)
-    REFERENCES `SGRU`.`OperadorCaixa` (`id`)
+    FOREIGN KEY (`idPessoa`)
+    REFERENCES `SGRU`.`OperadorCaixa` (`idPessoa`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -183,21 +181,20 @@ ENGINE = InnoDB;
 -- Table `SGRU`.`Professor`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SGRU`.`Professor` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL,
   `idCartao` INT UNSIGNED NOT NULL,
-  `idPessoa` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
   INDEX `fk_Professor_Cartao1_idx` (`idCartao` ASC),
-  INDEX `fk_Professor_Pessoa1_idx` (`idPessoa` ASC),
+  INDEX `fk_Professor_Pessoa1_idx` (`id` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_Professor_Cartao1`
     FOREIGN KEY (`idCartao`)
     REFERENCES `SGRU`.`Cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Professor_Pessoa1`
-    FOREIGN KEY (`idPessoa`)
+    FOREIGN KEY (`id`)
     REFERENCES `SGRU`.`Pessoa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -207,3 +204,13 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- Cria usuário da aplicação:
+
+CREATE USER 'USERSGRUAPP'@'LOCALHOST' IDENTIFIED BY 'APPURGSUSER';
+
+--
+-- Configura permissões do usuário da aplicação:
+--
+
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE, SHOW VIEW ON SGRU.* TO 'USERSGRUAPP'@'LOCALHOST'; 
