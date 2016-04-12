@@ -25,8 +25,8 @@ public class AlunoDAO {
      * @param matricula Número de matrícula do aluno
      * @return um objeto Aluno
      */
-    public Aluno carregar(String matricula) {
-        return (Aluno) sessao.load(Aluno.class, matricula);
+    public Aluno carregar(String matricula) {        
+        return (Aluno) sessao.createQuery("FROM Aluno WHERE matricula=:matricula").setString("matricula", matricula).uniqueResult();
     }    
     
     /**

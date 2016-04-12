@@ -8,9 +8,13 @@ package br.edu.ifrs.restinga.sgru.modelo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -26,7 +30,12 @@ public class CaixaRU implements Serializable {
     private Date dataAbertura;
     private double valorAbertura;
     private double valorFechamento;
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name="idVendaAlmoco")
     private List<VendaAlmoco> vendaAlmoco;
+    @OneToOne
+    @JoinColumn(name="idOperadorCaixa")
+    private OperadorCaixa operadorCaixa;    
 
     /**
      * @return the id
@@ -96,5 +105,19 @@ public class CaixaRU implements Serializable {
      */
     public void setVendaAlmoco(List<VendaAlmoco> vendaAlmoco) {
         this.vendaAlmoco = vendaAlmoco;
+    }
+
+    /**
+     * @return the operadorCaixa
+     */
+    public OperadorCaixa getOperadorCaixa() {
+        return operadorCaixa;
+    }
+
+    /**
+     * @param operadorCaixa the operadorCaixa to set
+     */
+    public void setOperadorCaixa(OperadorCaixa operadorCaixa) {
+        this.operadorCaixa = operadorCaixa;
     }
 }

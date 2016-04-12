@@ -8,9 +8,12 @@ package br.edu.ifrs.restinga.sgru.modelo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -24,7 +27,9 @@ public class Cartao implements Serializable {
     private int id;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataExpiracao;
-    private double saldo;
+    private double saldo;    
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name="idCartao")
     private List<Recarga> recarga;
 
     /**

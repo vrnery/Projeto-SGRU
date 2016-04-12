@@ -1,8 +1,10 @@
 
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
+import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
+import java.util.Date;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,24 +24,22 @@ public class NewClass {
         
         aluno.setNome("Lima");
         aluno.setEmail("lima@email");
-        aluno.setCaminhoFoto("caminhoFoto");
+        aluno.setCaminhoFoto("C:\\Fotos");
         aluno.setLogin("lima");
         aluno.setSenha("limasecreto");
-        aluno.setMatricula("Lima123");
+        aluno.setMatricula("sor10");
         aluno.setTelefone("LimaTel");
         
         dao.salvar(aluno);
         dao.encerrar();
-        /*
-        Pessoa pessoa = new Pessoa();
-        PessoaDAO dao = new PessoaDAO();
-        pessoa.setEmail("email");
-        pessoa.setLogin("login");
-        pessoa.setNome("nome");
-        pessoa.setSenha("senha");
-        pessoa.setTelefone("telefone");
-        dao.salvar(pessoa);
+        
+        dao = new AlunoDAO();
+                
+        aluno = dao.carregar("sor10");        
+        aluno.setCartao(new Cartao());        
+        aluno.getCartao().setDataExpiracao(new Date());
+        aluno.getCartao().setSaldo(0);
+        dao.salvar(aluno);
         dao.encerrar();
-        */
     }
 }

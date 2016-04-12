@@ -5,7 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
@@ -16,7 +19,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name="id")
 public class Aluno extends Pessoa {        
     private String matricula;
-    private String caminhoFoto;        
+    private String caminhoFoto;                
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name="idCartao")
     private Cartao cartao;
     
     /**

@@ -15,19 +15,4 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @Entity
 @PrimaryKeyJoinColumn(name="id")
 public class OperadorCaixa extends Pessoa {            
-    private CaixaRU caixaRU;
-    
-    /**
-     * @return the caixaRU
-     */
-    public CaixaRU getCaixaRU() {
-        return caixaRU;
-    }
-
-    /**
-     * @param caixaRU the caixaRU to set
-     */
-    public void setCaixaRU(CaixaRU caixaRU) {
-        this.caixaRU = caixaRU;
-    }
 }

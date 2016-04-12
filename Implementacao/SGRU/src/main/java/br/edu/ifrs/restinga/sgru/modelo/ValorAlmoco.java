@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -21,6 +22,7 @@ public class ValorAlmoco implements Serializable {
     @GeneratedValue
     private int id;
     private double valorAlmoco;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dataValor;
 
     /**

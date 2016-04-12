@@ -9,6 +9,8 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -20,8 +22,14 @@ public class VendaAlmoco implements Serializable {
     @GeneratedValue
     private int id;
     private String formaPagamento;
+    @OneToOne
+    @JoinColumn(name="idValorAlmoco")
     private ValorAlmoco valorAlmoco;
+    @OneToOne
+    @JoinColumn(name="idTicket")
     private Ticket ticket;
+    @OneToOne
+    @JoinColumn(name="idCartao")
     private Cartao cartao;
 
     /**
