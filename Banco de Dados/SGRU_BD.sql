@@ -14,13 +14,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sgru
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `SGRU` DEFAULT CHARACTER SET utf8 ;
 USE `sgru` ;
 
 -- -----------------------------------------------------
 -- Table `sgru`.`cartao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
+CREATE TABLE IF NOT EXISTS `sgru`.`Cartao` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataExpiracao` DATE NOT NULL,
   `saldo` DECIMAL(6,2) NOT NULL,
@@ -32,7 +32,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`pessoa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
+CREATE TABLE IF NOT EXISTS `sgru`.`Pessoa` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
@@ -47,7 +47,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`aluno`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`aluno` (
+CREATE TABLE IF NOT EXISTS `sgru`.`Aluno` (
   `id` INT(10) UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
@@ -72,7 +72,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`operadorcaixa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`operadorcaixa` (
+CREATE TABLE IF NOT EXISTS `sgru`.`OperadorCaixa` (
   `idPessoa` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`idPessoa`),
   INDEX `fk_OperadorCaixa_Pessoa1_idx` (`idPessoa` ASC),
@@ -88,7 +88,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`caixaru`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`caixaru` (
+CREATE TABLE IF NOT EXISTS `sgru`.`CaixaRU` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
@@ -108,7 +108,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`professor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`professor` (
+CREATE TABLE IF NOT EXISTS `sgru`.`Professor` (
   `id` INT(10) UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
@@ -133,7 +133,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`recarga`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`recarga` (
+CREATE TABLE IF NOT EXISTS `sgru`.`Recarga` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorRecarregado` DECIMAL(6,2) NOT NULL,
   `dataCredito` DATETIME NOT NULL,
@@ -153,7 +153,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`ticket`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
+CREATE TABLE IF NOT EXISTS `sgru`.`Ticket` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `valor` DECIMAL(6,2) NOT NULL,
   `dataCriado` DATETIME NOT NULL,
@@ -166,7 +166,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`valoralmoco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
+CREATE TABLE IF NOT EXISTS `sgru`.`ValorAlmoco` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorAlmoco` DECIMAL(6,2) NOT NULL,
   `dataValor` DATETIME NOT NULL,
@@ -178,7 +178,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
+CREATE TABLE IF NOT EXISTS `sgru`.`VendaAlmoco` (
   `id` INT(11) NOT NULL,
   `formaPagamento` VARCHAR(15) NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
