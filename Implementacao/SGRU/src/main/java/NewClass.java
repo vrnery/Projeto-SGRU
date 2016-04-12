@@ -16,20 +16,21 @@ import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
  */
 public class NewClass {
     public static void main(String[] args) {
-        /*
+        
         Aluno aluno = new Aluno();
         AlunoDAO dao = new AlunoDAO();
         
         aluno.setNome("Lima");
         aluno.setEmail("lima@email");
-        aluno.setCaminhoFoto("c:\foto");
+        aluno.setCaminhoFoto("caminhoFoto");
         aluno.setLogin("lima");
         aluno.setSenha("limasecreto");
         aluno.setMatricula("Lima123");
         aluno.setTelefone("LimaTel");
         
         dao.salvar(aluno);
-        */
+        dao.encerrar();
+        /*
         Pessoa pessoa = new Pessoa();
         PessoaDAO dao = new PessoaDAO();
         pessoa.setEmail("email");
@@ -38,5 +39,7 @@ public class NewClass {
         pessoa.setSenha("senha");
         pessoa.setTelefone("telefone");
         dao.salvar(pessoa);
+        dao.encerrar();
+        */
     }
 }

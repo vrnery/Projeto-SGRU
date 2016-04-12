@@ -19,9 +19,9 @@ import javax.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Pessoa implements Serializable {
+public abstract class Pessoa implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private int id;
     private String nome;
     private String telefone;

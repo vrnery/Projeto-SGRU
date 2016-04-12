@@ -16,8 +16,8 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name="id")
 public class Aluno extends Pessoa {        
     private String matricula;
-    private String caminhoFoto;    
-    //private Cartao cartao;
+    private String caminhoFoto;        
+    private Cartao cartao;
     
     /**
      * @return the matricula
@@ -50,14 +50,14 @@ public class Aluno extends Pessoa {
     /**
      * @return the cartao
      */
-    //public Cartao getCartao() {
-    //    return cartao;
-    //}
+    public Cartao getCartao() {
+        return cartao;
+    }
 
     /**
      * @param cartao the cartao to set
      */
-    //public void setCartao(Cartao cartao) {
-    //    this.cartao = cartao;
-    //}  
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
+    }  
 }

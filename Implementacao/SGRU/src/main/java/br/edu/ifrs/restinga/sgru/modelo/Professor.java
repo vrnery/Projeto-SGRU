@@ -6,12 +6,14 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  *
  * @author marcelo.lima
  */
 @Entity
+@PrimaryKeyJoinColumn(name="id")
 public class Professor extends Pessoa {    
     private String matricula;
     private String caminhoFoto;
