@@ -14,25 +14,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sgru
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `SGRU` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
 USE `sgru` ;
-
--- -----------------------------------------------------
--- Table `sgru`.`cartao`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`Cartao` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `dataExpiracao` DATE NOT NULL,
-  `saldo` DECIMAL(6,2) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
 
 -- -----------------------------------------------------
 -- Table `sgru`.`pessoa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`Pessoa` (
+CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
@@ -45,24 +33,36 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
+-- Table `sgru`.`cartao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `dataExpiracao` DATE NOT NULL,
+  `saldo` DECIMAL(6,2) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
 -- Table `sgru`.`aluno`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`Aluno` (
+CREATE TABLE IF NOT EXISTS `sgru`.`aluno` (
   `id` INT(10) UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
   `idCartao` INT(10) UNSIGNED NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Aluno_Cartao_idx` (`idCartao` ASC),
   INDEX `fk_Aluno_Pessoa1_idx` (`id` ASC),
-  CONSTRAINT `fk_Aluno_Cartao`
-    FOREIGN KEY (`idCartao`)
-    REFERENCES `sgru`.`cartao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_aluno_cartao1_idx` (`idCartao` ASC),
   CONSTRAINT `fk_Aluno_Pessoa1`
     FOREIGN KEY (`id`)
     REFERENCES `sgru`.`pessoa` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_aluno_cartao1`
+    FOREIGN KEY (`idCartao`)
+    REFERENCES `sgru`.`cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -72,7 +72,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`operadorcaixa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`OperadorCaixa` (
+CREATE TABLE IF NOT EXISTS `sgru`.`operadorcaixa` (
   `idPessoa` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`idPessoa`),
   INDEX `fk_OperadorCaixa_Pessoa1_idx` (`idPessoa` ASC),
@@ -88,7 +88,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`caixaru`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`CaixaRU` (
+CREATE TABLE IF NOT EXISTS `sgru`.`caixaru` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
@@ -108,22 +108,22 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`professor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`Professor` (
+CREATE TABLE IF NOT EXISTS `sgru`.`professor` (
   `id` INT(10) UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
   `idCartao` INT(10) UNSIGNED NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Professor_Cartao1_idx` (`idCartao` ASC),
   INDEX `fk_Professor_Pessoa1_idx` (`id` ASC),
-  CONSTRAINT `fk_Professor_Cartao1`
-    FOREIGN KEY (`idCartao`)
-    REFERENCES `sgru`.`cartao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_professor_cartao1_idx` (`idCartao` ASC),
   CONSTRAINT `fk_Professor_Pessoa1`
     FOREIGN KEY (`id`)
     REFERENCES `sgru`.`pessoa` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_professor_cartao1`
+    FOREIGN KEY (`idCartao`)
+    REFERENCES `sgru`.`cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -133,7 +133,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`recarga`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`Recarga` (
+CREATE TABLE IF NOT EXISTS `sgru`.`recarga` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorRecarregado` DECIMAL(6,2) NOT NULL,
   `dataCredito` DATETIME NOT NULL,
@@ -153,7 +153,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`ticket`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`Ticket` (
+CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `valor` DECIMAL(6,2) NOT NULL,
   `dataCriado` DATETIME NOT NULL,
@@ -166,7 +166,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`valoralmoco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`ValorAlmoco` (
+CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorAlmoco` DECIMAL(6,2) NOT NULL,
   `dataValor` DATETIME NOT NULL,
@@ -178,7 +178,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`VendaAlmoco` (
+CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
   `id` INT(11) NOT NULL,
   `formaPagamento` VARCHAR(15) NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
@@ -220,7 +220,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Cria usuário da aplicação:
 
-CREATE USER 'USERSGRUAPP'@'LOCALHOST' IDENTIFIED BY 'APPURGSUSER';
+CREATE USER IF NOT EXISTS 'USERSGRUAPP'@'LOCALHOST' IDENTIFIED BY 'APPURGSUSER';
 
 --
 -- Configura permissões do usuário da aplicação:
