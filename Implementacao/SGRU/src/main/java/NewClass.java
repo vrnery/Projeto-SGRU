@@ -1,10 +1,19 @@
 
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
+import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.Cartao;
-import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
+import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import br.edu.ifrs.restinga.sgru.modelo.Recarga;
+import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
+import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,27 +28,78 @@ import java.util.Date;
 public class NewClass {
     public static void main(String[] args) {
         
-        Aluno aluno = new Aluno();
-        AlunoDAO dao = new AlunoDAO();
-        
-        aluno.setNome("Lima");
-        aluno.setEmail("lima@email");
-        aluno.setCaminhoFoto("C:\\Fotos");
-        aluno.setLogin("lima");
-        aluno.setSenha("limasecreto");
-        aluno.setMatricula("sor10");
-        aluno.setTelefone("LimaTel");
-        
-        dao.salvar(aluno);
-        dao.encerrar();
-        
-        dao = new AlunoDAO();
+        OperadorCaixa oper = new OperadorCaixa();
+        OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
+        oper.setNome("Operador");
+        oper.setEmail("operador@email");
+        oper.setTelefone("55555555");
+        oper.setLogin("oper1");
+        oper.setSenha("oper");
+        daoOper.salvar(oper);
+        daoOper.encerrar();
                 
-        aluno = dao.carregar("sor10");        
-        aluno.setCartao(new Cartao());        
+        Aluno aluno = new Aluno();
+        AlunoDAO daoAluno = new AlunoDAO();
+        
+        aluno.setNome("Aluno");
+        aluno.setEmail("aluno@email");
+        aluno.setCaminhoFoto("C:\\Fotos");
+        aluno.setLogin("aluno");
+        aluno.setSenha("senha");
+        aluno.setMatricula("123456");
+        aluno.setTelefone("66666666");
+        aluno.setCartao(new Cartao());
         aluno.getCartao().setDataExpiracao(new Date());
         aluno.getCartao().setSaldo(0);
-        dao.salvar(aluno);
-        dao.encerrar();
+        
+        daoAluno.salvar(aluno);
+        daoAluno.encerrar();
+        
+        Recarga recarga = new Recarga();
+        RecargaDAO daoRecarga = new RecargaDAO();
+        
+        recarga.setDataCredito(new Date());
+        recarga.setUtilizado(false);
+        recarga.setValorRecarregado(100);
+        recarga.setCartao(aluno.getCartao());
+        daoRecarga.salvar(recarga);
+        daoRecarga.encerrar();
+        
+        ValorAlmoco valor = new ValorAlmoco();
+        ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
+        
+        valor.setDataValor(new Date());
+        valor.setValorAlmoco(1.3);
+        daoValor.salvar(valor);
+        daoValor.encerrar();
+        
+        
+        CaixaRU caixa = new CaixaRU();
+        CaixaRUDAO daoCaixa = new CaixaRUDAO();
+        
+        caixa.setDataAbertura(new Date());
+        caixa.setOperadorCaixa(oper);
+        caixa.setValorAbertura(0);
+        //daoCaixa.salvar(caixa);
+        //daoCaixa.encerrar();        
+        
+        
+        List<VendaAlmoco> listaVenda = new ArrayList();
+        caixa.setVendaAlmoco(listaVenda);
+        caixa.getVendaAlmoco().add(new VendaAlmoco());
+        caixa.getVendaAlmoco().get(0).setValorAlmoco(valor);
+        caixa.getVendaAlmoco().get(0).setCartao(aluno.getCartao());
+        caixa.getVendaAlmoco().get(0).setCaixaRU(caixa);
+        caixa.getVendaAlmoco().get(0).setFormaPagamento("Cartao");
+        
+        /*
+        System.out.println(caixa.getVendaAlmoco().get(0).getValorAlmoco().getId());
+        System.out.println(caixa.getVendaAlmoco().get(0).getCaixaRU().getId());
+        System.out.println(caixa.getVendaAlmoco().get(0).getCartao().getId());
+        */
+        //daoCaixa = new CaixaRUDAO();
+        daoCaixa.salvar(caixa);
+        daoCaixa.encerrar();
+        
     }
 }

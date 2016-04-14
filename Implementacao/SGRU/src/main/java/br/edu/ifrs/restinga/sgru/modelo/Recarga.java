@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -25,6 +27,9 @@ public class Recarga implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dataCredito;
     private boolean utilizado;
+    @ManyToOne
+    @JoinColumn(name="idCartao")
+    private Cartao cartao;
 
     /**
      * @return the id
@@ -80,6 +85,20 @@ public class Recarga implements Serializable {
      */
     public void setUtilizado(boolean utilizado) {
         this.utilizado = utilizado;
+    }
+
+    /**
+     * @return the cartao
+     */
+    public Cartao getCartao() {
+        return cartao;
+    }
+
+    /**
+     * @param cartao the cartao to set
+     */
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
     }
     
 }

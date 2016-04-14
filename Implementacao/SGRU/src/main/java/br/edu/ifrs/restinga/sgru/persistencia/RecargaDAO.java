@@ -30,6 +30,14 @@ public class RecargaDAO {
     }    
     
     /**
+     * Persiste um objeto Aluno no banco de dados
+     * @param recarga A recarga a ser cadastrada no sistema
+     */
+    public void salvar(Recarga recarga) {
+        sessao.saveOrUpdate(recarga);        
+    }          
+    
+    /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.
      */        

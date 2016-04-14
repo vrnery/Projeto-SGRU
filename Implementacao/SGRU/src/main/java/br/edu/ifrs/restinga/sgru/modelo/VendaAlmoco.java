@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
@@ -31,6 +32,9 @@ public class VendaAlmoco implements Serializable {
     @OneToOne
     @JoinColumn(name="idCartao")
     private Cartao cartao;
+    @ManyToOne
+    @JoinColumn(name="idCaixaRU")
+    private CaixaRU caixaRU;
 
     /**
      * @return the id
@@ -100,6 +104,20 @@ public class VendaAlmoco implements Serializable {
      */
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
+    }
+
+    /**
+     * @return the caixaRU
+     */
+    public CaixaRU getCaixaRU() {
+        return caixaRU;
+    }
+
+    /**
+     * @param caixaRU the caixaRU to set
+     */
+    public void setCaixaRU(CaixaRU caixaRU) {
+        this.caixaRU = caixaRU;
     }
     
 }

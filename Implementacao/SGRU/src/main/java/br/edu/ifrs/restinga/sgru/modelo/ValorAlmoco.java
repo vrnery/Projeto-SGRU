@@ -53,9 +53,6 @@ public class ValorAlmoco implements Serializable {
         this.valorAlmoco = valorAlmoco;
     }
 
-    public ValorAlmoco(Date dataCredito) {
-    }        
-
     /**
      * @return the dataValor
      */

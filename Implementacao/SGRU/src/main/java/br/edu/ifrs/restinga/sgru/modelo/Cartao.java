@@ -12,7 +12,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
@@ -28,8 +27,7 @@ public class Cartao implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dataExpiracao;
     private double saldo;    
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name="idCartao")
+    @OneToMany(mappedBy = "cartao")
     private List<Recarga> recarga;
 
     /**

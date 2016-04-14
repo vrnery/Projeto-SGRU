@@ -29,13 +29,12 @@ public class CaixaRU implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date dataAbertura;
     private double valorAbertura;
-    private double valorFechamento;
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name="idVendaAlmoco")
+    private double valorFechamento;    
+    @OneToMany(mappedBy = "caixaRU", cascade = {CascadeType.ALL})
     private List<VendaAlmoco> vendaAlmoco;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
-    private OperadorCaixa operadorCaixa;    
+    private OperadorCaixa operadorCaixa;       
 
     /**
      * @return the id

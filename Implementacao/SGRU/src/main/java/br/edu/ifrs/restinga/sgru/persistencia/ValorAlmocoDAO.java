@@ -5,27 +5,27 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
+import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
 import org.hibernate.Session;
 
 /**
  *
  * @author 10070133
  */
-public class VendaAlmocoDAO {
+public class ValorAlmocoDAO {
     private final Session sessao;
 
-    public VendaAlmocoDAO() {
+    public ValorAlmocoDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
         sessao.beginTransaction();
     }
 
     /**
-     * Persiste a VendaAlmoco enviado na base de dados
-     * @param vendaAlmoco A vendaAlmoco a ser salvo na base de dados
+     * Persiste o ValorAlmoco enviado na base de dados
+     * @param valorAlmoco O valor do almoco a ser salvo na base de dados
      */
-    public void salvar(VendaAlmoco vendaAlmoco) {
-        sessao.saveOrUpdate(vendaAlmoco);        
+    public void salvar(ValorAlmoco valorAlmoco) {
+        sessao.saveOrUpdate(valorAlmoco);        
     }  
     
     /**
@@ -34,6 +34,5 @@ public class VendaAlmocoDAO {
      */        
     public void encerrar() {
         sessao.getTransaction().commit();
-    }            
-    
+    }
 }
