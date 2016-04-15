@@ -179,7 +179,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
-  `id` INT(11) NOT NULL,
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `formaPagamento` VARCHAR(15) NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
   `idValorAlmoco` INT(10) UNSIGNED NOT NULL,
@@ -220,7 +220,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Cria usuário da aplicação:
 
-CREATE USER IF NOT EXISTS 'USERSGRUAPP'@'LOCALHOST' IDENTIFIED BY 'APPURGSUSER';
+CREATE USER 'USERSGRUAPP'@'LOCALHOST' IDENTIFIED BY 'APPURGSUSER';
 
 --
 -- Configura permissões do usuário da aplicação:
