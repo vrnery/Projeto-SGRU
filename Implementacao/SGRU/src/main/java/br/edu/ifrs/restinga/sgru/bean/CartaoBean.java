@@ -9,6 +9,7 @@ import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CartaoDAO;
+import javax.annotation.PreDestroy;
 
 /**
  *
@@ -57,5 +58,10 @@ public class CartaoBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
+    }        
+    
+    @PreDestroy
+    public void encerrar() {
+        dao.encerrar();
     }        
 }

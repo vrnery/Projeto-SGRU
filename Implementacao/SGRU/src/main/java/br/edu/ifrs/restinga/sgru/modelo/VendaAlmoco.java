@@ -6,6 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -74,7 +75,17 @@ public class VendaAlmoco implements Serializable {
     /**
      * @param valorAlmoco the valorAlmoco to set
      */
-    public void setValorAlmoco(ValorAlmoco valorAlmoco) {
+    public void setValorAlmoco(ValorAlmoco valorAlmoco) {                
+        // verifica se a data de expiração dos creditos do cartao jah venceu
+        Date dataHoje = new Date();
+        // 86400000 eh equivalente a 1 dia
+        int diasCredito = (int) ((dataHoje.getTime() - cartao.getDataExpiracao().getTime()) / 86400000L);
+        // 60 dias é a validade dos créditos para utilizar um valor 
+        if (diasCredito > 60 ) {
+            // valor de almoco eh o valor atual da tabela
+        } else {
+            // verifica qual valor de almoco utilizar
+        }         
         this.valorAlmoco = valorAlmoco;
     }
 

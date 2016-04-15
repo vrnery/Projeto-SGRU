@@ -5,49 +5,50 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.modelo.Ticket;
+import br.edu.ifrs.restinga.sgru.modelo.Cartao;
+import br.edu.ifrs.restinga.sgru.modelo.Recarga;
+import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
-import javax.annotation.PreDestroy;
 
 /**
  *
  * @author marcelo.lima
  */
-public class TicketBean {
-    private Ticket ticket = new Ticket();
-    TicketDAO dao = new TicketDAO();
+public class RecargaBean {
+    private Recarga recarga = new Recarga();
+    RecargaDAO dao = new RecargaDAO();
 
     /**
-     * @return the ticket
+     * @return the recarga
      */
-    public Ticket getTicket() {
-        return ticket;
+    public Recarga getRecarga() {
+        return recarga;
     }
 
     /**
-     * @param ticket the ticket to set
+     * @param recarga the recarga to set
      */
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
+    public void setRecarga(Recarga recarga) {
+        this.recarga = recarga;
     }
     
     /**
-     * Solicita à camada de persistência o cadastro de um ticket
+     * Solicita à camada de persistência o cadastro de uma Recarga
      */
     public void salvar() {
-        dao.salvar(ticket);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Ticket cadastrado com sucesso!");
+        dao.salvar(recarga);
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
     }
     
     /**
-     * Solicita a pesquisa de um ticket para a camada de persistência
-     * @param id O id do ticket a ser pesquisada
+     * Solicita a pesquisa de uma Recarga com o id informado à camada de persistência
+     * @param id O id da Recarga a ser pesquisado
      */
     public void carregar(int id) {
-        ticket = dao.carregar(id);        
-    }
+        recarga = dao.carregar(id);
+    }    
     
     /**
      * Envia à viewer uma mensagem com o status da operação
@@ -57,7 +58,7 @@ public class TicketBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }    
+    }        
     
     @PreDestroy
     public void encerrar() {

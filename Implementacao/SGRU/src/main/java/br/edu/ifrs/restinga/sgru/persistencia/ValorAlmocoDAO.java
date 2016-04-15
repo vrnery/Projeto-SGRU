@@ -28,6 +28,10 @@ public class ValorAlmocoDAO {
         sessao.saveOrUpdate(valorAlmoco);        
     }  
     
+    public ValorAlmoco carregar() {        
+        return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco ORDER BY dataValor DESC").setMaxResults(1).uniqueResult();
+    }
+    
     /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.

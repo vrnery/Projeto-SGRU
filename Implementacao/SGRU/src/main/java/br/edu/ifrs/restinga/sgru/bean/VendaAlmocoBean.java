@@ -5,8 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
+import java.util.Date;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -34,12 +36,13 @@ public class VendaAlmocoBean {
     }
     
     /**
-     * Solicita à camada de persistência o cadastro de um aluno
-     */
+     * Solicita à camada de persistência o cadastro de uma VendaAlmoco
+     */    
     public void salvar() {
         dao.salvar(vendaAlmoco);
         enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda do Almoco cadastrada com sucesso!");
     }    
+    
     
     /**
      * Envia à viewer uma mensagem com o status da operação

@@ -6,9 +6,9 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,7 +28,7 @@ public class Cartao implements Serializable {
     private Date dataExpiracao;
     private double saldo;    
     @OneToMany(mappedBy = "cartao")
-    private List<Recarga> recarga;
+    private List<Recarga> recarga = new ArrayList();
 
     /**
      * @return the id
@@ -82,8 +82,15 @@ public class Cartao implements Serializable {
     /**
      * @param recarga the recarga to set
      */
-    public void setRecarga(List<Recarga> recarga) {
-        this.recarga = recarga;
-    }
-    
+    public void setRecarga(Recarga recarga) {
+        // verifica se o saldo do cartao estah vazio
+        // caso afirmativo, atualiza o saldo do cartao
+        if (this.saldo <= 0) {
+            // tranfere o valor da recarga para o cartao
+            this.setSaldo(recarga.getValorRecarregado());
+            // seta o valor da recarga como utilizado
+            recarga.setUtilizado(true);
+        }
+        this.recarga.add(recarga);               
+    }    
 }

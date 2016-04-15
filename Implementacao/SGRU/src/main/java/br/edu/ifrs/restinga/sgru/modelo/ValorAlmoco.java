@@ -49,7 +49,7 @@ public class ValorAlmoco implements Serializable {
     /**
      * @param valorAlmoco the valorAlmoco to set
      */
-    public void setValorAlmoco(double valorAlmoco) {
+    public void setValorAlmoco(double valorAlmoco) {        
         this.valorAlmoco = valorAlmoco;
     }
 

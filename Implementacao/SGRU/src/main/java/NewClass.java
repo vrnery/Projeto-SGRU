@@ -27,7 +27,6 @@ import java.util.List;
  */
 public class NewClass {
     public static void main(String[] args) {
-        
         OperadorCaixa oper = new OperadorCaixa();
         OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
         oper.setNome("Operador");
@@ -50,8 +49,7 @@ public class NewClass {
         aluno.setTelefone("66666666");
         aluno.setCartao(new Cartao());
         aluno.getCartao().setDataExpiracao(new Date());
-        aluno.getCartao().setSaldo(0);
-        
+        aluno.getCartao().setSaldo(0);        
         daoAluno.salvar(aluno);
         daoAluno.encerrar();
         
@@ -65,6 +63,12 @@ public class NewClass {
         daoRecarga.salvar(recarga);
         daoRecarga.encerrar();
         
+        // Adiciona a recarga ao cartao do aluno
+        daoAluno = new AlunoDAO();
+        aluno.getCartao().setRecarga(recarga);        
+        daoAluno.salvar(aluno);
+        daoAluno.encerrar();
+                
         ValorAlmoco valor = new ValorAlmoco();
         ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
         
@@ -73,6 +77,13 @@ public class NewClass {
         daoValor.salvar(valor);
         daoValor.encerrar();
         
+        // simula o carregamento do valor atual do almoco
+        ValorAlmoco valorAtual;
+        daoValor = new ValorAlmocoDAO();
+        valorAtual = daoValor.carregar();
+        daoValor.encerrar();
+        
+        System.out.println("Valor atual do almoco: " + valorAtual.getValorAlmoco());
         
         CaixaRU caixa = new CaixaRU();
         CaixaRUDAO daoCaixa = new CaixaRUDAO();
@@ -80,26 +91,18 @@ public class NewClass {
         caixa.setDataAbertura(new Date());
         caixa.setOperadorCaixa(oper);
         caixa.setValorAbertura(0);
-        //daoCaixa.salvar(caixa);
-        //daoCaixa.encerrar();        
-        
         
         List<VendaAlmoco> listaVenda = new ArrayList();
         caixa.setVendaAlmoco(listaVenda);
         caixa.getVendaAlmoco().add(new VendaAlmoco());
-        caixa.getVendaAlmoco().get(0).setValorAlmoco(valor);
         caixa.getVendaAlmoco().get(0).setCartao(aluno.getCartao());
+        caixa.getVendaAlmoco().get(0).setValorAlmoco(valorAtual);        
         caixa.getVendaAlmoco().get(0).setCaixaRU(caixa);
         caixa.getVendaAlmoco().get(0).setFormaPagamento("Cartao");
         
-        /*
-        System.out.println(caixa.getVendaAlmoco().get(0).getValorAlmoco().getId());
-        System.out.println(caixa.getVendaAlmoco().get(0).getCaixaRU().getId());
-        System.out.println(caixa.getVendaAlmoco().get(0).getCartao().getId());
-        */
-        //daoCaixa = new CaixaRUDAO();
         daoCaixa.salvar(caixa);
         daoCaixa.encerrar();
-        
+
+        System.out.println("Data: " + aluno.getCartao().getDataExpiracao() + " Saldo: " + aluno.getCartao().getSaldo());
     }
 }
