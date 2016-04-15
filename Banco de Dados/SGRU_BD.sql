@@ -154,7 +154,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`ticket`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valor` DECIMAL(6,2) NOT NULL,
   `dataCriado` DATETIME NOT NULL,
   `dataUtilizado` DATETIME NULL DEFAULT NULL,
