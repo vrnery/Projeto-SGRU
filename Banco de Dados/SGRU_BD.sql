@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
   `idValorAlmoco` INT(10) UNSIGNED NOT NULL,
   `idCartao` INT(10) UNSIGNED NULL DEFAULT NULL,
-  `idTicket` INT(11) NULL DEFAULT NULL,
+  `idTicket` INT(11) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_VendaAlmoco_Cartao1_idx` (`idCartao` ASC),
   INDEX `fk_VendaAlmoco_ValorAlmoco1_idx` (`idValorAlmoco` ASC),
