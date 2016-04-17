@@ -103,6 +103,11 @@ public class NewClass {
         daoCaixa.salvar(caixa);
         daoCaixa.encerrar();
 
+        daoAluno = new AlunoDAO();
+        aluno.getCartao().descontar(valorAtual.getValorAlmoco());
+        daoAluno.salvar(aluno);
+        daoAluno.encerrar();
+        
         System.out.println("Data: " + aluno.getCartao().getDataExpiracao() + " Saldo: " + aluno.getCartao().getSaldo());
     }
 }

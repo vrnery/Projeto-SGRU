@@ -73,6 +73,14 @@ public class Cartao implements Serializable {
     }
 
     /**
+     * Descontar valor do almoço
+     * @param valor the saldo to set
+     */
+    public void descontar(double valor) {
+        this.saldo -= valor;
+    }
+    
+    /**
      * @return the recarga
      */
     public List<Recarga> getRecarga() {

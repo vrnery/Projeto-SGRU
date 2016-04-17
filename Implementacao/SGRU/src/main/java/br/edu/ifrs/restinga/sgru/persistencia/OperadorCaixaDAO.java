@@ -26,7 +26,7 @@ public class OperadorCaixaDAO {
      * @return Um objeto OperadorCaixa
      */
     public OperadorCaixa carregar(String login) {
-        return (OperadorCaixa) sessao.load(OperadorCaixa.class, login);
+        return (OperadorCaixa) sessao.createQuery("FROM OperadorCaixa WHERE login=:login").setString("login", login).uniqueResult();
     }    
     
     /**

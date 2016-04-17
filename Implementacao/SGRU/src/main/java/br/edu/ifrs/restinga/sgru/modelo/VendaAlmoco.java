@@ -20,21 +20,22 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class VendaAlmoco implements Serializable {
+
     @Id
     @GeneratedValue
     private int id;
     private String formaPagamento;
     @OneToOne
-    @JoinColumn(name="idValorAlmoco")
+    @JoinColumn(name = "idValorAlmoco")
     private ValorAlmoco valorAlmoco;
     @OneToOne
-    @JoinColumn(name="idTicket")
+    @JoinColumn(name = "idTicket")
     private Ticket ticket;
     @OneToOne
-    @JoinColumn(name="idCartao")
+    @JoinColumn(name = "idCartao")
     private Cartao cartao;
     @ManyToOne
-    @JoinColumn(name="idCaixaRU")
+    @JoinColumn(name = "idCaixaRU")
     private CaixaRU caixaRU;
 
     /**
@@ -75,17 +76,19 @@ public class VendaAlmoco implements Serializable {
     /**
      * @param valorAlmoco the valorAlmoco to set
      */
-    public void setValorAlmoco(ValorAlmoco valorAlmoco) {                
-        // verifica se a data de expiração dos creditos do cartao jah venceu
-        Date dataHoje = new Date();
-        // 86400000 eh equivalente a 1 dia
-        int diasCredito = (int) ((dataHoje.getTime() - cartao.getDataExpiracao().getTime()) / 86400000L);
-        // 60 dias é a validade dos créditos para utilizar um valor 
-        if (diasCredito > 60 ) {
-            // valor de almoco eh o valor atual da tabela
-        } else {
-            // verifica qual valor de almoco utilizar
-        }         
+    public void setValorAlmoco(ValorAlmoco valorAlmoco) {
+        if (cartao != null) {
+            // verifica se a data de expiração dos creditos do cartao jah venceu
+            Date dataHoje = new Date();
+            // 86400000 eh equivalente a 1 dia
+            int diasCredito = (int) ((dataHoje.getTime() - cartao.getDataExpiracao().getTime()) / 86400000L);
+            // 60 dias é a validade dos créditos para utilizar um valor 
+            if (diasCredito > 60) {
+                // valor de almoco eh o valor atual da tabela
+            } else {
+                // verifica qual valor de almoco utilizar
+            }
+        }
         this.valorAlmoco = valorAlmoco;
     }
 
@@ -130,5 +133,5 @@ public class VendaAlmoco implements Serializable {
     public void setCaixaRU(CaixaRU caixaRU) {
         this.caixaRU = caixaRU;
     }
-    
+
 }
