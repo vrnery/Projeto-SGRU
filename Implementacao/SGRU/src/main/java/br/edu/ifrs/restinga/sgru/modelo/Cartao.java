@@ -100,5 +100,13 @@ public class Cartao implements Serializable {
             recarga.setUtilizado(true);
         }
         this.recarga.add(recarga);               
-    }    
+    }
+    
+    /**
+     * Descontar o valor do almoco
+     * @param valor ValorAlmoco
+     */
+    public void setDebitar(double valor) {
+        this.saldo -= valor;
+    }
 }

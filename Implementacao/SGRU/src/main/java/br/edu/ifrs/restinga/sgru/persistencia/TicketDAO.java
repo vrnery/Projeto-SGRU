@@ -35,8 +35,15 @@ public class TicketDAO {
      */
     public Ticket carregar(int id) {
         return (Ticket) sessao.load(Ticket.class, id);
-    }    
-    
+    }
+
+    /**
+     * Consulta codigo do Ticket não utilizado
+     */
+    public Ticket usarTicket(int codigo) {
+        return (Ticket) sessao.createQuery("FROM Ticket WHERE id=:id AND dataUtilizado = NULL").setInteger("id", codigo).uniqueResult();
+    }
+
     /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.

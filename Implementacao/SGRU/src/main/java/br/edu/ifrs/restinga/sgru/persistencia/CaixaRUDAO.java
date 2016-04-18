@@ -6,6 +6,8 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import java.util.Date;
 import org.hibernate.Session;
 
 /**
@@ -36,7 +38,17 @@ public class CaixaRUDAO {
     public CaixaRU carregar(int id) {
         return (CaixaRU) sessao.load(CaixaRU.class, id);
     }    
-    
+
+    /**
+     * Buscar caixa aberto pelo operador
+     * @param idOperador Codigo do OperadorCaixa
+     * @param data Data do dia
+     * @return Objeto CaixaRU
+     */
+    public CaixaRU reabrirCaixa(int idOperador, Date data) {
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE idOperadorCaixa=:op AND dataFechamento = null AND dataAbertura < :data ORDER BY dataAbertura DESC").setInteger("op", idOperador).setDate("data", data).uniqueResult();
+    }
+
     /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.
