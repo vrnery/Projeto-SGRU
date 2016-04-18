@@ -102,8 +102,8 @@ public class CaixaRU implements Serializable {
     /**
      * @param vendaAlmoco the vendaAlmoco to set
      */
-    public void setVendaAlmoco(List<VendaAlmoco> vendaAlmoco) {
-        this.vendaAlmoco = vendaAlmoco;
+    public void setVendaAlmoco(VendaAlmoco vendaAlmoco) {
+        this.vendaAlmoco.add(vendaAlmoco);
     }
 
     /**

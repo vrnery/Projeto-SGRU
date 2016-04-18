@@ -76,7 +76,7 @@ public class NewClass2 {
 
                 //verifica o valor correto de acordo com a data da recarga
                 daoValor = new ValorAlmocoDAO();
-                valor = daoValor.almocoCartao(aluno.getCartao().getDataExpiracao());
+                valor = daoValor.almocoCartao(aluno.getCartao().getDataCredito());
                 daoValor.encerrar();
 
                 //verifica se tem saldo no cartão
@@ -109,6 +109,7 @@ public class NewClass2 {
         } while (txtForma.equals("")); //verifica se tem alguma forma de pagamento
 
         //Realizar a venda do almoço
+        /*
         List<VendaAlmoco> venda = new ArrayList();
         caixa.setVendaAlmoco(venda);
         caixa.getVendaAlmoco().add(new VendaAlmoco());
@@ -147,5 +148,6 @@ public class NewClass2 {
 
         System.out.println("Operador: " + op.getId() + " " + op.getNome());
         System.out.println(new Date());
+        */
     }
 }

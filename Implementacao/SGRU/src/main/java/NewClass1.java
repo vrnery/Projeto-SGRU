@@ -55,6 +55,7 @@ public class NewClass1 {
         caixa.setOperadorCaixa(oper);
         caixa.setValorAbertura(0);
         
+        /*
         List<VendaAlmoco> listaVenda = new ArrayList();
         caixa.setVendaAlmoco(listaVenda);
         caixa.getVendaAlmoco().add(new VendaAlmoco());
@@ -70,7 +71,7 @@ public class NewClass1 {
         tic.setDataUtilizado(new Date());
         daoTic.salvar(tic);
         daoTic.encerrar();
-        
+        */
         System.out.println("Data: " + tic.getDataCriado() + " Utilizado: " + tic.getDataUtilizado());
     }
 }

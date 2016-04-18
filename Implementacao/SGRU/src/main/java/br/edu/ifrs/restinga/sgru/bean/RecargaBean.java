@@ -5,7 +5,6 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
 import javax.annotation.PreDestroy;
@@ -18,7 +17,7 @@ import javax.faces.context.FacesContext;
  */
 public class RecargaBean {
     private Recarga recarga = new Recarga();
-    RecargaDAO dao = new RecargaDAO();
+    private final RecargaDAO dao = new RecargaDAO();
 
     /**
      * @return the recarga

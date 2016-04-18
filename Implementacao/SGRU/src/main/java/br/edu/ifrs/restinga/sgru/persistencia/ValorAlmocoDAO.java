@@ -16,6 +16,7 @@ import org.hibernate.Session;
 public class ValorAlmocoDAO {
     private final Session sessao;
 
+    
     public ValorAlmocoDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
         sessao.beginTransaction();
@@ -49,6 +50,15 @@ public class ValorAlmocoDAO {
         return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor >= :verifica ORDER BY dataValor").setDate("verifica", verificar).setMaxResults(1).uniqueResult();
     }
 
+    /**
+     * O valor a ser cobrado pelo almoco com base na data enviada
+     * @param dataCredito Data em que os creditos foram inseridos no cartao
+     * @return Um objeto do tipo ValorAlmoco
+     */
+    public ValorAlmoco getValorAlmocoPorData(Date dataCredito) {
+        return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor <= :dataCredito ORDER BY dataValor DESC").setDate("dataCredito", dataCredito).setMaxResults(1).uniqueResult();
+    }
+    
     /**
      * Encerra uma transação com o banco de dados. 
      * Esse método é chamado automaticamente.

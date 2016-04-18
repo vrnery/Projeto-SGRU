@@ -17,7 +17,7 @@ import javax.annotation.PreDestroy;
  */
 public class CartaoBean {
     private Cartao cartao = new Cartao();
-    private CartaoDAO dao = new CartaoDAO();
+    private final CartaoDAO dao = new CartaoDAO();
 
     /**
      * @return the cartao

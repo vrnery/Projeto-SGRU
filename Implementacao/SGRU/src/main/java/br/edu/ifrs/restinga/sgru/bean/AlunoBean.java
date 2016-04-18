@@ -17,7 +17,7 @@ import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
  */
 public class AlunoBean {
     private Aluno aluno = new Aluno();
-    private AlunoDAO dao = new AlunoDAO();
+    private final AlunoDAO dao = new AlunoDAO();
 
     /**
      * @return the aluno
@@ -46,8 +46,7 @@ public class AlunoBean {
      * @param matricula A matricula do aluno a ser pesquisada
      */
     public void carregar(String matricula) {
-        aluno = dao.carregar(matricula);
-        
+        aluno = dao.carregar(matricula);        
     }
     
     /**

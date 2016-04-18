@@ -25,7 +25,7 @@ public class Cartao implements Serializable {
     @GeneratedValue
     private int id;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date dataExpiracao;
+    private Date dataCredito;
     private double saldo;    
     @OneToMany(mappedBy = "cartao")
     private List<Recarga> recarga = new ArrayList();
@@ -45,17 +45,17 @@ public class Cartao implements Serializable {
     }
 
     /**
-     * @return the dataExpiracao
+     * @return the dataCredito
      */
-    public Date getDataExpiracao() {
-        return dataExpiracao;
+    public Date getDataCredito() {
+        return dataCredito;
     }
 
     /**
-     * @param dataExpiracao the dataExpiracao to set
+     * @param dataCredito the dataCredito to set
      */
-    public void setDataExpiracao(Date dataExpiracao) {
-        this.dataExpiracao = dataExpiracao;
+    public void setDataCredito(Date dataCredito) {
+        this.dataCredito = dataCredito;
     }
 
     /**

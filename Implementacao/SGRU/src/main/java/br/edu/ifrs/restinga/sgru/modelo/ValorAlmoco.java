@@ -65,5 +65,5 @@ public class ValorAlmoco implements Serializable {
      */
     public void setDataValor(Date dataValor) {
         this.dataValor = dataValor;
-    }
+    }            
 }

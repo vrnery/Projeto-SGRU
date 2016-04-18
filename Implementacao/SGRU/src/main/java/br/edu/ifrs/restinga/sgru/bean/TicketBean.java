@@ -17,7 +17,7 @@ import javax.annotation.PreDestroy;
  */
 public class TicketBean {
     private Ticket ticket = new Ticket();
-    TicketDAO dao = new TicketDAO();
+    private final TicketDAO dao = new TicketDAO();
 
     /**
      * @return the ticket

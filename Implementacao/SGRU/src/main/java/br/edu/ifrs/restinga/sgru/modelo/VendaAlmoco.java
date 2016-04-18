@@ -77,22 +77,26 @@ public class VendaAlmoco implements Serializable {
     /**
      * @param valorAlmoco the valorAlmoco to set
      */
-    public void setValorAlmoco(ValorAlmoco valorAlmoco) {
-        // se o pagamento for com cartão
-        //if (cartao != null) {
-            /*
+    public void setValorAlmoco(ValorAlmoco valorAlmoco) {       
+        if ((this.getCartao() == null) && (this.getTicket() == null)) {
+            // lancar excessao
+        }
+        this.valorAlmoco = valorAlmoco;
+        // se o pagamento for com cartão e a data do credito do cartao for menos que a data
+        // do valor do almoco, entao verifica se eh necessario atualizar o valor do almoco
+        if ((this.getCartao() != null) && 
+            (this.getCartao().getDataCredito().getTime() < valorAlmoco.getDataValor().getTime())) {            
             // verifica se a data de expiração dos creditos do cartao jah venceu
             Date dataHoje = new Date();
             // 86400000 eh equivalente a 1 dia
-            int diasCredito = (int) ((dataHoje.getTime() - cartao.getDataExpiracao().getTime()) / 86400000L);
+            int diasCredito = (int) ((dataHoje.getTime() - this.getCartao().getDataCredito().getTime()) / 86400000L);
             // 60 dias é a validade dos créditos para utilizar um valor 
-            if (diasCredito > 60) {
-                // valor de almoco eh o valor atual da tabela
-                this.valorAlmoco = valorAlmoco;
-            } else {
+            if (diasCredito < 60) {
                 // verifica qual valor de almoco utilizar
-            }
-            */
+                ValorAlmocoDAO dao = new ValorAlmocoDAO();
+                this.valorAlmoco = dao.getValorAlmocoPorData(this.cartao.getDataCredito());
+                dao.encerrar();
+            }            
             
             /*
             if (new Date().getTime() > cartao.getDataExpiracao().getTime()) {
@@ -105,8 +109,10 @@ public class VendaAlmoco implements Serializable {
                 this.valorAlmoco = valorAlmoco;
             }
             */
-        //}
-        this.valorAlmoco = valorAlmoco;
+        }        
+        if (this.getValorAlmoco() == null) {
+            // lancar excessao
+        }
     }
 
     /**
@@ -151,4 +157,7 @@ public class VendaAlmoco implements Serializable {
         this.caixaRU = caixaRU;
     }
 
+    public void realizarVendaAlmoco() {
+        
+    }
 }

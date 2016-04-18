@@ -17,7 +17,7 @@ import javax.annotation.PreDestroy;
  */
 public class OperadorCaixaBean {
     private OperadorCaixa operadorCaixa = new OperadorCaixa();
-    private OperadorCaixaDAO dao = new OperadorCaixaDAO();
+    private final OperadorCaixaDAO dao = new OperadorCaixaDAO();
 
     /**
      * @return the operadorCaixa

@@ -17,7 +17,7 @@ import javax.faces.context.FacesContext;
  */
 public class ProfessorBean {
     private Professor professor = new Professor();
-    private ProfessorDAO dao = new ProfessorDAO();
+    private final ProfessorDAO dao = new ProfessorDAO();
 
     /**
      * @return the professor

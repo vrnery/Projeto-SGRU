@@ -5,10 +5,11 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.modelo.Cartao;
+import br.edu.ifrs.restinga.sgru.modelo.Aluno;
+import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
-import java.util.Date;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -19,7 +20,7 @@ import javax.faces.context.FacesContext;
  */
 public class VendaAlmocoBean {
     private VendaAlmoco vendaAlmoco = new VendaAlmoco();
-    private VendaAlmocoDAO dao = new VendaAlmocoDAO();
+    private final VendaAlmocoDAO dao = new VendaAlmocoDAO();
 
     /**
      * @return the vendaAlmoco
@@ -37,10 +38,13 @@ public class VendaAlmocoBean {
     
     /**
      * Solicita à camada de persistência o cadastro de uma VendaAlmoco
+     * @param aluno O aluno que está realizando a compra do almoco
+     * @param valorAtualAlmoco Um objeto ValorAlmoco com o valor do almoco da tabela atual
+     * @param caixa O caixa onde está sendo realizada a venda
      */    
-    public void salvar() {
-        dao.salvar(vendaAlmoco);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda do Almoco cadastrada com sucesso!");
+    public void realizarVendaAlmoco(Aluno aluno, ValorAlmoco valorAtualAlmoco,
+            CaixaRU caixa) {
+
     }    
     
     
