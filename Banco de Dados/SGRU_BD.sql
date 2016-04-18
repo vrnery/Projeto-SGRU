@@ -37,7 +37,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `dataExpiracao` DATE NOT NULL,
+  `dataCredito` DATE NOT NULL,
   `saldo` DECIMAL(6,2) NULL DEFAULT 0,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
