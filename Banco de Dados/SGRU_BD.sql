@@ -37,7 +37,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `dataCredito` DATE NOT NULL,
+  `dataCredito` DATETIME NOT NULL,
   `saldo` DECIMAL(6,2) NULL DEFAULT 0,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -92,8 +92,9 @@ CREATE TABLE IF NOT EXISTS `sgru`.`caixaru` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
+  `dataFechamento` DATETIME NULL,
   `valorFechamento` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
-  `idOperadorCaixa` INT(10) UNSIGNED NULL DEFAULT NULL,
+  `idOperadorCaixa` INT(10) UNSIGNED NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idOperadorCaixa` ASC),
   CONSTRAINT `fk_CaixaRU_OperadorCaixa1`
