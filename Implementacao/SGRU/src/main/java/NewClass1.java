@@ -3,14 +3,13 @@ import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Ticket;
 import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
-import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,12 +31,13 @@ public class NewClass1 {
         
         ValorAlmoco valorAtual;
         ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
-        valorAtual = daoValor.carregar();
+        valorAtual = daoValor.carregarValorAtualAlmoco();
         daoValor.encerrar();
         
         Ticket tic = new Ticket();
         TicketDAO daoTic = new TicketDAO();
-        tic.setDataCriado(new Date());
+        Calendar data = new GregorianCalendar();
+        tic.setDataCriado(data);
         tic.setValor(valorAtual.getValorAlmoco());
         daoTic.salvar(tic);
         daoTic.encerrar();
@@ -51,7 +51,8 @@ public class NewClass1 {
         CaixaRU caixa = new CaixaRU();
         CaixaRUDAO daoCaixa = new CaixaRUDAO();
         
-        caixa.setDataAbertura(new Date());
+        data = new GregorianCalendar();
+        caixa.setDataAbertura(data);
         caixa.setOperadorCaixa(oper);
         caixa.setValorAbertura(0);
         

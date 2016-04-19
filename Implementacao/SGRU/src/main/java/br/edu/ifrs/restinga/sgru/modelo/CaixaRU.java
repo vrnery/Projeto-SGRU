@@ -6,7 +6,8 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -27,11 +28,13 @@ public class CaixaRU implements Serializable {
     @GeneratedValue
     private int id;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataAbertura;
+    private Calendar dataAbertura;
     private double valorAbertura;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Calendar dataFechamento;
     private double valorFechamento;    
-    @OneToMany(mappedBy = "caixaRU", cascade = {CascadeType.ALL})
-    private List<VendaAlmoco> vendaAlmoco;
+    @OneToMany(mappedBy = "caixaRU")    
+    private List<VendaAlmoco> vendaAlmoco = new ArrayList();
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
     private OperadorCaixa operadorCaixa;       
@@ -53,14 +56,14 @@ public class CaixaRU implements Serializable {
     /**
      * @return the dataAbertura
      */
-    public Date getDataAbertura() {
+    public Calendar getDataAbertura() {
         return dataAbertura;
     }
 
     /**
      * @param dataAbertura the dataAbertura to set
      */
-    public void setDataAbertura(Date dataAbertura) {
+    public void setDataAbertura(Calendar dataAbertura) {
         this.dataAbertura = dataAbertura;
     }
 
@@ -77,6 +80,20 @@ public class CaixaRU implements Serializable {
     public void setValorAbertura(double valorAbertura) {
         this.valorAbertura = valorAbertura;
     }
+    
+    /**
+     * @return the dataFechamento
+     */
+    public Calendar getDataFechamento() {
+        return dataFechamento;
+    }
+
+    /**
+     * @param dataFechamento the dataFechamento to set
+     */
+    public void setDataFechamento(Calendar dataFechamento) {
+        this.dataFechamento = dataFechamento;
+    }    
 
     /**
      * @return the valorFechamento

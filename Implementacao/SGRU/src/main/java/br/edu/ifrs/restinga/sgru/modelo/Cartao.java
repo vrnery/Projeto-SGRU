@@ -7,7 +7,7 @@ package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,8 +24,8 @@ public class Cartao implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date dataCredito;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Calendar dataCredito;
     private double saldo;    
     @OneToMany(mappedBy = "cartao")
     private List<Recarga> recarga = new ArrayList();
@@ -47,14 +47,14 @@ public class Cartao implements Serializable {
     /**
      * @return the dataCredito
      */
-    public Date getDataCredito() {
+    public Calendar getDataCredito() {
         return dataCredito;
     }
 
     /**
      * @param dataCredito the dataCredito to set
      */
-    public void setDataCredito(Date dataCredito) {
+    public void setDataCredito(Calendar dataCredito) {
         this.dataCredito = dataCredito;
     }
 
@@ -96,6 +96,8 @@ public class Cartao implements Serializable {
         if (this.saldo <= 0) {
             // tranfere o valor da recarga para o cartao
             this.setSaldo(recarga.getValorRecarregado());
+            // data do credito eh a mesma data da recarga
+            this.setDataCredito(recarga.getDataCredito());
             // seta o valor da recarga como utilizado
             recarga.setUtilizado(true);
         }

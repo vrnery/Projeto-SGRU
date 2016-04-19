@@ -5,9 +5,6 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.modelo.Aluno;
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
-import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import javax.annotation.PreDestroy;
@@ -37,16 +34,13 @@ public class VendaAlmocoBean {
     }
     
     /**
-     * Solicita à camada de persistência o cadastro de uma VendaAlmoco
-     * @param aluno O aluno que está realizando a compra do almoco
-     * @param valorAtualAlmoco Um objeto ValorAlmoco com o valor do almoco da tabela atual
-     * @param caixa O caixa onde está sendo realizada a venda
-     */    
-    public void realizarVendaAlmoco(Aluno aluno, ValorAlmoco valorAtualAlmoco,
-            CaixaRU caixa) {
-
-    }    
-    
+     * Salva uma venda de almoco no banco de dados
+     * @param vendaAlmoco A venda a ser persistida no banco de dado
+     */
+    public void salvar(VendaAlmoco vendaAlmoco) {
+        dao.salvar(vendaAlmoco);
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
+    }
     
     /**
      * Envia à viewer uma mensagem com o status da operação

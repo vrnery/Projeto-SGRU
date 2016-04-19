@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,7 +25,7 @@ public class Recarga implements Serializable {
     private int id;
     private double valorRecarregado;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataCredito;
+    private Calendar dataCredito;
     private boolean utilizado;
     @ManyToOne
     @JoinColumn(name="idCartao")
@@ -62,14 +62,14 @@ public class Recarga implements Serializable {
     /**
      * @return the dataCredito
      */
-    public Date getDataCredito() {
+    public Calendar getDataCredito() {
         return dataCredito;
     }
 
     /**
      * @param dataCredito the dataCredito to set
      */
-    public void setDataCredito(Date dataCredito) {
+    public void setDataCredito(Calendar dataCredito) {
         this.dataCredito = dataCredito;
     }
 

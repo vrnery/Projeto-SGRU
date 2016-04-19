@@ -6,8 +6,8 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
-import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
-import java.util.Date;
+import java.util.Calendar;
+//import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import org.hibernate.Session;
 
 /**
@@ -45,17 +45,19 @@ public class CaixaRUDAO {
      * @param data Data do dia
      * @return Objeto CaixaRU
      */
-    public CaixaRU reabrirCaixa(int idOperador, Date data) {
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE idOperadorCaixa=:op AND dataFechamento = null AND dataAbertura < :data ORDER BY dataAbertura DESC").setInteger("op", idOperador).setDate("data", data).uniqueResult();
-    }
-    
+    public CaixaRU reabrirCaixa(int idOperador, Calendar data) {
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE idOperadorCaixa=:op AND dataFechamento = null AND dataAbertura < :data ORDER BY dataAbertura DESC").setInteger("op", idOperador).setDate("data", data.getTime()).uniqueResult();
+    }        
+        
     /**
      * Salva a venda do almoco no banco de dados
      * @param vendaAlmoco A venda de almoco realizada
      */
+    /*
     public void salvarVendaAlmoco(VendaAlmoco vendaAlmoco) {
         sessao.saveOrUpdate(vendaAlmoco);
     }
+    */
 
     /**
      * Encerra uma transação com o banco de dados. 

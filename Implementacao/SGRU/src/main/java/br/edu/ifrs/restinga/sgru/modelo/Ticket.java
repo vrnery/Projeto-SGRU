@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,9 +23,9 @@ public class Ticket implements Serializable {
     private int id;
     private double valor;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataCriado;
+    private Calendar dataCriado;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataUtilizado;
+    private Calendar dataUtilizado;
 
     /**
      * @return the id
@@ -58,28 +58,28 @@ public class Ticket implements Serializable {
     /**
      * @return the dataCriado
      */
-    public Date getDataCriado() {
+    public Calendar getDataCriado() {
         return dataCriado;
     }
 
     /**
      * @param dataCriado the dataCriado to set
      */
-    public void setDataCriado(Date dataCriado) {
+    public void setDataCriado(Calendar dataCriado) {
         this.dataCriado = dataCriado;
     }
 
     /**
      * @return the dataUtilizado
      */
-    public Date getDataUtilizado() {
+    public Calendar getDataUtilizado() {
         return dataUtilizado;
     }
 
     /**
      * @param dataUtilizado the dataUtilizado to set
      */
-    public void setDataUtilizado(Date dataUtilizado) {
+    public void setDataUtilizado(Calendar dataUtilizado) {
         this.dataUtilizado = dataUtilizado;
     }
 }

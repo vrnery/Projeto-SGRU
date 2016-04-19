@@ -5,8 +5,12 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
+import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -27,6 +31,14 @@ public class VendaAlmocoDAO {
     public void salvar(VendaAlmoco vendaAlmoco) {
         sessao.saveOrUpdate(vendaAlmoco);        
     }  
+    
+    public double carregarTotalVendidoDia(CaixaRU caixaRU) {
+        return (double) sessao.createCriteria(VendaAlmoco.class)
+                .createAlias("mate", "valorAlmoco", Criteria.INNER_JOIN)                
+                .setProjection(Projections.sum("valorAlmoco"))
+                .add(Restrictions.eq("id", caixaRU.getId()))
+                .add(Restrictions.eq("dataAbertura", caixaRU.getDataAbertura())).uniqueResult();
+    }
     
     /**
      * Encerra uma transação com o banco de dados. 

@@ -5,9 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
-import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,7 +19,6 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class VendaAlmoco implements Serializable {
-
     @Id
     @GeneratedValue
     private int id;
@@ -36,7 +33,7 @@ public class VendaAlmoco implements Serializable {
     @JoinColumn(name = "idCartao")
     private Cartao cartao;
     @ManyToOne
-    @JoinColumn(name = "idCaixaRU")
+    @JoinColumn(name = "idCaixaRU")    
     private CaixaRU caixaRU;
 
     /**
@@ -78,41 +75,7 @@ public class VendaAlmoco implements Serializable {
      * @param valorAlmoco the valorAlmoco to set
      */
     public void setValorAlmoco(ValorAlmoco valorAlmoco) {       
-        if ((this.getCartao() == null) && (this.getTicket() == null)) {
-            // lancar excessao
-        }
         this.valorAlmoco = valorAlmoco;
-        // se o pagamento for com cartão e a data do credito do cartao for menos que a data
-        // do valor do almoco, entao verifica se eh necessario atualizar o valor do almoco
-        if ((this.getCartao() != null) && 
-            (this.getCartao().getDataCredito().getTime() < valorAlmoco.getDataValor().getTime())) {            
-            // verifica se a data de expiração dos creditos do cartao jah venceu
-            Date dataHoje = new Date();
-            // 86400000 eh equivalente a 1 dia
-            int diasCredito = (int) ((dataHoje.getTime() - this.getCartao().getDataCredito().getTime()) / 86400000L);
-            // 60 dias é a validade dos créditos para utilizar um valor 
-            if (diasCredito < 60) {
-                // verifica qual valor de almoco utilizar
-                ValorAlmocoDAO dao = new ValorAlmocoDAO();
-                this.valorAlmoco = dao.getValorAlmocoPorData(this.cartao.getDataCredito());
-                dao.encerrar();
-            }            
-            
-            /*
-            if (new Date().getTime() > cartao.getDataExpiracao().getTime()) {
-                // Procurar valor do almoço
-                ValorAlmocoDAO daoAlmoco = new ValorAlmocoDAO();
-                this.valorAlmoco = daoAlmoco.almocoCartao(cartao.getDataExpiracao());
-                daoAlmoco.encerrar();
-            } else {
-                // Valor atual da tabela
-                this.valorAlmoco = valorAlmoco;
-            }
-            */
-        }        
-        if (this.getValorAlmoco() == null) {
-            // lancar excessao
-        }
     }
 
     /**
@@ -155,9 +118,5 @@ public class VendaAlmoco implements Serializable {
      */
     public void setCaixaRU(CaixaRU caixaRU) {
         this.caixaRU = caixaRU;
-    }
-
-    public void realizarVendaAlmoco() {
-        
     }
 }

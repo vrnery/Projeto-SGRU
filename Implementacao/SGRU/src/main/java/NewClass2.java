@@ -11,7 +11,9 @@ import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -40,14 +42,15 @@ public class NewClass2 {
 
         //Faz a busca do caixa ja aberto (exemplo de retorno do horario de almoço do OperadorCaixa)
         CaixaRUDAO daoCaixa = new CaixaRUDAO();
-        CaixaRU caixa = daoCaixa.reabrirCaixa(op.getId(), new Date());
+        Calendar data = new GregorianCalendar();
+        CaixaRU caixa = daoCaixa.reabrirCaixa(op.getId(), data);
         daoCaixa.encerrar();
 
         System.out.println("Caixa: " + caixa.getId() + " Data Abertura: " + caixa.getDataAbertura() + " Operador: " + caixa.getOperadorCaixa().getId());
 
         //Faz a busca do valor do almoço
         ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
-        ValorAlmoco valor = daoValor.carregar();
+        ValorAlmoco valor = daoValor.carregarValorAtualAlmoco();
         daoValor.encerrar();
 
         System.out.println("Data: " + valor.getDataValor() + " Valor do Almoço:" + valor.getValorAlmoco());
@@ -101,7 +104,8 @@ public class NewClass2 {
 
                     //registra que o ticket foi utilizado na data
                     daoTicket = new TicketDAO();
-                    ticket.setDataUtilizado(new Date());
+                    data = new GregorianCalendar();
+                    ticket.setDataUtilizado(data);
                     daoTicket.salvar(ticket);
                     daoTicket.encerrar();
                 }

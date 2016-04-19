@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,7 +23,7 @@ public class ValorAlmoco implements Serializable {
     private int id;
     private double valorAlmoco;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date dataValor;
+    private Calendar dataValor;
 
     /**
      * @return the id
@@ -56,14 +56,14 @@ public class ValorAlmoco implements Serializable {
     /**
      * @return the dataValor
      */
-    public Date getDataValor() {
+    public Calendar getDataValor() {
         return dataValor;
     }
 
     /**
      * @param dataValor the dataValor to set
      */
-    public void setDataValor(Date dataValor) {
+    public void setDataValor(Calendar dataValor) {
         this.dataValor = dataValor;
     }            
 }

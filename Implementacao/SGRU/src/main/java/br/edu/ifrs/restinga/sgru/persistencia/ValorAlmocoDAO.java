@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
-import java.util.Date;
+import java.util.Calendar;
 import org.hibernate.Session;
 
 /**
@@ -34,7 +34,7 @@ public class ValorAlmocoDAO {
      * Carregar o valor atual do ValorAlmoco
      * @return Objeto do tipo ValorAlmoco
      */
-    public ValorAlmoco carregar() {        
+    public ValorAlmoco carregarValorAtualAlmoco() {        
         return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco ORDER BY dataValor DESC").setMaxResults(1).uniqueResult();
     }
 
@@ -43,20 +43,22 @@ public class ValorAlmocoDAO {
      * @param expira Data de expiração do cartão
      * @return Objeto do tipo ValorAlmoco
      */
-    public ValorAlmoco almocoCartao(Date expira) {
+    /*
+    public ValorAlmoco almocoCartao(Calendar expira) {
         long data = 86400000L * 60;
-        Date verificar = new Date(expira.getTime() - data);
+        Calendar verificar = new Date(expira.getTime() - data);
         System.out.println("Expira: " + expira + " Procura: " + verificar.toString());
         return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor >= :verifica ORDER BY dataValor").setDate("verifica", verificar).setMaxResults(1).uniqueResult();
     }
+    */
 
     /**
      * O valor a ser cobrado pelo almoco com base na data enviada
      * @param dataCredito Data em que os creditos foram inseridos no cartao
      * @return Um objeto do tipo ValorAlmoco
      */
-    public ValorAlmoco getValorAlmocoPorData(Date dataCredito) {
-        return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor <= :dataCredito ORDER BY dataValor DESC").setDate("dataCredito", dataCredito).setMaxResults(1).uniqueResult();
+    public ValorAlmoco getValorAlmocoPorData(Calendar dataCredito) {
+        return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor <= :dataCredito ORDER BY dataValor DESC").setDate("dataCredito", dataCredito.getTime()).setMaxResults(1).uniqueResult();
     }
     
     /**

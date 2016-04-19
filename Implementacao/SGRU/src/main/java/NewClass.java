@@ -1,21 +1,21 @@
 
 import br.edu.ifrs.restinga.sgru.bean.AlunoBean;
 import br.edu.ifrs.restinga.sgru.bean.CaixaRUBean;
+import br.edu.ifrs.restinga.sgru.bean.OperadorCaixaBean;
+import br.edu.ifrs.restinga.sgru.bean.ValorAlmocoBean;
+import br.edu.ifrs.restinga.sgru.bean.VendaAlmocoBean;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
-import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,120 +30,71 @@ import java.util.List;
 public class NewClass {
     public static void main(String[] args) {
         
-        /* *******************************
-        *       Cadastros - Inicio
-        *  ******************************* */ 
-        OperadorCaixa oper = new OperadorCaixa();
-        OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
-        oper.setNome("Operador");
-        oper.setEmail("operador@email");
-        oper.setTelefone("55555555");
-        oper.setLogin("oper1");
-        oper.setSenha("oper");
-        daoOper.salvar(oper);
-        daoOper.encerrar();
-                
-        Aluno aluno = new Aluno();
-        AlunoDAO daoAluno = new AlunoDAO();
-        
-        aluno.setNome("Aluno");
-        aluno.setEmail("aluno@email");
-        aluno.setCaminhoFoto("C:\\Fotos");
-        aluno.setLogin("aluno");
-        aluno.setSenha("senha");
-        aluno.setMatricula("123456");
-        aluno.setTelefone("66666666");
-        aluno.setCartao(new Cartao());
-        aluno.getCartao().setDataCredito(new Date());
-        aluno.getCartao().setSaldo(0);        
-        daoAluno.salvar(aluno);
-        daoAluno.encerrar();
-        
-        Recarga recarga = new Recarga();
-        RecargaDAO daoRecarga = new RecargaDAO();
-        
-        Date dataCredito = new Date(2016,04,17);
-        recarga.setDataCredito(dataCredito);
-        recarga.setUtilizado(false);
-        recarga.setValorRecarregado(100);
-        recarga.setCartao(aluno.getCartao());
-        daoRecarga.salvar(recarga);
-        daoRecarga.encerrar();
-        
-        // Adiciona a recarga ao cartao do aluno
-        daoAluno = new AlunoDAO();
-        aluno.getCartao().setRecarga(recarga);        
-        daoAluno.salvar(aluno);
-        daoAluno.encerrar();
-                
-        // Salva quatro valores para teste
-        ValorAlmoco valor = new ValorAlmoco();
-        ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
-                
-        valor.setDataValor(new Date(2016,04,14));
-        valor.setValorAlmoco(1);
-        daoValor.salvar(valor);
-        daoValor.encerrar();
-        
-        daoValor = new ValorAlmocoDAO();
-        valor = new ValorAlmoco();
-        valor.setDataValor(new Date(2016,04,15));
-        valor.setValorAlmoco(1.2);
-        daoValor.salvar(valor);
-        daoValor.encerrar();
-        
-        daoValor = new ValorAlmocoDAO();
-        valor = new ValorAlmoco();
-        valor.setDataValor(new Date(2016,04,16));
-        valor.setValorAlmoco(1.3);
-        daoValor.salvar(valor);
-        daoValor.encerrar();
-        
-        daoValor = new ValorAlmocoDAO();
-        valor = new ValorAlmoco();
-        valor.setDataValor(new Date(2016,04,18));
-        valor.setValorAlmoco(1.4);
-        daoValor.salvar(valor);
-        daoValor.encerrar();                        
-        
-        /* *******************************
-        *       Cadastros - Fim
-        *  ******************************* */                 
+        // Operador de caixa
+        OperadorCaixaBean operadorCaixaBean = new OperadorCaixaBean();
+        operadorCaixaBean.carregar("oper1");
+        operadorCaixaBean.encerrar();
        
-        // O aluno deveria ser carregado apos a abertura do caixa
-        // mas uma excecao nested transactio eh lancada, pois
-        // teriamo duas sessoes abertas ao mesmo tempo
-        // Eh preciso ver com o professor como resolver isso
-        AlunoBean alunoBean = new AlunoBean();        
-        alunoBean.carregar("123456");          
-        alunoBean.encerrar();
-        
         // abre o caixa
-        CaixaRUBean caixaBean = new CaixaRUBean();       
+        /*
+        CaixaRUBean caixaRUBean = new CaixaRUBean();               
+        caixaRUBean.getCaixaRU().setDataAbertura(Calendar.getInstance().getTime());
+        caixaRUBean.getCaixaRU().setOperadorCaixa(operadorCaixaBean.getOperadorCaixa());
+        caixaRUBean.getCaixaRU().setValorAbertura(0);
+        caixaRUBean.salvar();
+        caixaRUBean.encerrar();
+        */
         
-        caixaBean.getCaixaRU().setDataAbertura(new Date());
-        caixaBean.getCaixaRU().setOperadorCaixa(oper);
-        caixaBean.getCaixaRU().setValorAbertura(0);
+        // Valor atual do almoco
+        ValorAlmocoBean valorAtualAlmocoBean = new ValorAlmocoBean();
+        valorAtualAlmocoBean.carregarValorAtualAlmoco();
+        valorAtualAlmocoBean.encerrar();
         
         // Simula uma venda
         
         /* *******************************
         *       1 - Consulta aluno
-        *  ******************************* */ 
-        // carrega aluno        
-        //AlunoBean alunoBean = new AlunoBean();        
-        //alunoBean.carregar("123456");
-        //alunoBean.encerrar();
+        *  ******************************* */                 
+        AlunoBean alunoBean = new AlunoBean();                
+        alunoBean.carregar("123456");
+        alunoBean.encerrar();
         
-        // Neste ponto, aguarda-se pela confirmacao do operador
-        // de caixa
-        caixaBean.realizarVendaAlmoco(alunoBean.getAluno());
+        // Solicita o valor do almoco para o aluno
+        ValorAlmocoBean valorAlmocoAlunoBean = new ValorAlmocoBean();
+        valorAlmocoAlunoBean.getValorAlmocoPorData(valorAtualAlmocoBean, alunoBean.getAluno().getCartao().getDataCredito());
+        valorAlmocoAlunoBean.encerrar();
         
-        // Encerramento do caixa
-        CaixaRUDAO daoCaixa = new CaixaRUDAO();
-        daoCaixa.salvar(caixaBean.getCaixaRU());
-        daoCaixa.encerrar();
+         // O frente de caixa apresenta a foto, o nome completo do usuario, o saldo
+         // e o valor do almoco para o operador, e solicita a confirmacao
 
+         /************************************/
+         /*       PARA TESTE APENAS          */
+         /************************************/
+         CaixaRUBean caixaRUBean = new CaixaRUBean();
+         caixaRUBean.carregar(1);
+         caixaRUBean.encerrar();
+         /************************************/         
+         
+        // Se confirmado, inicia a venda do almoco 
+        VendaAlmocoBean vendaAlmocoBean = new VendaAlmocoBean();
+        // seta o objeto VendaAlmoco do bean
+        vendaAlmocoBean.getVendaAlmoco().setCaixaRU(caixaRUBean.getCaixaRU());
+        vendaAlmocoBean.getVendaAlmoco().setCartao(alunoBean.getAluno().getCartao());
+        vendaAlmocoBean.getVendaAlmoco().setValorAlmoco(valorAlmocoAlunoBean.getValorAlmoco());        
+        vendaAlmocoBean.getVendaAlmoco().setFormaPagamento("Cartão");
+        System.out.println("Valor atual do almoco: " + valorAtualAlmocoBean.getValorAlmoco().getValorAlmoco());
+        System.out.println("Valor do almoco pago pelo aluno: " + valorAlmocoAlunoBean.getValorAlmoco().getValorAlmoco());
+        vendaAlmocoBean.salvar(vendaAlmocoBean.getVendaAlmoco());
+        vendaAlmocoBean.encerrar();
+        
+        // Encerramento do caixa        
+        /*
+        caixaRUBean.getCaixaRU().setDataFechamento(Calendar.getInstance().getTime());
+        //caixaRUBean.realizarFechamentoCaixa();
+        caixaRUBean.getCaixaRU().setValorFechamento(15);
+        caixaRUBean.salvar();
+        caixaRUBean.encerrar();
+        */
         /*
         daoAluno = new AlunoDAO();
         aluno.getCartao().descontar(valorAtualAlmoco.getValorAlmoco());

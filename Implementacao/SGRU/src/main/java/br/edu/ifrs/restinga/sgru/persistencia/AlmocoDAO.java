@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
-import java.util.Date;
+import java.util.Calendar;
 import org.hibernate.Session;
 
 /**
@@ -26,7 +26,7 @@ public class AlmocoDAO {
      * @param dataCredito Data de crédito dos créditos do cartão
      * @return um objeto ValorAlmoco
      */
-    public ValorAlmoco carregar(Date dataCredito) {
+    public ValorAlmoco carregar(Calendar dataCredito) {
         return (ValorAlmoco) sessao.load(ValorAlmoco.class, dataCredito);
     }    
         
