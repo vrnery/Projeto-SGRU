@@ -25,7 +25,7 @@ import java.util.Scanner;
 /**
  *
  * @author cstads
- */
+ 
 public class NewClass2 {
 
     public static void main(String[] args) {
@@ -152,6 +152,7 @@ public class NewClass2 {
 
         System.out.println("Operador: " + op.getId() + " " + op.getNome());
         System.out.println(new Date());
-        */
+        
     }
 }
+*/

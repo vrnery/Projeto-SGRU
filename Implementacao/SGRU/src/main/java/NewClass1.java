@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author cstads
- */
+ 
 public class NewClass1 {
     public static void main(String[] args) {
         OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
@@ -72,7 +72,8 @@ public class NewClass1 {
         tic.setDataUtilizado(new Date());
         daoTic.salvar(tic);
         daoTic.encerrar();
-        */
+        
         System.out.println("Data: " + tic.getDataCriado() + " Utilizado: " + tic.getDataUtilizado());
     }
 }
+*/
