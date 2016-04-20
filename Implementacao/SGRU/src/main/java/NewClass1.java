@@ -26,21 +26,18 @@ import java.util.logging.Logger;
 public class NewClass1 {
     public static void main(String[] args) {
         OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
-        OperadorCaixa oper = daoOper.carregar("oper12");
-        daoOper.encerrar();
+        OperadorCaixa oper = daoOper.carregar("oper12");        
         
         ValorAlmoco valorAtual;
         ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
-        valorAtual = daoValor.carregarValorAtualAlmoco();
-        daoValor.encerrar();
+        valorAtual = daoValor.carregarValorAtualAlmoco();        
         
         Ticket tic = new Ticket();
         TicketDAO daoTic = new TicketDAO();
         Calendar data = new GregorianCalendar();
         tic.setDataCriado(data);
         tic.setValor(valorAtual.getValorAlmoco());
-        daoTic.salvar(tic);
-        daoTic.encerrar();
+        daoTic.salvar(tic);        
         
         try {
             Thread.sleep(3000);

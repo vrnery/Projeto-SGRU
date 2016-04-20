@@ -35,23 +35,20 @@ public class NewClass2 {
         op.setSenha("oper");
 
         OperadorCaixaDAO daoOp = new OperadorCaixaDAO();
-        op = daoOp.autenticar(op.getLogin(), op.getSenha());
-        daoOp.encerrar();
+        op = daoOp.autenticar(op.getLogin(), op.getSenha());        
 
         System.out.println("Operador: " + op.getNome() + " Código: " + op.getId());
 
         //Faz a busca do caixa ja aberto (exemplo de retorno do horario de almoço do OperadorCaixa)
         CaixaRUDAO daoCaixa = new CaixaRUDAO();
         Calendar data = new GregorianCalendar();
-        CaixaRU caixa = daoCaixa.reabrirCaixa(op.getId(), data);
-        daoCaixa.encerrar();
+        CaixaRU caixa = daoCaixa.reabrirCaixa(op.getId(), data);        
 
         System.out.println("Caixa: " + caixa.getId() + " Data Abertura: " + caixa.getDataAbertura() + " Operador: " + caixa.getOperadorCaixa().getId());
 
         //Faz a busca do valor do almoço
         ValorAlmocoDAO daoValor = new ValorAlmocoDAO();
-        ValorAlmoco valor = daoValor.carregarValorAtualAlmoco();
-        daoValor.encerrar();
+        ValorAlmoco valor = daoValor.carregarValorAtualAlmoco();        
 
         System.out.println("Data: " + valor.getDataValor() + " Valor do Almoço:" + valor.getValorAlmoco());
 
@@ -74,13 +71,11 @@ public class NewClass2 {
             if (forma == 1) {
                 //pesquisa o aluno pela matricula
                 daoAluno = new AlunoDAO();
-                aluno = daoAluno.carregar(String.valueOf(codigo));
-                daoAluno.encerrar();
+                aluno = daoAluno.carregar(String.valueOf(codigo));                
 
                 //verifica o valor correto de acordo com a data da recarga
                 daoValor = new ValorAlmocoDAO();
-                valor = daoValor.almocoCartao(aluno.getCartao().getDataCredito());
-                daoValor.encerrar();
+                valor = daoValor.almocoCartao(aluno.getCartao().getDataCredito());                
 
                 //verifica se tem saldo no cartão
                 if (valor.getValorAlmoco() < aluno.getCartao().getSaldo()) {
@@ -89,14 +84,12 @@ public class NewClass2 {
                     //debita do saldo o valor correto do almoço
                     daoAluno = new AlunoDAO();
                     aluno.getCartao().setDebitar(valor.getValorAlmoco());
-                    daoAluno.salvar(aluno);
-                    daoAluno.encerrar();
+                    daoAluno.salvar(aluno);                    
                 }
             } else {
                 //perquisa o ticket pelo codigo
                 daoTicket = new TicketDAO();
-                ticket = daoTicket.usarTicket(codigo);
-                daoTicket.encerrar();
+                ticket = daoTicket.usarTicket(codigo);                
 
                 //verifica se retornou um ticket valido
                 if (ticket != null) {
@@ -106,8 +99,7 @@ public class NewClass2 {
                     daoTicket = new TicketDAO();
                     data = new GregorianCalendar();
                     ticket.setDataUtilizado(data);
-                    daoTicket.salvar(ticket);
-                    daoTicket.encerrar();
+                    daoTicket.salvar(ticket);                    
                 }
             }
         } while (txtForma.equals("")); //verifica se tem alguma forma de pagamento

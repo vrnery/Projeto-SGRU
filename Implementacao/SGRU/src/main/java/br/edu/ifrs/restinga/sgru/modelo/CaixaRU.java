@@ -35,20 +35,23 @@ public class CaixaRU implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar dataFechamento;
     private double valorFechamento;    
-    @OneToMany(mappedBy = "caixaRU")    
+    //@OneToMany(mappedBy = "caixaRU")    
+    @Transient
     private List<VendaAlmoco> vendaAlmoco = new ArrayList();
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
     private OperadorCaixa operadorCaixa;       
     // Atributo nao persistido no banco
     @Transient
-    private final ValorAlmoco valorAtualAlmoco;
+    private ValorAlmoco valorAtualAlmoco;    
 
+    /*
     public CaixaRU() {
-        // Carrega o valor de almoco atual
+        // Carrega o valor de almoco atual        
         ValorAlmocoDAO dao = new ValorAlmocoDAO();
         valorAtualAlmoco = dao.carregarValorAtualAlmoco();
     }
+    */
     
     /**
      * @return the id
@@ -153,5 +156,11 @@ public class CaixaRU implements Serializable {
      */
     public ValorAlmoco getValorAtualAlmoco() {
         return valorAtualAlmoco;
+    }
+    
+    public void carregarValorAtualAlmoco() {
+        // Carrega o valor de almoco atual        
+        ValorAlmocoDAO dao = new ValorAlmocoDAO();
+        valorAtualAlmoco = dao.carregarValorAtualAlmoco();
     }
 }

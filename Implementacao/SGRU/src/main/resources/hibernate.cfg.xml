@@ -19,6 +19,6 @@
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Recarga"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Ticket"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco"/>
-    <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco"/>
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco"/>    
   </session-factory>
 </hibernate-configuration>
