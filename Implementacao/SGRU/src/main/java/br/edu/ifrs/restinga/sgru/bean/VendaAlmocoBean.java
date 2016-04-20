@@ -7,7 +7,6 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
-import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -39,7 +38,7 @@ public class VendaAlmocoBean {
      */
     public void salvar(VendaAlmoco vendaAlmoco) {
         dao.salvar(vendaAlmoco);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
     }
     
     /**
@@ -50,10 +49,5 @@ public class VendaAlmocoBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }        
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
-    }        
+    }            
 }

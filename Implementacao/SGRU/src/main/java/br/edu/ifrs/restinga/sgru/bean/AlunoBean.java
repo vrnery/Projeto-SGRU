@@ -6,7 +6,6 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
-import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
@@ -38,7 +37,7 @@ public class AlunoBean {
      */
     public void salvar() {
         dao.salvar(aluno);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Aluno cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Aluno cadastrado com sucesso!");
     }    
     
     /**
@@ -57,10 +56,5 @@ public class AlunoBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }        
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
-    }    
+    }            
 }

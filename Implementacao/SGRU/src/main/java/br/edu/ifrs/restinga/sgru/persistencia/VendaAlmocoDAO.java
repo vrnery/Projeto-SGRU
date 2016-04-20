@@ -20,8 +20,7 @@ public class VendaAlmocoDAO {
     private final Session sessao;
 
     public VendaAlmocoDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
 
     /**
@@ -39,13 +38,4 @@ public class VendaAlmocoDAO {
                 .add(Restrictions.eq("id", caixaRU.getId()))
                 .add(Restrictions.eq("dataAbertura", caixaRU.getDataAbertura())).uniqueResult();
     }
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */        
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }            
-    
 }

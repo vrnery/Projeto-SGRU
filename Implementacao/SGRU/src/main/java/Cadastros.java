@@ -5,11 +5,13 @@ import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import org.hibernate.Session;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -26,6 +28,8 @@ public class Cadastros {
         /* *******************************
         *       Cadastros - Inicio
         *  ******************************* */ 
+        Session sessao  = HibernateUtil.getSessionFactory().getCurrentSession();
+        sessao.beginTransaction();
         Calendar data = new GregorianCalendar();
         
         OperadorCaixa oper = new OperadorCaixa();
@@ -35,8 +39,7 @@ public class Cadastros {
         oper.setTelefone("55555555");
         oper.setLogin("oper1");
         oper.setSenha("oper");
-        daoOper.salvar(oper);
-        daoOper.encerrar();
+        daoOper.salvar(oper);        
                 
         Aluno aluno = new Aluno();
         AlunoDAO daoAluno = new AlunoDAO();
@@ -51,8 +54,7 @@ public class Cadastros {
         aluno.setCartao(new Cartao());        
         aluno.getCartao().setDataCredito(Calendar.getInstance());
         aluno.getCartao().setSaldo(0);        
-        daoAluno.salvar(aluno);
-        daoAluno.encerrar();
+        daoAluno.salvar(aluno);        
         
         Recarga recarga = new Recarga();
         RecargaDAO daoRecarga = new RecargaDAO();
@@ -62,14 +64,12 @@ public class Cadastros {
         recarga.setUtilizado(false);
         recarga.setValorRecarregado(100);
         recarga.setCartao(aluno.getCartao());
-        daoRecarga.salvar(recarga);
-        daoRecarga.encerrar();
+        daoRecarga.salvar(recarga);        
         
         // Adiciona a recarga ao cartao do aluno
         daoAluno = new AlunoDAO();
         aluno.getCartao().setRecarga(recarga);        
-        daoAluno.salvar(aluno);
-        daoAluno.encerrar();
+        daoAluno.salvar(aluno);        
                 
         // Salva quatro valores para teste
         ValorAlmoco valor = new ValorAlmoco();
@@ -78,32 +78,29 @@ public class Cadastros {
         data.set(2016,04,14);
         valor.setDataValor(data);
         valor.setValorAlmoco(1);
-        daoValor.salvar(valor);
-        daoValor.encerrar();
+        daoValor.salvar(valor);        
         
         daoValor = new ValorAlmocoDAO();
         valor = new ValorAlmoco();
         data.set(2016,04,15);
         valor.setDataValor(data);
         valor.setValorAlmoco(1.2);
-        daoValor.salvar(valor);
-        daoValor.encerrar();
+        daoValor.salvar(valor);        
         
         daoValor = new ValorAlmocoDAO();
         valor = new ValorAlmoco();
         data.set(2016,04,16);
         valor.setDataValor(data);
         valor.setValorAlmoco(1.3);
-        daoValor.salvar(valor);
-        daoValor.encerrar();
+        daoValor.salvar(valor);        
         
         daoValor = new ValorAlmocoDAO();
         valor = new ValorAlmoco();
         data.set(2016,04,18);
         valor.setDataValor(data);
         valor.setValorAlmoco(1.4);
-        daoValor.salvar(valor);
-        daoValor.encerrar();                        
+        daoValor.salvar(valor);   
+        sessao.getTransaction().commit();
         
         /* *******************************
         *       Cadastros - Fim

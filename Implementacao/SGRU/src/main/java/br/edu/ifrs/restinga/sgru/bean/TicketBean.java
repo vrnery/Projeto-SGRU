@@ -9,7 +9,6 @@ import br.edu.ifrs.restinga.sgru.modelo.Ticket;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
-import javax.annotation.PreDestroy;
 
 /**
  *
@@ -38,7 +37,7 @@ public class TicketBean {
      */
     public void salvar() {
         dao.salvar(ticket);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Ticket cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Ticket cadastrado com sucesso!");
     }
     
     /**
@@ -58,9 +57,4 @@ public class TicketBean {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
     }    
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
-    }        
 }

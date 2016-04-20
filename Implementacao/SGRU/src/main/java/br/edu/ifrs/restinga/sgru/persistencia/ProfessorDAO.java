@@ -16,8 +16,7 @@ public class ProfessorDAO {
     private final Session sessao;
 
     public ProfessorDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -35,13 +34,5 @@ public class ProfessorDAO {
      */
     public void salvar(Professor professor) {
         sessao.saveOrUpdate(professor);        
-    }      
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */    
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }
+    }          
 }

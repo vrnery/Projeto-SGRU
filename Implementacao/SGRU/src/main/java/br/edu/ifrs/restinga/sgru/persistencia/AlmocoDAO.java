@@ -17,8 +17,7 @@ public class AlmocoDAO {
     private final Session sessao;
 
     public AlmocoDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }        
     
     /**     
@@ -28,13 +27,5 @@ public class AlmocoDAO {
      */
     public ValorAlmoco carregar(Calendar dataCredito) {
         return (ValorAlmoco) sessao.load(ValorAlmoco.class, dataCredito);
-    }    
-        
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }                
+    }           
 }

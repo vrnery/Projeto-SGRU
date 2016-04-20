@@ -4,6 +4,14 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <filter>
+        <filter-name>FiltroTransacoesHibernate</filter-name>
+        <filter-class>FiltroTransacoesHibernate</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FiltroTransacoesHibernate</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

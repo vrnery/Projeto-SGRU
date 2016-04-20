@@ -16,8 +16,7 @@ public class AlunoDAO {
     private final Session sessao;
 
     public AlunoDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -35,13 +34,5 @@ public class AlunoDAO {
      */
     public void salvar(Aluno aluno) {
         sessao.saveOrUpdate(aluno);        
-    }      
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */    
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }        
+    }          
 }

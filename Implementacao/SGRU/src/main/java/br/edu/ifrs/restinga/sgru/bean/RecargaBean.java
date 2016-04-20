@@ -7,7 +7,6 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
-import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -38,7 +37,7 @@ public class RecargaBean {
      */
     public void salvar() {
         dao.salvar(recarga);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
     }
     
     /**
@@ -57,10 +56,5 @@ public class RecargaBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }        
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
     }        
 }

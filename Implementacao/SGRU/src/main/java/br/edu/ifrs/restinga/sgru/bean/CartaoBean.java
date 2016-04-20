@@ -9,7 +9,6 @@ import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CartaoDAO;
-import javax.annotation.PreDestroy;
 
 /**
  *
@@ -38,7 +37,7 @@ public class CartaoBean {
      */
     public void salvar() {
         dao.salvar(cartao);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Cartão cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Cartão cadastrado com sucesso!");
     }
     
     /**
@@ -58,10 +57,5 @@ public class CartaoBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }        
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
     }        
 }

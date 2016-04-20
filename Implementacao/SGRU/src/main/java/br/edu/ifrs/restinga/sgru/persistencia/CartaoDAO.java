@@ -16,8 +16,7 @@ public class CartaoDAO {
     private final Session sessao;
 
     public CartaoDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }        
     
     /**
@@ -36,12 +35,4 @@ public class CartaoDAO {
     public Cartao carregar(int id) {
         return (Cartao) sessao.load(Cartao.class, id);
     }    
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */        
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }            
 }

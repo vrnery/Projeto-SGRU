@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -38,7 +40,16 @@ public class CaixaRU implements Serializable {
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
     private OperadorCaixa operadorCaixa;       
+    // Atributo nao persistido no banco
+    @Transient
+    private final ValorAlmoco valorAtualAlmoco;
 
+    public CaixaRU() {
+        // Carrega o valor de almoco atual
+        ValorAlmocoDAO dao = new ValorAlmocoDAO();
+        valorAtualAlmoco = dao.carregarValorAtualAlmoco();
+    }
+    
     /**
      * @return the id
      */
@@ -135,5 +146,12 @@ public class CaixaRU implements Serializable {
      */
     public void setOperadorCaixa(OperadorCaixa operadorCaixa) {
         this.operadorCaixa = operadorCaixa;
+    }
+
+    /**
+     * @return the valorAtualAlmoco
+     */
+    public ValorAlmoco getValorAtualAlmoco() {
+        return valorAtualAlmoco;
     }
 }

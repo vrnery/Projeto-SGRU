@@ -16,8 +16,7 @@ public class RecargaDAO {
     private final Session sessao;
 
     public RecargaDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -36,12 +35,4 @@ public class RecargaDAO {
     public void salvar(Recarga recarga) {
         sessao.saveOrUpdate(recarga);        
     }          
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */        
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }                
 }

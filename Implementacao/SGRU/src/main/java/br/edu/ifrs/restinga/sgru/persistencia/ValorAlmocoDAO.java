@@ -18,8 +18,7 @@ public class ValorAlmocoDAO {
 
     
     public ValorAlmocoDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
 
     /**
@@ -59,13 +58,5 @@ public class ValorAlmocoDAO {
      */
     public ValorAlmoco getValorAlmocoPorData(Calendar dataCredito) {
         return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor <= :dataCredito ORDER BY dataValor DESC").setDate("dataCredito", dataCredito.getTime()).setMaxResults(1).uniqueResult();
-    }
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */        
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }
+    }    
 }

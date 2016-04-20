@@ -18,8 +18,7 @@ public class CaixaRUDAO {
     private final Session sessao;
 
     public CaixaRUDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -58,12 +57,4 @@ public class CaixaRUDAO {
         sessao.saveOrUpdate(vendaAlmoco);
     }
     */
-
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */    
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }            
 }

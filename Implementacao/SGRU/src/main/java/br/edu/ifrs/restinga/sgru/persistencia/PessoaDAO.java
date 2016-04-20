@@ -17,7 +17,6 @@ public class PessoaDAO {
 
     public PessoaDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
     }
     
     /**
@@ -36,12 +35,4 @@ public class PessoaDAO {
     public void salvar(Pessoa pessoa) {
         sessao.saveOrUpdate(pessoa);        
     }      
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */    
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }
 }

@@ -16,8 +16,7 @@ public class TicketDAO {
     private final Session sessao;
 
     public TicketDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -43,12 +42,4 @@ public class TicketDAO {
     public Ticket usarTicket(int codigo) {
         return (Ticket) sessao.createQuery("FROM Ticket WHERE id=:id AND dataUtilizado = NULL").setInteger("id", codigo).uniqueResult();
     }
-
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */        
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }            
 }

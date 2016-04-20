@@ -7,7 +7,6 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
 import br.edu.ifrs.restinga.sgru.persistencia.ProfessorDAO;
-import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -38,7 +37,7 @@ public class ProfessorBean {
      */
     public void salvar() {
         dao.salvar(professor);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Professor cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Professor cadastrado com sucesso!");
     }    
     
     /**
@@ -59,9 +58,4 @@ public class ProfessorBean {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
     }        
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
-    }
 }

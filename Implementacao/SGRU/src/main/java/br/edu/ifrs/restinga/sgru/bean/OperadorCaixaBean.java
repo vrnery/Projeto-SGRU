@@ -9,7 +9,6 @@ import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
-import javax.annotation.PreDestroy;
 
 /**
  *
@@ -38,7 +37,7 @@ public class OperadorCaixaBean {
      */
     public void salvar() {
         dao.salvar(operadorCaixa);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Operador de caixa cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Operador de caixa cadastrado com sucesso!");
     }
     
     /**
@@ -59,9 +58,4 @@ public class OperadorCaixaBean {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
     }    
-    
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
-    }        
 }

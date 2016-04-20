@@ -16,8 +16,7 @@ public class OperadorCaixaDAO {
     private final Session sessao;
 
     public OperadorCaixaDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.beginTransaction();
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -46,12 +45,4 @@ public class OperadorCaixaDAO {
     public void salvar(OperadorCaixa operadorCaixa) {
         sessao.saveOrUpdate(operadorCaixa);        
     }      
-    
-    /**
-     * Encerra uma transação com o banco de dados. 
-     * Esse método é chamado automaticamente.
-     */        
-    public void encerrar() {
-        sessao.getTransaction().commit();
-    }                
 }

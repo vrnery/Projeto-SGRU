@@ -5,8 +5,9 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
-import javax.annotation.PreDestroy;
+import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
@@ -38,7 +39,7 @@ public class CaixaRUBean {
      */
     public void salvar() {
         dao.salvar(caixaRU);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
+        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
     }
     
     /**
@@ -48,6 +49,24 @@ public class CaixaRUBean {
     public void carregar(int id) {
         caixaRU = dao.carregar(id);
     }        
+    
+    /**
+     * Realiza uma venda de almoco com cartao para o aluno
+     * @param aluno O aluno que está realizando a compra
+     */
+    public void realizarVendaAlmocoCartao(Aluno aluno) {        
+        // Cria o objeto VendaAlmoco
+        VendaAlmoco vendaAlmoco = new VendaAlmoco();
+        vendaAlmoco.setCaixaRU(caixaRU);
+        vendaAlmoco.setCartao(aluno.getCartao());
+        // Seta o valor atual do almoco por default
+        // No metodo set da classe ValorAlmoco verifica se o 
+        // valor deve ser atualizado
+        vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());
+        
+        System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco());
+        System.out.println("Valor do almoco pago pelo aluno: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
+    }
     
     /**
      * Realiza o fechamento de caixa. Esse método já persiste os 
@@ -64,10 +83,5 @@ public class CaixaRUBean {
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        
         context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }
-        
-    @PreDestroy
-    public void encerrar() {
-        dao.encerrar();
-    }               
+    }        
 }
