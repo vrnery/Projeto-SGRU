@@ -8,6 +8,7 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
+import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
@@ -51,10 +52,19 @@ public class CaixaRUBean {
     }        
     
     /**
-     * Realiza uma venda de almoco com cartao para o aluno
-     * @param aluno O aluno que está realizando a compra
+     * Realiza uma venda de almoco com cartao para o cliente
+     * @param matricula A matricula do cliente que está realizando a compra
+     * @throws NullPointerException Se não encontrar matrícula cadastrada
      */
-    public void realizarVendaAlmocoCartao(Aluno aluno) {        
+    public void realizarVendaAlmocoCartao(String matricula) throws NullPointerException {
+        AlunoDAO alunoDAO = new AlunoDAO();
+        Aluno aluno = alunoDAO.carregar(matricula);        
+        
+        if (aluno == null) {
+            // Criar classe excessao CartaoNaoEncontradoException?
+            throw new NullPointerException("Matrícula não encontrada");
+        }
+        
         // Cria o objeto VendaAlmoco
         VendaAlmoco vendaAlmoco = new VendaAlmoco();
         vendaAlmoco.setCaixaRU(caixaRU);
@@ -62,10 +72,23 @@ public class CaixaRUBean {
         // Seta o valor atual do almoco por default
         // No metodo set da classe ValorAlmoco verifica se o 
         // valor deve ser atualizado
-        vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());
+        vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
+        caixaRU.setVendaAlmoco(vendaAlmoco);
         
-        System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco());
+        System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
         System.out.println("Valor do almoco pago pelo aluno: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
+    }
+    
+    // Apos execucao, o metodo realizarVendaAlmocoCartao deve retornar para o operador
+    // de caixa a foto, o nome completo, o saldo e o valor do almoco a pagar pelo
+    // aluno. O operador, entao, confirma ou nao a venda. Caso confirme, da-se um 
+    // commit na transaco, caso nao confirme, da-se um rollback na transacao
+    public void finalizarAlmoco(boolean confirmar) {
+        if (confirmar) {
+            // commit na transacao
+        } else {
+            // rollback na trasacao
+        }
     }
     
     /**
@@ -73,6 +96,7 @@ public class CaixaRUBean {
      * dados do fechamento na base de dados
      */
     public void realizarFechamentoCaixa() {
+        // calcula a soma de todos os almocos vendidos no dia
     }
     
     /**

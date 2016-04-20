@@ -23,8 +23,7 @@ import javax.persistence.OneToOne;
 public class VendaAlmoco implements Serializable {
     @Id
     @GeneratedValue
-    private int id;
-    private String formaPagamento;
+    private int id;    
     @OneToOne
     @JoinColumn(name = "idValorAlmoco")
     private ValorAlmoco valorAlmoco;
@@ -53,20 +52,6 @@ public class VendaAlmoco implements Serializable {
     }
 
     /**
-     * @return the formaPagamento
-     */
-    public String getFormaPagamento() {
-        return formaPagamento;
-    }
-
-    /**
-     * @param formaPagamento the formaPagamento to set
-     */
-    public void setFormaPagamento(String formaPagamento) {
-        this.formaPagamento = formaPagamento;
-    }
-
-    /**
      * @return the valorAlmoco
      */
     public ValorAlmoco getValorAlmoco() {
@@ -81,7 +66,7 @@ public class VendaAlmoco implements Serializable {
         this.valorAlmoco = valorAlmoco;
         
         // verifica a necessidade de atualizar o valor do almoco
-        if (this.getCartao() == null) {
+        if (this.getCartao() != null) {
             long miliSecondsCartao = this.getCartao().getDataCredito().getTimeInMillis();            
             // Se a data do cretito no cartao for menor que a data do valor
             // do almoco atual, verifica se eh necessario atualizar valor

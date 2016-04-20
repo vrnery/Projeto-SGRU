@@ -35,7 +35,8 @@ public class CaixaRUDAO {
      * @return Um objeto CaixaRU
      */
     public CaixaRU carregar(int id) {
-        return (CaixaRU) sessao.load(CaixaRU.class, id);
+        //return (CaixaRU) sessao.load(CaixaRU.class, id);        
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE id=:id").setString("id", Integer.toString(id)).uniqueResult();
     }    
 
     /**
