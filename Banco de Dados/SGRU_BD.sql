@@ -180,7 +180,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `data` DATETIME NOT NULL,
+  `dataVenda` DATETIME NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
   `idValorAlmoco` INT(10) UNSIGNED NOT NULL,
   `idCartao` INT(10) UNSIGNED NULL DEFAULT NULL,
