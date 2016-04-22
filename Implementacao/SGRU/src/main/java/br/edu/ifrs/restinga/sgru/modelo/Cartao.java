@@ -32,7 +32,7 @@ public class Cartao implements Serializable {
     private Calendar dataCredito;
     private double saldo;    
     @OneToMany(mappedBy = "cartao", cascade = {CascadeType.ALL})
-    private List<Recarga> recarga = new ArrayList();
+    private List<Recarga> lstRecarga = new ArrayList();
 
     /**
      * @return the id
@@ -85,10 +85,10 @@ public class Cartao implements Serializable {
     }
     
     /**
-     * @return the recarga
+     * @return the lstRecarga
      */
-    public List<Recarga> getRecarga() {
-        return recarga;
+    public List<Recarga> getLstRecarga() {
+        return lstRecarga;
     }
     
     /**
@@ -100,19 +100,19 @@ public class Cartao implements Serializable {
     }
     
     /**
-     * Carrega a recarga mais antiga para o cartao. Se houver mais de uma recarga
-     * realizada na mesma data, soma os valores
+     * Carrega a lstRecarga mais antiga para o cartao. Se houver mais de uma lstRecarga
+ realizada na mesma data, soma os valores
      * @throws br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException Se o cartão não possui recargas
      */
     public void transferirRecargaParaCartao() throws RecargaNaoEncontradaException {
         // Nao ha recargas para o cartao
-        if (recarga.isEmpty()) {
+        if (lstRecarga.isEmpty()) {
             throw new RecargaNaoEncontradaException("Nenhuma recarga encontrada para o cartão!");
         }
         
         // Aqui ordenamos o arraylist por data, sendo que a primeira serah
         // a mais antiga
-        Collections.sort(recarga, new Comparator<Recarga>() {
+        Collections.sort(lstRecarga, new Comparator<Recarga>() {
             @Override
             public int compare(Recarga rec1, Recarga rec2) {                
                 if ((rec1.getDataCredito() == null) || rec2.getDataCredito() == null) {
@@ -122,23 +122,23 @@ public class Cartao implements Serializable {
             }
         });
         
-        // Se o cliente fez mais de uma recarga no mesmo dia, entao
+        // Se o cliente fez mais de uma lstRecarga no mesmo dia, entao
         // carrega todas as recargas daquele dia
         double valRecargas = 0;
-        Calendar dataRecarga = recarga.get(0).getDataCredito();
-        // Seta a data do saldo do cartao como a data da recarga
+        Calendar dataRecarga = lstRecarga.get(0).getDataCredito();
+        // Seta a data do saldo do cartao como a data da lstRecarga
         this.setDataCredito(dataRecarga);
-        for (Recarga rec : recarga) {            
+        for (Recarga rec : lstRecarga) {            
             if (rec.getDataCredito().equals(dataRecarga)) {
                 // atualiza valor a ser atualizado no saldo do cartao
                 valRecargas += rec.getValorRecarregado();                
-                // seta o valor da recarga como utilizado
+                // seta o valor da lstRecarga como utilizado
                 rec.setUtilizado(true);
             } else {
                 break;
             }
         }
-        // Transfere o saldo da recarga para o cartao
+        // Transfere o saldo da lstRecarga para o cartao
         this.setSaldo(valRecargas);
     }
 }

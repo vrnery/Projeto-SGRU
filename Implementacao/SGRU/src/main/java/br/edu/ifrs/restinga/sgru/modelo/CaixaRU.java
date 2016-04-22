@@ -7,12 +7,16 @@ package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -34,10 +38,10 @@ public class CaixaRU implements Serializable {
     private double valorFechamento;        
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
-    private OperadorCaixa operadorCaixa;       
-    // Atributos nao persistidos no banco
-    @Transient
-    private VendaAlmoco vendaAlmoco;    
+    private OperadorCaixa operadorCaixa;              
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "caixaRU", cascade = {CascadeType.ALL})
+    private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();    
+    // Atributo nao persistido no banco
     @Transient
     private ValorAlmoco valorAtualAlmoco;    
 
@@ -134,17 +138,17 @@ public class CaixaRU implements Serializable {
     }
     
     /**
-     * @return the vendaAlmoco
+     * @return the lstVendaAlmoco
      */
-    public VendaAlmoco getVendaAlmoco() {
-        return vendaAlmoco;
+    public List<VendaAlmoco> getLstVendaAlmoco() {
+        return lstVendaAlmoco;
     }
 
     /**
-     * @param vendaAlmoco the vendaAlmoco to set
+     * @param vendaAlmoco the lstVendaAlmoco to set
      */
     public void setVendaAlmoco(VendaAlmoco vendaAlmoco) {
-        this.vendaAlmoco = vendaAlmoco;
+        this.lstVendaAlmoco.add(vendaAlmoco);
     }    
 
     /**

@@ -37,7 +37,7 @@ public class NewClass {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 
         sessao.beginTransaction();
         CaixaRUBean caixaRUBean = new CaixaRUBean();               
-        caixaRUBean.carregar(1);
+        caixaRUBean.carregar(Calendar.getInstance());
         sessao.getTransaction().commit();
         
         // Carrega valor atual do almoco. Esse carregamento deve ficar no

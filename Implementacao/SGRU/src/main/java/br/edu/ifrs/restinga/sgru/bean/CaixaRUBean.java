@@ -11,7 +11,6 @@ import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
-import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
@@ -20,6 +19,7 @@ import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
+import java.util.Calendar;
 
 /**
  *
@@ -53,10 +53,10 @@ public class CaixaRUBean {
     
     /**
      * Solicita a pesquisa de um CaixaRU com o id informado à camada de persistência
-     * @param id O id do CaixaRU a ser pesquisado
+     * @param dataAbertura A data de abertura do CaixaRU a ser pesquisado
      */
-    public void carregar(int id) {
-        caixaRU = dao.carregar(id);
+    public void carregar(Calendar dataAbertura) {
+        caixaRU = dao.carregar(dataAbertura);
     }        
     
     /**
@@ -94,6 +94,7 @@ public class CaixaRUBean {
                 // O metodo setValorAlmoco verifica, com base na dataCredito do cartao
                 // o valor a ser pago pelo almoco
                 vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
+                vendaAlmoco.setDataVenda(Calendar.getInstance());
                 caixaRU.setVendaAlmoco(vendaAlmoco);               
 
                 System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
@@ -121,7 +122,7 @@ public class CaixaRUBean {
         if (confirmar) {            
             // commit na transacao
             VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
-            daoVendaAlmoco.salvar(this.getCaixaRU().getVendaAlmoco());
+            daoVendaAlmoco.salvar(this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1));
         } else {
             // rollback na trasacao
             this.getCaixaRU().setVendaAlmoco(null);
@@ -139,7 +140,7 @@ public class CaixaRUBean {
      */
     private boolean autorizaVendaAlmoco(Pessoa pessoa) throws 
             RecargaNaoEncontradaException {
-        boolean autorizado = false;
+        boolean autorizado = true;
         // primeiramente, verifica se eh necessario atualizar o saldo da
         // cartao da pessoa        
         if (pessoa instanceof Aluno) {            
@@ -148,8 +149,9 @@ public class CaixaRUBean {
                 // eh necessario atualizar o saldo
                 aluno.getCartao().transferirRecargaParaCartao();
                 
-                if (aluno.getCartao().getSaldo() > 0) {
-                    autorizado = true;
+                // Caso recarga zerada
+                if (aluno.getCartao().getSaldo() <= 0) {
+                    autorizado = false;
                 }
             }
         } else if (pessoa instanceof Professor) {
@@ -158,8 +160,9 @@ public class CaixaRUBean {
                 // eh necessario atualizar o saldo
                 professor.getCartao().transferirRecargaParaCartao();
                 
-                if (professor.getCartao().getSaldo() > 0) {
-                    autorizado = true;
+                // Caso recarga zerada
+                if (professor.getCartao().getSaldo() <= 0) {
+                    autorizado = false;
                 }
             }
         }

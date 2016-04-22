@@ -24,6 +24,7 @@ public class VendaAlmoco implements Serializable {
     @Id
     @GeneratedValue
     private int id;    
+    private Calendar dataVenda;
     @OneToOne
     @JoinColumn(name = "idValorAlmoco")
     private ValorAlmoco valorAlmoco;
@@ -50,6 +51,20 @@ public class VendaAlmoco implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
+    
+    /**
+     * @return the dataVenda
+     */
+    public Calendar getDataVenda() {
+        return dataVenda;
+    }
+
+    /**
+     * @param dataVenda the dataVenda to set
+     */
+    public void setDataVenda(Calendar dataVenda) {
+        this.dataVenda = dataVenda;
+    }    
 
     /**
      * @return the valorAlmoco

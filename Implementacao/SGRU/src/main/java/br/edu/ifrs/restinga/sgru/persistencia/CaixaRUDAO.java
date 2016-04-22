@@ -6,6 +6,7 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 //import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import org.hibernate.Session;
@@ -31,12 +32,13 @@ public class CaixaRUDAO {
     
     /**
      * Procura um caixa do RU que contenha o id informado
-     * @param id O id do caixa do RU
+     * @param dataAbertura A data de abertura do caixa do RU
      * @return Um objeto CaixaRU
      */
-    public CaixaRU carregar(int id) {
+    public CaixaRU carregar(Calendar dataAbertura) {        
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE id=:id").setString("id", Integer.toString(id)).uniqueResult();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura").setString("dataAbertura", f.format(dataAbertura.getTime())).uniqueResult();
     }    
 
     /**
