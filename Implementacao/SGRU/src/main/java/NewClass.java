@@ -1,12 +1,11 @@
 
 import br.edu.ifrs.restinga.sgru.bean.CaixaRUBean;
 import br.edu.ifrs.restinga.sgru.bean.OperadorCaixaBean;
-import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
+import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
+import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
-import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Scanner;
 import org.hibernate.Session;
 /*
@@ -26,7 +25,12 @@ public class NewClass {
         sessao.beginTransaction();
         // Operador de caixa
         OperadorCaixaBean operadorCaixaBean = new OperadorCaixaBean();
-        operadorCaixaBean.carregar("oper1");        
+        try {
+            operadorCaixaBean.carregar("987654");        
+        } catch (MatriculaInvalidaException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
         sessao.getTransaction().commit();
        
         // Carrega o caixa      
@@ -51,27 +55,25 @@ public class NewClass {
         sessao.beginTransaction();
         try {
             caixaRUBean.realizarVendaAlmocoCartao("123456");
-        } catch (NullPointerException e) {
+        } catch (MatriculaInvalidaException | UsuarioInvalidoException |
+                SaldoInsuficienteException e) {
             System.out.println(e.getMessage());
+            System.exit(0);
         }
+        
         System.out.printf("Confirmar almoco?\n1 - Sim\n2 - Não\nOpção: ");
         Scanner ler = new Scanner(System.in);
         int opcao = ler.nextInt();
-        
-        /*****************************/
-        /* Este codigo deve ficar em */  
-        /* finalizarAlmoco da classe */
-        /* CaixaRUBean               */
-        /*****************************/
-        VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();        
-        List<VendaAlmoco> lstVendaAlmoco = caixaRUBean.getCaixaRU().getVendaAlmoco();        
+                
+        /*****************************************************************/
+        /*  Verificar com professor como realizar commit e rollback aqui */
+        /*****************************************************************/                
         if (opcao == 1) {
-            // salva ultimo almoco vendido
-            daoVendaAlmoco.salvar(lstVendaAlmoco.get(lstVendaAlmoco.size()-1));
+            // descontar valor do saldo do cartao            
+            caixaRUBean.finalizarAlmoco(true);
             sessao.getTransaction().commit();
         } else {
-            // remove almoco da lista de almocos            
-            caixaRUBean.getCaixaRU().getVendaAlmoco().remove(lstVendaAlmoco.size()-1);
+            caixaRUBean.finalizarAlmoco(false);
             sessao.getTransaction().rollback();
         }
         
@@ -82,6 +84,7 @@ public class NewClass {
         //caixaRUBean.realizarFechamentoCaixa();
         caixaRUBean.getCaixaRU().setValorFechamento(15);
         caixaRUBean.salvar();        
+        sessao.getTransaction().commit();        
         /*
         daoAluno = new AlunoDAO();
         aluno.getCartao().descontar(valorAtualAlmoco.getValorAlmoco());
@@ -89,7 +92,6 @@ public class NewClass {
         daoAluno.encerrar();
         
         System.out.println("Data: " + aluno.getCartao().getDataCredito() + " Saldo: " + aluno.getCartao().getSaldo());
-        */       
-        sessao.getTransaction().commit();        
+        */               
     }
 }

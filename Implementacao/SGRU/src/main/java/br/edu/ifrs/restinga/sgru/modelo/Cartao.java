@@ -5,10 +5,14 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,7 +31,7 @@ public class Cartao implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar dataCredito;
     private double saldo;    
-    @OneToMany(mappedBy = "cartao")
+    @OneToMany(mappedBy = "cartao", cascade = {CascadeType.ALL})
     private List<Recarga> recarga = new ArrayList();
 
     /**
@@ -86,23 +90,6 @@ public class Cartao implements Serializable {
     public List<Recarga> getRecarga() {
         return recarga;
     }
-
-    /**
-     * @param recarga the recarga to set
-     */
-    public void setRecarga(Recarga recarga) {
-        // verifica se o saldo do cartao estah vazio
-        // caso afirmativo, atualiza o saldo do cartao
-        if (this.saldo <= 0) {
-            // tranfere o valor da recarga para o cartao
-            this.setSaldo(recarga.getValorRecarregado());
-            // data do credito eh a mesma data da recarga
-            this.setDataCredito(recarga.getDataCredito());
-            // seta o valor da recarga como utilizado
-            recarga.setUtilizado(true);
-        }
-        this.recarga.add(recarga);               
-    }
     
     /**
      * Descontar o valor do almoco
@@ -110,5 +97,48 @@ public class Cartao implements Serializable {
      */
     public void setDebitar(double valor) {
         this.saldo -= valor;
+    }
+    
+    /**
+     * Carrega a recarga mais antiga para o cartao. Se houver mais de uma recarga
+     * realizada na mesma data, soma os valores
+     * @throws br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException Se o cartão não possui recargas
+     */
+    public void transferirRecargaParaCartao() throws RecargaNaoEncontradaException {
+        // Nao ha recargas para o cartao
+        if (recarga.isEmpty()) {
+            throw new RecargaNaoEncontradaException("Nenhuma recarga encontrada para o cartão!");
+        }
+        
+        // Aqui ordenamos o arraylist por data, sendo que a primeira serah
+        // a mais antiga
+        Collections.sort(recarga, new Comparator<Recarga>() {
+            @Override
+            public int compare(Recarga rec1, Recarga rec2) {                
+                if ((rec1.getDataCredito() == null) || rec2.getDataCredito() == null) {
+                    return 0;
+                }
+                return rec1.getDataCredito().compareTo(rec2.getDataCredito());
+            }
+        });
+        
+        // Se o cliente fez mais de uma recarga no mesmo dia, entao
+        // carrega todas as recargas daquele dia
+        double valRecargas = 0;
+        Calendar dataRecarga = recarga.get(0).getDataCredito();
+        // Seta a data do saldo do cartao como a data da recarga
+        this.setDataCredito(dataRecarga);
+        for (Recarga rec : recarga) {            
+            if (rec.getDataCredito().equals(dataRecarga)) {
+                // atualiza valor a ser atualizado no saldo do cartao
+                valRecargas += rec.getValorRecarregado();                
+                // seta o valor da recarga como utilizado
+                rec.setUtilizado(true);
+            } else {
+                break;
+            }
+        }
+        // Transfere o saldo da recarga para o cartao
+        this.setSaldo(valRecargas);
     }
 }

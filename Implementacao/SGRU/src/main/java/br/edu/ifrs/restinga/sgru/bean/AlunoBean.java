@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -43,9 +44,14 @@ public class AlunoBean {
     /**
      * Solicita a pesquisa de um aluno para a camada de persistência
      * @param matricula A matricula do aluno a ser pesquisada
+     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se a matrícula não seja localizada
      */
-    public void carregar(String matricula) {
-        aluno = dao.carregar(matricula);        
+    public void carregar(String matricula) throws MatriculaInvalidaException {
+        Aluno tmpAluno = dao.carregar(matricula);        
+        
+        if (tmpAluno == null) {
+            throw new MatriculaInvalidaException("Matrícula não encontrada!");
+        }
     }
     
     /**

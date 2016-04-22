@@ -7,15 +7,12 @@ package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -34,14 +31,13 @@ public class CaixaRU implements Serializable {
     private double valorAbertura;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar dataFechamento;
-    private double valorFechamento;    
-    //@OneToMany(mappedBy = "caixaRU")    
-    @Transient
-    private List<VendaAlmoco> vendaAlmoco = new ArrayList();
+    private double valorFechamento;        
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
     private OperadorCaixa operadorCaixa;       
-    // Atributo nao persistido no banco
+    // Atributos nao persistidos no banco
+    @Transient
+    private VendaAlmoco vendaAlmoco;    
     @Transient
     private ValorAlmoco valorAtualAlmoco;    
 
@@ -124,20 +120,6 @@ public class CaixaRU implements Serializable {
     }
 
     /**
-     * @return the vendaAlmoco
-     */
-    public List<VendaAlmoco> getVendaAlmoco() {
-        return vendaAlmoco;
-    }
-
-    /**
-     * @param vendaAlmoco the vendaAlmoco to set
-     */
-    public void setVendaAlmoco(VendaAlmoco vendaAlmoco) {
-        this.vendaAlmoco.add(vendaAlmoco);
-    }
-
-    /**
      * @return the operadorCaixa
      */
     public OperadorCaixa getOperadorCaixa() {
@@ -150,6 +132,20 @@ public class CaixaRU implements Serializable {
     public void setOperadorCaixa(OperadorCaixa operadorCaixa) {
         this.operadorCaixa = operadorCaixa;
     }
+    
+    /**
+     * @return the vendaAlmoco
+     */
+    public VendaAlmoco getVendaAlmoco() {
+        return vendaAlmoco;
+    }
+
+    /**
+     * @param vendaAlmoco the vendaAlmoco to set
+     */
+    public void setVendaAlmoco(VendaAlmoco vendaAlmoco) {
+        this.vendaAlmoco = vendaAlmoco;
+    }    
 
     /**
      * @return the valorAtualAlmoco

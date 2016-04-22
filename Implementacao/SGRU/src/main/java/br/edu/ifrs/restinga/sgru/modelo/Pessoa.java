@@ -23,6 +23,7 @@ public abstract class Pessoa implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private int id;
+    private String matricula;
     private String nome;
     private String telefone;
     private String email;
@@ -42,6 +43,20 @@ public abstract class Pessoa implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
+    
+    /**
+     * @return the matricula
+     */
+    public String getMatricula() {
+        return matricula;
+    }
+
+    /**
+     * @param matricula the matricula to set
+     */
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }    
 
     /**
      * @return the nome

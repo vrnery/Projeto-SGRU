@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -42,11 +43,14 @@ public class OperadorCaixaBean {
     
     /**
      * Solicita a pesquisa de um operador de caixa para a camada de persistência
-     * @param login O login do operador de caixa a ser pesquisado
+     * @param matricula A matricula do operador de caixa a ser pesquisado
+     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se a matrícula não for localizada     
      */
-    public void carregar(String login) {
-        operadorCaixa = dao.carregar(login);
-        
+    public void carregar(String matricula) throws MatriculaInvalidaException {
+        OperadorCaixa tmpOperadorCaixa = dao.carregar(matricula);
+        if (tmpOperadorCaixa == null) {
+            throw new MatriculaInvalidaException("Matrícula não encontrada!");
+        }
     }    
     
     /**

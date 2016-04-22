@@ -17,26 +17,11 @@ import javax.persistence.PrimaryKeyJoinColumn;
  */
 @Entity
 @PrimaryKeyJoinColumn(name="id")
-public class Aluno extends Pessoa {        
-    private String matricula;
+public class Aluno extends Pessoa {            
     private String caminhoFoto;                
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idCartao")
-    private Cartao cartao;
-    
-    /**
-     * @return the matricula
-     */
-    public String getMatricula() {
-        return matricula;
-    }
-
-    /**
-     * @param matricula the matricula to set
-     */
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
+    private Cartao cartao;    
 
     /**
      * @return the caminhoFoto

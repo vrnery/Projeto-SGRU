@@ -37,6 +37,7 @@ public class Cadastros {
         OperadorCaixa oper = new OperadorCaixa();
         OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
         oper.setNome("Operador");
+        oper.setMatricula("987654");
         oper.setEmail("operador@email");
         oper.setTelefone("55555555");
         oper.setLogin("oper1");
@@ -75,10 +76,34 @@ public class Cadastros {
         recarga.setCartao(aluno.getCartao());
         daoRecarga.salvar(recarga);        
         
+        recarga = new Recarga();        
+        data = new GregorianCalendar(2016, 3, 23);
+        recarga.setDataCredito(data);
+        recarga.setUtilizado(false);
+        recarga.setValorRecarregado(200);
+        recarga.setCartao(aluno.getCartao());
+        daoRecarga.salvar(recarga);                
+        
+        recarga = new Recarga();        
+        data = new GregorianCalendar(2016, 3, 22);
+        recarga.setDataCredito(data);
+        recarga.setUtilizado(false);
+        recarga.setValorRecarregado(300);
+        recarga.setCartao(aluno.getCartao());
+        daoRecarga.salvar(recarga);                        
+        
+        recarga = new Recarga();        
+        data = new GregorianCalendar(2016, 3, 17);
+        recarga.setDataCredito(data);
+        recarga.setUtilizado(false);
+        recarga.setValorRecarregado(400);
+        recarga.setCartao(aluno.getCartao());
+        daoRecarga.salvar(recarga);                        
+        
         // Adiciona a recarga ao cartao do aluno
-        daoAluno = new AlunoDAO();
-        aluno.getCartao().setRecarga(recarga);        
-        daoAluno.salvar(aluno);        
+        //daoAluno = new AlunoDAO();
+        //aluno.getCartao().setRecarga(recarga);        
+        //daoAluno.salvar(aluno);        
                 
         // Salva quatro valores para teste
         ValorAlmoco valor = new ValorAlmoco();

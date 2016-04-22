@@ -21,11 +21,11 @@ public class OperadorCaixaDAO {
     
     /**
      * Pesquisa um operador de caixa com o login informado
-     * @param login O login do operador de caixa
+     * @param matricula A matricula do operador de caixa
      * @return Um objeto OperadorCaixa
      */
-    public OperadorCaixa carregar(String login) {
-        return (OperadorCaixa) sessao.createQuery("FROM OperadorCaixa WHERE login=:login").setString("login", login).uniqueResult();
+    public OperadorCaixa carregar(String matricula) {
+        return (OperadorCaixa) sessao.createQuery("FROM OperadorCaixa WHERE matricula=:matricula").setString("matricula", matricula).uniqueResult();
     }
 
     /**

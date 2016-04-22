@@ -5,13 +5,21 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
+import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
+import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.Cartao;
+import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
+import br.edu.ifrs.restinga.sgru.modelo.Professor;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
-import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 
 /**
  *
@@ -54,29 +62,55 @@ public class CaixaRUBean {
     /**
      * Realiza uma venda de almoco com cartao para o cliente
      * @param matricula A matricula do cliente que está realizando a compra
-     * @throws NullPointerException Se não encontrar matrícula cadastrada
+     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se não encontrar matrícula cadastrada     
+     * @throws UsuarioInvalidoException Caso o cliente não seja nem aluno nem professor
+     * @throws br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException Se o cliente não possuir saldo    
      */
-    public void realizarVendaAlmocoCartao(String matricula) throws NullPointerException {
-        AlunoDAO alunoDAO = new AlunoDAO();
-        Aluno aluno = alunoDAO.carregar(matricula);        
+    public void realizarVendaAlmocoCartao(String matricula) throws MatriculaInvalidaException,
+            UsuarioInvalidoException, SaldoInsuficienteException {
+        PessoaDAO pessoaDAO = new PessoaDAO();
+        Pessoa pessoa = pessoaDAO.carregar(matricula);        
         
-        if (aluno == null) {
-            // Criar classe excessao CartaoNaoEncontradoException?
-            throw new NullPointerException("Matrícula não encontrada");
-        }
-        
-        // Cria o objeto VendaAlmoco
-        VendaAlmoco vendaAlmoco = new VendaAlmoco();
-        vendaAlmoco.setCaixaRU(caixaRU);
-        vendaAlmoco.setCartao(aluno.getCartao());
-        // Seta o valor atual do almoco por default
-        // No metodo set da classe ValorAlmoco verifica se o 
-        // valor deve ser atualizado
-        vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
-        caixaRU.setVendaAlmoco(vendaAlmoco);
-        
-        System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
-        System.out.println("Valor do almoco pago pelo aluno: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
+        // Apenas professores e alunos podem almocar com cartao
+        if (!(pessoa instanceof Aluno) && !(pessoa instanceof Professor)) {
+            throw new UsuarioInvalidoException("Usuário não é aluno nem professor!");            
+        }                
+                
+        // Verifica se o cartao do cliente tem saldo                
+        boolean autorizado;
+        try {
+            autorizado = autorizaVendaAlmoco(pessoa);
+                     
+            // Cria o objeto VendaAlmoco            
+            if (autorizado) {
+                VendaAlmoco vendaAlmoco = new VendaAlmoco();
+                vendaAlmoco.setCaixaRU(caixaRU);
+                // seta cartao                
+                if (pessoa instanceof Aluno) {
+                    vendaAlmoco.setCartao(((Aluno)pessoa).getCartao());                    
+                } else if (pessoa instanceof Professor) {
+                    vendaAlmoco.setCartao(((Professor)pessoa).getCartao());
+                }
+                // O metodo setValorAlmoco verifica, com base na dataCredito do cartao
+                // o valor a ser pago pelo almoco
+                vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
+                caixaRU.setVendaAlmoco(vendaAlmoco);               
+
+                System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
+                System.out.println("Valor do almoco pago pelo cliente: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
+                
+                // Desconta o valor do almoco do saldo do cliente
+                if (pessoa instanceof Aluno) {
+                    ((Aluno)pessoa).getCartao().setSaldo(((Aluno)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
+                } else if (pessoa instanceof Professor) {
+                    ((Professor)pessoa).getCartao().setSaldo(((Professor)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
+                }
+            } else {
+                throw new SaldoInsuficienteException("Saldo insuficiente!");
+            }            
+        } catch (RecargaNaoEncontradaException e) {
+            throw new SaldoInsuficienteException("Saldo insuficiente!");
+        }        
     }
     
     // Apos execucao, o metodo realizarVendaAlmocoCartao deve retornar para o operador
@@ -84,11 +118,52 @@ public class CaixaRUBean {
     // aluno. O operador, entao, confirma ou nao a venda. Caso confirme, da-se um 
     // commit na transaco, caso nao confirme, da-se um rollback na transacao
     public void finalizarAlmoco(boolean confirmar) {
-        if (confirmar) {
+        if (confirmar) {            
             // commit na transacao
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+            daoVendaAlmoco.salvar(this.getCaixaRU().getVendaAlmoco());
         } else {
             // rollback na trasacao
+            this.getCaixaRU().setVendaAlmoco(null);
         }
+    }
+    
+    /**
+     * Verifica se o cliente possuir saldo no cartão. Caso negativo, verifica se existe recarga
+     * para o cartao e transfere o saldo. O almoco eh autorizado ainda que o valor do saldo do 
+     * cartão seja menor que o valor do almoco. Não será autorizado, no entanto, a venda para
+     * cartões que tenham saldo negativos ou ainda iguais a zero
+     * @param pessoa O cliente que está comprando o almoco
+     * @return True, para almoço autorizado e false para almoço não autorizado
+     * @throws RecargaNaoEncontradaException 
+     */
+    private boolean autorizaVendaAlmoco(Pessoa pessoa) throws 
+            RecargaNaoEncontradaException {
+        boolean autorizado = false;
+        // primeiramente, verifica se eh necessario atualizar o saldo da
+        // cartao da pessoa        
+        if (pessoa instanceof Aluno) {            
+            Aluno aluno = (Aluno) pessoa;
+            if (aluno.getCartao().getSaldo() <= 0) {
+                // eh necessario atualizar o saldo
+                aluno.getCartao().transferirRecargaParaCartao();
+                
+                if (aluno.getCartao().getSaldo() > 0) {
+                    autorizado = true;
+                }
+            }
+        } else if (pessoa instanceof Professor) {
+            Professor professor = (Professor) pessoa;
+            if (professor.getCartao().getSaldo() <= 0) {
+                // eh necessario atualizar o saldo
+                professor.getCartao().transferirRecargaParaCartao();
+                
+                if (professor.getCartao().getSaldo() > 0) {
+                    autorizado = true;
+                }
+            }
+        }
+        return autorizado;
     }
     
     /**

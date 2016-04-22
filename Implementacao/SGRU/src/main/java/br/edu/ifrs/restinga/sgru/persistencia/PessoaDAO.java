@@ -21,11 +21,11 @@ public class PessoaDAO {
     
     /**
      * Pesquisa uma pessoa baseado no id informado
-     * @param id Id da pessoa
+     * @param matricula A matricula da pessoa a ser pesquisada
      * @return um objeto Pessoa
      */
-    public Pessoa carregar(int id) {
-        return (Pessoa) sessao.load(Pessoa.class, id);
+    public Pessoa carregar(String matricula) {
+        return (Pessoa) sessao.createQuery("FROM Pessoa WHERE matricula=:matricula").setString("matricula", matricula).uniqueResult();
     }    
     
     /**

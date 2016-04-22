@@ -24,7 +24,7 @@ public class Recarga implements Serializable {
     @GeneratedValue
     private int id;
     private double valorRecarregado;
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar dataCredito;
     private boolean utilizado;
     @ManyToOne
