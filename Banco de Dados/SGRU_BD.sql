@@ -22,6 +22,7 @@ USE `sgru` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `matricula` VARCHAR(15) NOT NULL,
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
   `telefone` VARCHAR(11) NULL DEFAULT NULL,
@@ -49,7 +50,6 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`aluno` (
   `id` INT(10) UNSIGNED NOT NULL,
-  `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
   `idCartao` INT(10) UNSIGNED NULL,
   PRIMARY KEY (`id`),
@@ -111,7 +111,6 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`professor` (
   `id` INT(10) UNSIGNED NOT NULL,
-  `matricula` VARCHAR(15) NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
   `idCartao` INT(10) UNSIGNED NULL,
   PRIMARY KEY (`id`),
@@ -137,7 +136,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `sgru`.`recarga` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorRecarregado` DECIMAL(6,2) NOT NULL,
-  `dataCredito` DATETIME NOT NULL,
+  `dataCredito` DATE NOT NULL,
   `utilizado` TINYINT(1) NOT NULL DEFAULT '0',
   `idCartao` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -180,7 +179,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
-  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,  
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
   `idValorAlmoco` INT(10) UNSIGNED NOT NULL,
   `idCartao` INT(10) UNSIGNED NULL DEFAULT NULL,
