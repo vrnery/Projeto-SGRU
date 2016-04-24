@@ -1,4 +1,5 @@
 
+import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.Cartao;
@@ -36,10 +37,14 @@ public class Cadastros {
         
         OperadorCaixa oper = new OperadorCaixa();
         OperadorCaixaDAO daoOper = new OperadorCaixaDAO();
-        oper.setNome("Operador");
-        oper.setMatricula("987654");
-        oper.setEmail("operador@email");
-        oper.setTelefone("55555555");
+        try {
+            oper.setNome("Operador");
+            oper.setMatricula("987654");
+            oper.setEmail("operador@email");
+            oper.setTelefone("55555555");
+        } catch (DadoPessoaInvalidoException e) {
+            System.out.println(e);
+        }
         oper.setLogin("oper1");
         oper.setSenha("oper");
         daoOper.salvar(oper);        
@@ -62,13 +67,17 @@ public class Cadastros {
         Aluno aluno = new Aluno();
         AlunoDAO daoAluno = new AlunoDAO();
         
-        aluno.setNome("Aluno");
-        aluno.setEmail("aluno@email");
-        aluno.setCaminhoFoto("C:\\Fotos");
-        aluno.setLogin("aluno");
-        aluno.setSenha("senha");
-        aluno.setMatricula("123456");
-        aluno.setTelefone("66666666");
+        try {
+            aluno.setNome("Aluno");
+            aluno.setEmail("aluno@email");
+            aluno.setCaminhoFoto("C:\\Fotos");
+            aluno.setLogin("aluno");
+            aluno.setSenha("senha");
+            aluno.setMatricula("123456");
+            aluno.setTelefone("66666666");
+        } catch (DadoPessoaInvalidoException e) {
+            System.out.println(e);
+        }
         aluno.setCartao(new Cartao());        
         aluno.getCartao().setDataCredito(Calendar.getInstance());
         aluno.getCartao().setSaldo(0);        

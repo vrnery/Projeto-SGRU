@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -67,8 +68,15 @@ public abstract class Pessoa implements Serializable {
 
     /**
      * @param nome the nome to set
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Quando o nome enviado contém caracteres diferentes de letras e espaços
      */
-    public void setNome(String nome) {
+    public void setNome(String nome) throws DadoPessoaInvalidoException {
+        // O nome nao pode ser vazio e contem apenas letras e espacos
+        String regexNome = "^[a-zA-Z]*$";
+        if ((nome.trim().length() == 0) ||
+                nome.trim().matches(regexNome)) {
+            throw new DadoPessoaInvalidoException("O nome informado é inválido!");
+        }
         this.nome = nome;
     }
 
@@ -81,8 +89,16 @@ public abstract class Pessoa implements Serializable {
 
     /**
      * @param telefone the telefone to set
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Se o telefone estiver em formato inválido
      */
-    public void setTelefone(String telefone) {
+    public void setTelefone(String telefone) throws DadoPessoaInvalidoException {
+        // O telefone nao eh obrigatorio
+        if (telefone.length() > 0) {
+            String regexTelefone = "^\\([1-9][1-9]\\) [2-9][0-9]{3}-[0-9]{4}[0-9]{0,1}?$";
+            if (!telefone.matches(regexTelefone)) {
+                throw new DadoPessoaInvalidoException("O número de telefone informado é inválido!");
+            }
+        }
         this.telefone = telefone;
     }
 
@@ -95,8 +111,17 @@ public abstract class Pessoa implements Serializable {
 
     /**
      * @param email the email to set
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Se o email informado for inválido
      */
-    public void setEmail(String email) {
+    public void setEmail(String email) throws DadoPessoaInvalidoException {
+        // o email nao eh obrigatorio
+        if (email.length() > 0) {
+            String regexEmail = "^\\w+([-\\.]\\w+)*@\\w+([-.]\\w+)+$";
+            if (!email.matches(regexEmail)) {
+                throw new DadoPessoaInvalidoException("O e-mail informado é inválido!");
+            }
+        }
+        
         this.email = email;
     }
 

@@ -101,7 +101,7 @@ public class Cartao implements Serializable {
     
     /**
      * Carrega a lstRecarga mais antiga para o cartao. Se houver mais de uma lstRecarga
- realizada na mesma data, soma os valores
+     * realizada na mesma data, soma os valores
      * @throws br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException Se o cartão não possui recargas
      */
     public void transferirRecargaParaCartao() throws RecargaNaoEncontradaException {
