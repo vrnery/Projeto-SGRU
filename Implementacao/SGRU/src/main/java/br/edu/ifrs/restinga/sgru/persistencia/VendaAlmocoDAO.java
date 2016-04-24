@@ -5,12 +5,11 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
-import org.hibernate.Criteria;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -31,11 +30,13 @@ public class VendaAlmocoDAO {
         sessao.saveOrUpdate(vendaAlmoco);        
     }  
     
-    public double carregarTotalVendidoDia(CaixaRU caixaRU) {
-        return (double) sessao.createCriteria(VendaAlmoco.class)
-                .createAlias("mate", "valorAlmoco", Criteria.INNER_JOIN)                
-                .setProjection(Projections.sum("valorAlmoco"))
-                .add(Restrictions.eq("id", caixaRU.getId()))
-                .add(Restrictions.eq("dataAbertura", caixaRU.getDataAbertura())).uniqueResult();
+    /**
+     * Carrega uma lista de almoços vendidos em uma determinada data
+     * @param dataVenda A data da venda dos almoços a serem carregados
+     * @return Uma lista de almoços vendidos na data informada
+     */
+    public List<VendaAlmoco> carregar(Calendar dataVenda) {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        return (List<VendaAlmoco>) sessao.createQuery("FROM VendaAlmoco WHERE DATE(dataVenda)=:dataVenda").setString("dataVenda", f.format(dataVenda.getTime())).list();        
     }
 }

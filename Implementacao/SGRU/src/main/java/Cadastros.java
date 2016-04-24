@@ -44,8 +44,16 @@ public class Cadastros {
         oper.setSenha("oper");
         daoOper.salvar(oper);        
         
+        data = new GregorianCalendar(2016, 3, 17);
         CaixaRU caixaRU = new CaixaRU();
         CaixaRUDAO daoCaixaRU = new CaixaRUDAO();
+        caixaRU.setDataAbertura(data);
+        caixaRU.setOperadorCaixa(oper);
+        caixaRU.setValorAbertura(0);
+        daoCaixaRU.salvar(caixaRU);        
+        
+        caixaRU = new CaixaRU();
+        daoCaixaRU = new CaixaRUDAO();
         caixaRU.setDataAbertura(Calendar.getInstance());
         caixaRU.setOperadorCaixa(oper);
         caixaRU.setValorAbertura(0);

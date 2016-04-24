@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -24,6 +25,8 @@ public class VendaAlmoco implements Serializable {
     @Id
     @GeneratedValue
     private int id;    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Id
     private Calendar dataVenda;
     @OneToOne
     @JoinColumn(name = "idValorAlmoco")
@@ -35,7 +38,7 @@ public class VendaAlmoco implements Serializable {
     @JoinColumn(name = "idCartao")
     private Cartao cartao;
     @ManyToOne
-    @JoinColumn(name = "idCaixaRU")    
+    @JoinColumn(name = "idCaixaRU")
     private CaixaRU caixaRU;
 
     /**

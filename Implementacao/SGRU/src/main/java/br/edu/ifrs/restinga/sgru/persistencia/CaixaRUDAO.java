@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 //import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -38,7 +39,7 @@ public class CaixaRUDAO {
     public CaixaRU carregar(Calendar dataAbertura) {        
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura").setString("dataAbertura", f.format(dataAbertura.getTime())).uniqueResult();
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura").setString("dataAbertura", f.format(dataAbertura.getTime())).uniqueResult();        
     }    
 
     /**
