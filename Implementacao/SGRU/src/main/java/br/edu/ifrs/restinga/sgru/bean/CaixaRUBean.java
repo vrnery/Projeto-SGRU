@@ -8,16 +8,19 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
+import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
+import br.edu.ifrs.restinga.sgru.modelo.Ticket;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.util.Calendar;
 
@@ -175,6 +178,38 @@ public class CaixaRUBean {
      */
     public void realizarFechamentoCaixa() {
         // calcula a soma de todos os almocos vendidos no dia
+    }
+
+    public void realizarVendaAlmocoTicket(int codigo) throws TicketInvalidoException {
+        TicketDAO ticketDAO = new TicketDAO();
+        Ticket ticket = ticketDAO.carregar(codigo);
+        
+        try {
+            if (ticket == null) {
+                throw new TicketInvalidoException("Ticket não encontrado!");
+            } else if (ticket.getValor() != caixaRU.getValorAtualAlmoco().getValorAlmoco()) {
+                throw new TicketInvalidoException("Ticket vencido!");
+            } else {
+                // Cria o objeto VendaAlmoco
+                VendaAlmoco vendaAlmoco = new VendaAlmoco();
+                vendaAlmoco.setCaixaRU(caixaRU);
+            
+                // seta o ticket
+                vendaAlmoco.setTicket(ticket);
+                vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());
+                vendaAlmoco.setDataVenda(Calendar.getInstance());
+                caixaRU.setVendaAlmoco(vendaAlmoco);
+            
+                // o valor a ser pago pelo almoco
+                System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
+                System.out.println("Valor do almoco pago pelo cliente: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());
+            
+                // Coloca o ticket como utilizado
+                ticket.setDataUtilizado(vendaAlmoco.getDataVenda());
+            }
+        } catch (TicketInvalidoException e) {
+            throw new TicketInvalidoException("Ticket Invalido!");
+        }
     }
     
     /**
