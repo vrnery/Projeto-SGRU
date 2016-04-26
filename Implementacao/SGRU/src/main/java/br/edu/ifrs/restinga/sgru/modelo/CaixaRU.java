@@ -12,11 +12,9 @@ import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -39,19 +37,12 @@ public class CaixaRU implements Serializable {
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
     private OperadorCaixa operadorCaixa;              
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "caixaRU", cascade = {CascadeType.ALL})
-    private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();    
-    // Atributo nao persistido no banco
+    //@OneToMany(fetch = FetchType.EAGER, mappedBy = "caixaRU", cascade = {CascadeType.ALL})
+    // Atributos nao persistidos no banco
     @Transient
-    private ValorAlmoco valorAtualAlmoco;    
-
-    /*
-    public CaixaRU() {
-        // Carrega o valor de almoco atual        
-        ValorAlmocoDAO dao = new ValorAlmocoDAO();
-        valorAtualAlmoco = dao.carregarValorAtualAlmoco();
-    }
-    */
+    private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();        
+    @Transient
+    private ValorAlmoco valorAtualAlmoco = null;    
     
     /**
      * @return the id
@@ -143,6 +134,14 @@ public class CaixaRU implements Serializable {
     public List<VendaAlmoco> getLstVendaAlmoco() {
         return lstVendaAlmoco;
     }
+    
+    /**
+     * 
+     * @param lstVendaAlmoco the lstVendaAlmoco to set
+     */
+    public void setLstVendaAlmoco(List<VendaAlmoco> lstVendaAlmoco) {
+        this.lstVendaAlmoco = lstVendaAlmoco;
+    }    
 
     /**
      * @param vendaAlmoco the lstVendaAlmoco to set

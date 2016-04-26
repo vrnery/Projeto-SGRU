@@ -36,19 +36,10 @@ public class NewClass {
         // Carrega o caixa      
         sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 
         sessao.beginTransaction();
-        CaixaRUBean caixaRUBean = new CaixaRUBean();               
-        caixaRUBean.carregar(Calendar.getInstance());
+        CaixaRUBean caixaRUBean = new CaixaRUBean();
+        caixaRUBean.realizarAberturaCaixa(operadorCaixaBean.getOperadorCaixa(), 0);
         sessao.getTransaction().commit();
-        
-        // Carrega valor atual do almoco. Esse carregamento deve ficar no
-        // construtor da classe CaixaRU. No entanto o Hibernate, aparentemente,
-        // instancia toda classe Entity, e isso está causando problemas no 
-        // construtor da classe CaixaRU
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 
-        sessao.beginTransaction();
-        caixaRUBean.getCaixaRU().carregarValorAtualAlmoco();
-        sessao.getTransaction().commit();
-        
+                
          // O frente de caixa apresenta a foto, o nome completo do usuario, o saldo
          // e o valor do almoco para o operador, e solicita a confirmacao
         sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 

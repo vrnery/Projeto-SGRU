@@ -12,6 +12,7 @@ import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
 import br.edu.ifrs.restinga.sgru.modelo.Ticket;
@@ -23,13 +24,17 @@ import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.util.Calendar;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
  * @author marcelo.lima
  */
+@ManagedBean
+@RequestScoped
 public class CaixaRUBean {
-    private CaixaRU caixaRU = new CaixaRU();
+    private CaixaRU caixaRU;
     private final CaixaRUDAO dao = new CaixaRUDAO();    
     
     /**
@@ -55,14 +60,6 @@ public class CaixaRUBean {
     }
     
     /**
-     * Solicita a pesquisa de um CaixaRU com o id informado à camada de persistência
-     * @param dataAbertura A data de abertura do CaixaRU a ser pesquisado
-     */
-    public void carregar(Calendar dataAbertura) {
-        caixaRU = dao.carregar(dataAbertura);
-    }        
-    
-    /**
      * Realiza uma venda de almoco com cartao para o cliente
      * @param matricula A matricula do cliente que está realizando a compra
      * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se não encontrar matrícula cadastrada     
@@ -70,7 +67,7 @@ public class CaixaRUBean {
      * @throws br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException Se o cliente não possuir saldo    
      */
     public void realizarVendaAlmocoCartao(String matricula) throws MatriculaInvalidaException,
-            UsuarioInvalidoException, SaldoInsuficienteException {
+            UsuarioInvalidoException, SaldoInsuficienteException {               
         PessoaDAO pessoaDAO = new PessoaDAO();
         Pessoa pessoa = pessoaDAO.carregar(matricula);        
         
@@ -88,6 +85,7 @@ public class CaixaRUBean {
             if (autorizado) {
                 VendaAlmoco vendaAlmoco = new VendaAlmoco();
                 vendaAlmoco.setCaixaRU(caixaRU);
+                                
                 // seta cartao                
                 if (pessoa instanceof Aluno) {
                     vendaAlmoco.setCartao(((Aluno)pessoa).getCartao());                    
@@ -170,6 +168,33 @@ public class CaixaRUBean {
             }
         }
         return autorizado;
+    }
+    
+    public void realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {                       
+        // verifica se já existe um caixa aberto para o operador
+        caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
+        
+        // Nao encontrou caixa aberto. Abre o caixa
+        if (caixaRU == null) {
+            caixaRU  = new CaixaRU();
+            caixaRU.setOperadorCaixa(oper);
+            caixaRU.setValorAbertura(valorAbertura);
+            caixaRU.setDataAbertura(Calendar.getInstance());
+            dao.salvar(caixaRU);
+        }
+        
+        // Verifica se o valor atual do almoco estah setado
+        if (caixaRU.getValorAtualAlmoco() == null) {
+            caixaRU.carregarValorAtualAlmoco();
+        }        
+        
+        // verifica se a lista de almocos estah preenchida
+        if (caixaRU.getLstVendaAlmoco().isEmpty()) {
+            // realiza a consulta para verificar se existe alguma venda para o dia
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+            caixaRU.setLstVendaAlmoco(daoVendaAlmoco.carregar(Calendar.getInstance()));
+        }                
+        
     }
     
     /**

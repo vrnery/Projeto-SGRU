@@ -40,8 +40,8 @@ public class Cadastros {
         try {
             oper.setNome("Operador");
             oper.setMatricula("987654");
-            oper.setEmail("operador@email");
-            oper.setTelefone("55555555");
+            oper.setEmail("operador@email.com.br");
+            oper.setTelefone("(51) 5555-5555");
         } catch (DadoPessoaInvalidoException e) {
             System.out.println(e);
         }
@@ -49,6 +49,7 @@ public class Cadastros {
         oper.setSenha("oper");
         daoOper.salvar(oper);        
         
+        /*
         data = new GregorianCalendar(2016, 3, 17);
         CaixaRU caixaRU = new CaixaRU();
         CaixaRUDAO daoCaixaRU = new CaixaRUDAO();
@@ -63,18 +64,19 @@ public class Cadastros {
         caixaRU.setOperadorCaixa(oper);
         caixaRU.setValorAbertura(0);
         daoCaixaRU.salvar(caixaRU);
+        */
                 
         Aluno aluno = new Aluno();
         AlunoDAO daoAluno = new AlunoDAO();
         
         try {
             aluno.setNome("Aluno");
-            aluno.setEmail("aluno@email");
+            aluno.setEmail("aluno@email.com.br");
             aluno.setCaminhoFoto("C:\\Fotos");
             aluno.setLogin("aluno");
             aluno.setSenha("senha");
             aluno.setMatricula("123456");
-            aluno.setTelefone("66666666");
+            aluno.setTelefone("(51) 3333-3333");
         } catch (DadoPessoaInvalidoException e) {
             System.out.println(e);
         }

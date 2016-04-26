@@ -6,11 +6,10 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-//import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -33,13 +32,14 @@ public class CaixaRUDAO {
     
     /**
      * Procura um caixa do RU que contenha o id informado
+     * @param operador O operador de caixa que abriu o caixa anteriormente
      * @param dataAbertura A data de abertura do caixa do RU
      * @return Um objeto CaixaRU
      */
-    public CaixaRU carregar(Calendar dataAbertura) {        
+    public CaixaRU carregarCaixaAberto(OperadorCaixa operador, Calendar dataAbertura) {        
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura").setString("dataAbertura", f.format(dataAbertura.getTime())).uniqueResult();        
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador").setString("dataAbertura", f.format(dataAbertura.getTime())).setString("idOperador", String.valueOf(operador.getId())).uniqueResult();        
     }    
 
     /**

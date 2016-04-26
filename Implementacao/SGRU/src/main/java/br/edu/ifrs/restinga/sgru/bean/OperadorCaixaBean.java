@@ -55,6 +55,7 @@ public class OperadorCaixaBean {
         if (tmpOperadorCaixa == null) {
             throw new MatriculaInvalidaException("Matrícula não encontrada!");
         }
+        operadorCaixa = tmpOperadorCaixa;
     }    
     
     /**
