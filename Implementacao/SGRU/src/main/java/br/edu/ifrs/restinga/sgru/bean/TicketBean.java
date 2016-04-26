@@ -9,11 +9,15 @@ import br.edu.ifrs.restinga.sgru.modelo.Ticket;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
  * @author marcelo.lima
  */
+@ManagedBean
+@RequestScoped
 public class TicketBean {
     private Ticket ticket = new Ticket();
     private final TicketDAO dao = new TicketDAO();

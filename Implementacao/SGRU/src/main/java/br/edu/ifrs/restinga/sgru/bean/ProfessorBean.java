@@ -9,12 +9,16 @@ import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
 import br.edu.ifrs.restinga.sgru.persistencia.ProfessorDAO;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author 10070133
  */
+@ManagedBean
+@RequestScoped
 public class ProfessorBean {
     private Professor professor = new Professor();
     private final ProfessorDAO dao = new ProfessorDAO();

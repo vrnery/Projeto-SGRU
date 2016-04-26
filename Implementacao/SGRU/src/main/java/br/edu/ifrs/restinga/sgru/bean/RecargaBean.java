@@ -8,12 +8,16 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author marcelo.lima
  */
+@ManagedBean
+@RequestScoped
 public class RecargaBean {
     private Recarga recarga = new Recarga();
     private final RecargaDAO dao = new RecargaDAO();

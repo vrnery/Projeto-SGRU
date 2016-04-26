@@ -10,11 +10,15 @@ import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
  * @author marcelo.lima
  */
+@ManagedBean
+@RequestScoped
 public class AlunoBean {
     private Aluno aluno = new Aluno();
     private final AlunoDAO dao = new AlunoDAO();

@@ -9,11 +9,15 @@ import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CartaoDAO;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
  * @author marcelo.lima
  */
+@ManagedBean
+@RequestScoped
 public class CartaoBean {
     private Cartao cartao = new Cartao();
     private final CartaoDAO dao = new CartaoDAO();

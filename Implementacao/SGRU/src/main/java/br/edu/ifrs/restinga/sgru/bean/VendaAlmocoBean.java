@@ -8,12 +8,16 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author 10070133
  */
+@ManagedBean
+@RequestScoped
 public class VendaAlmocoBean {
     private VendaAlmoco vendaAlmoco = new VendaAlmoco();
     private final VendaAlmocoDAO dao = new VendaAlmocoDAO();

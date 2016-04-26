@@ -10,11 +10,15 @@ import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
  * @author marcelo.lima
  */
+@ManagedBean
+@RequestScoped
 public class OperadorCaixaBean {
     private OperadorCaixa operadorCaixa = new OperadorCaixa();
     private final OperadorCaixaDAO dao = new OperadorCaixaDAO();
