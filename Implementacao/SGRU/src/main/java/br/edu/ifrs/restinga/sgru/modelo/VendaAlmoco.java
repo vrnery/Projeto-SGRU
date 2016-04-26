@@ -25,8 +25,7 @@ public class VendaAlmoco implements Serializable {
     @Id
     @GeneratedValue
     private int id;    
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    @Id
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)    
     private Calendar dataVenda;
     @OneToOne
     @JoinColumn(name = "idValorAlmoco")

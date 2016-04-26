@@ -74,7 +74,7 @@ public abstract class Pessoa implements Serializable {
         // O nome nao pode ser vazio e contem apenas letras e espacos
         String regexNome = "^[a-zA-Z]*$";
         if ((nome.trim().length() == 0) ||
-                nome.trim().matches(regexNome)) {
+                !(nome.trim().matches(regexNome))) {
             throw new DadoPessoaInvalidoException("O nome informado é inválido!");
         }
         this.nome = nome;
@@ -99,7 +99,8 @@ public abstract class Pessoa implements Serializable {
                 throw new DadoPessoaInvalidoException("O número de telefone informado é inválido!");
             }
         }
-        this.telefone = telefone;
+        // Grava apenas numeros no banco
+        this.telefone = telefone.trim().replaceAll("[^0-9]()", "");
     }
 
     /**
