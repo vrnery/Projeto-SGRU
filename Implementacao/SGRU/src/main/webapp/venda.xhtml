@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="padraoInterno.xhtml">        
+        <ui:define name="titulo">SGRU</ui:define>
+        <ui:define name="conteudo">            
+            <h:form>
+                <h:panelGrid columns="2">
+                    <p:graphicImage name="demo/images/misc/kobe.png" />
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="txtNome" value="Nome: "/>
+                        <h:outputText id="txtNome" value="#{clientesBean.cliente.id}"/>
+                        <p:outputLabel for="txtMatricula" value="Matrícula: "/>
+                        <h:outputText id="txtMatricula" value="#{clientesBean.cliente.nome}"/>            
+                        <p:outputLabel for="txtSaldoCartao" value="Saldo do Cartão: "/>
+                        <h:outputText id="txtSaldoCartao" value="#{clientesBean.cliente.cpf}"/>            
+                        <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
+                        <h:outputText id="txtValorAlmoco" value="#{clientesBean.cliente.endereco}"/>            
+                    </h:panelGrid>
+                </h:panelGrid>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

@@ -4,7 +4,9 @@ import br.edu.ifrs.restinga.sgru.bean.OperadorCaixaBean;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
+import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
+import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import java.util.Calendar;
 import java.util.Scanner;
 import org.hibernate.Session;
@@ -26,7 +28,8 @@ public class NewClass {
         // Operador de caixa
         OperadorCaixaBean operadorCaixaBean = new OperadorCaixaBean();
         try {
-            operadorCaixaBean.carregar("987654");        
+            PessoaDAO pessoa = new PessoaDAO();
+            operadorCaixaBean.setOperadorCaixa((OperadorCaixa) pessoa.carregar("987654"));        
         } catch (MatriculaInvalidaException e) {
             System.out.println(e.getMessage());
             System.exit(0);
@@ -44,13 +47,13 @@ public class NewClass {
          // e o valor do almoco para o operador, e solicita a confirmacao
         sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 
         sessao.beginTransaction();
-        try {
+        //try {
             caixaRUBean.realizarVendaAlmocoCartao("123456");
-        } catch (MatriculaInvalidaException | UsuarioInvalidoException |
-                SaldoInsuficienteException e) {
-            System.out.println(e.getMessage());
-            System.exit(0);
-        }
+        //} catch (MatriculaInvalidaException | UsuarioInvalidoException |
+       //         SaldoInsuficienteException e) {
+        //    System.out.println(e.getMessage());
+       //     System.exit(0);
+       // }
         
         System.out.printf("Confirmar almoco?\n1 - Sim\n2 - Não\nOpção: ");
         Scanner ler = new Scanner(System.in);
@@ -61,28 +64,17 @@ public class NewClass {
         /*****************************************************************/                
         if (opcao == 1) {
             // descontar valor do saldo do cartao            
-            caixaRUBean.finalizarAlmoco(true);
-            sessao.getTransaction().commit();
+            caixaRUBean.finalizarAlmoco(true);            
         } else {
-            caixaRUBean.finalizarAlmoco(false);
-            sessao.getTransaction().rollback();
+            caixaRUBean.finalizarAlmoco(false);            
         }
         
         sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 
         sessao.beginTransaction();
         // Encerramento do caixa                
         caixaRUBean.getCaixaRU().setDataFechamento(Calendar.getInstance());
-        //caixaRUBean.realizarFechamentoCaixa();
-        caixaRUBean.getCaixaRU().setValorFechamento(15);
+        caixaRUBean.realizarFechamentoCaixa();        
         caixaRUBean.salvar();        
         sessao.getTransaction().commit();        
-        /*
-        daoAluno = new AlunoDAO();
-        aluno.getCartao().descontar(valorAtualAlmoco.getValorAlmoco());
-        daoAluno.salvar(aluno);
-        daoAluno.encerrar();
-        
-        System.out.println("Data: " + aluno.getCartao().getDataCredito() + " Saldo: " + aluno.getCartao().getSaldo());
-        */               
     }
 }

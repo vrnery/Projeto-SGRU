@@ -1,13 +1,11 @@
 
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
 import br.edu.ifrs.restinga.sgru.persistencia.AlunoDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RecargaDAO;

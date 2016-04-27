@@ -39,26 +39,7 @@ public class CaixaRUDAO {
     public CaixaRU carregarCaixaAberto(OperadorCaixa operador, Calendar dataAbertura) {        
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador").setString("dataAbertura", f.format(dataAbertura.getTime())).setString("idOperador", String.valueOf(operador.getId())).uniqueResult();        
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador AND valorFechamento='0'")
+                .setString("dataAbertura", f.format(dataAbertura.getTime())).setString("idOperador", String.valueOf(operador.getId())).uniqueResult();        
     }    
-
-    /**
-     * Buscar caixa aberto pelo operador
-     * @param idOperador Codigo do OperadorCaixa
-     * @param data Data do dia
-     * @return Objeto CaixaRU
-     */
-    public CaixaRU reabrirCaixa(int idOperador, Calendar data) {
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE idOperadorCaixa=:op AND dataFechamento = null AND dataAbertura < :data ORDER BY dataAbertura DESC").setInteger("op", idOperador).setDate("data", data.getTime()).uniqueResult();
-    }        
-        
-    /**
-     * Salva a venda do almoco no banco de dados
-     * @param vendaAlmoco A venda de almoco realizada
-     */
-    /*
-    public void salvarVendaAlmoco(VendaAlmoco vendaAlmoco) {
-        sessao.saveOrUpdate(vendaAlmoco);
-    }
-    */
 }

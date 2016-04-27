@@ -6,29 +6,26 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title><ui:insert name="titulo">Restaurante</ui:insert></title>
+        <title><ui:insert name="titulo">RU IFRS Restinga</ui:insert></title>
     </h:head>
     <h:body>
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="13">                
-                <!--Olá {loginBean.usuario.nome}-->
+            <p:layoutUnit position="north" size="110">
+                <h1 align="center">SGRU</h1>
             </p:layoutUnit>
             <p:layoutUnit position="west">
                 <h:form>
                     <p:menu>
-                        <p:menuitem ajax="false" value="Cadastro Usuários" action="#"/>
-                        <p:menuitem ajax="false" value="Incluir Novo Livro" action="#"/>
-                        <p:menuitem ajax="false" value="Consultar Livro" action="#"/>
+                        <p:menuitem ajax="false" value="Fechamento de Caixa" action="alterar"/>                        
                     </p:menu>
                 </h:form>
-            </p:layoutUnit>
+            </p:layoutUnit>            
             <p:layoutUnit position="center">
                 <f:facet name="header">
-                    <ui:insert name="titulo"/>
+                    <ui:insert name="mensagem"/>
                 </f:facet>
                 <ui:insert name="conteudo"/>
             </p:layoutUnit>
         </p:layout>
-        <ui:insert name="DlgLogin"/>
-     </h:body>
+    </h:body>
 </html>

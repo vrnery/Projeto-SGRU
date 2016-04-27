@@ -25,16 +25,16 @@ import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.util.Calendar;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 /**
  *
  * @author marcelo.lima
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class CaixaRUBean {
-    private CaixaRU caixaRU;
+    private CaixaRU caixaRU = new CaixaRU();
     private final CaixaRUDAO dao = new CaixaRUDAO();    
     
     /**
@@ -60,75 +60,98 @@ public class CaixaRUBean {
     }
     
     /**
+     * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa
+     * @param oper O operador que vai operar o caixa
+     * @param valorAbertura O valor de abertura do caixa
+     */
+    public void realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {                       
+        // verifica se já existe um caixa aberto para o operador
+        caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
+        
+        // Nao encontrou caixa aberto. Abre o caixa
+        if (caixaRU == null) {
+            caixaRU  = new CaixaRU();
+            caixaRU.setOperadorCaixa(oper);
+            caixaRU.setValorAbertura(valorAbertura);
+            caixaRU.setDataAbertura(Calendar.getInstance());
+            dao.salvar(caixaRU);
+        }
+        
+        // Verifica se o valor atual do almoco estah setado
+        if (caixaRU.getValorAtualAlmoco() == null) {
+            caixaRU.carregarValorAtualAlmoco();
+        }        
+        
+        // verifica se a lista de almocos estah preenchida
+        if (caixaRU.getLstVendaAlmoco().isEmpty()) {
+            // realiza a consulta para verificar se existe alguma venda para o dia
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+            caixaRU.setLstVendaAlmoco(daoVendaAlmoco.carregar(caixaRU.getId(),Calendar.getInstance()));
+        }                
+        
+    }    
+    
+    /**
      * Realiza uma venda de almoco com cartao para o cliente
      * @param matricula A matricula do cliente que está realizando a compra
-     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se não encontrar matrícula cadastrada     
-     * @throws UsuarioInvalidoException Caso o cliente não seja nem aluno nem professor
-     * @throws br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException Se o cliente não possuir saldo    
+     * @return Retorna a próxima página a ser exibida para o operador     
      */
-    public void realizarVendaAlmocoCartao(String matricula) throws MatriculaInvalidaException,
-            UsuarioInvalidoException, SaldoInsuficienteException {               
-        PessoaDAO pessoaDAO = new PessoaDAO();
-        Pessoa pessoa = pessoaDAO.carregar(matricula);        
-        
-        // Apenas professores e alunos podem almocar com cartao
-        if (!(pessoa instanceof Aluno) && !(pessoa instanceof Professor)) {
-            throw new UsuarioInvalidoException("Usuário não é aluno nem professor!");            
-        }                
-                
-        // Verifica se o cartao do cliente tem saldo                
-        boolean autorizado;
+    public String realizarVendaAlmocoCartao(String matricula) {
+        String retorno = "venda";
         try {
-            autorizado = autorizaVendaAlmoco(pessoa);
-                     
-            // Cria o objeto VendaAlmoco            
-            if (autorizado) {
-                VendaAlmoco vendaAlmoco = new VendaAlmoco();
-                vendaAlmoco.setCaixaRU(caixaRU);
-                                
-                // seta cartao                
-                if (pessoa instanceof Aluno) {
-                    vendaAlmoco.setCartao(((Aluno)pessoa).getCartao());                    
-                } else if (pessoa instanceof Professor) {
-                    vendaAlmoco.setCartao(((Professor)pessoa).getCartao());
-                }
-                // O metodo setValorAlmoco verifica, com base na dataCredito do cartao
-                // o valor a ser pago pelo almoco
-                vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
-                vendaAlmoco.setDataVenda(Calendar.getInstance());
-                caixaRU.setVendaAlmoco(vendaAlmoco);               
+            PessoaDAO pessoaDAO = new PessoaDAO();
+            Pessoa pessoa = pessoaDAO.carregar(matricula);        
 
-                System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
-                System.out.println("Valor do almoco pago pelo cliente: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
-                
-                // Desconta o valor do almoco do saldo do cliente
-                if (pessoa instanceof Aluno) {
-                    ((Aluno)pessoa).getCartao().setSaldo(((Aluno)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
-                } else if (pessoa instanceof Professor) {
-                    ((Professor)pessoa).getCartao().setSaldo(((Professor)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
-                }
-            } else {
+            // Apenas professores e alunos podem almocar com cartao
+            if (!(pessoa instanceof Aluno) && !(pessoa instanceof Professor)) {            
+                throw new UsuarioInvalidoException("Usuário não é aluno nem professor!");            
+            }                
+
+            // Verifica se o cartao do cliente tem saldo                
+            boolean autorizado;
+            try {
+                autorizado = autorizaVendaAlmoco(pessoa);
+
+                // Cria o objeto VendaAlmoco            
+                if (autorizado) {
+                    VendaAlmoco vendaAlmoco = new VendaAlmoco();
+                    vendaAlmoco.setCaixaRU(caixaRU);
+
+                    // seta cartao                
+                    if (pessoa instanceof Aluno) {
+                        vendaAlmoco.setCartao(((Aluno)pessoa).getCartao());                    
+                    } else if (pessoa instanceof Professor) {
+                        vendaAlmoco.setCartao(((Professor)pessoa).getCartao());
+                    }
+                    // O metodo setValorAlmoco verifica, com base na dataCredito do cartao
+                    // o valor a ser pago pelo almoco
+                    vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
+                    vendaAlmoco.setDataVenda(Calendar.getInstance());
+                    caixaRU.setVendaAlmoco(vendaAlmoco);               
+
+                    System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
+                    System.out.println("Valor do almoco pago pelo cliente: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
+
+                    // Desconta o valor do almoco do saldo do cliente
+                    if (pessoa instanceof Aluno) {
+                        ((Aluno)pessoa).getCartao().setSaldo(((Aluno)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
+                    } else if (pessoa instanceof Professor) {
+                        ((Professor)pessoa).getCartao().setSaldo(((Professor)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
+                    }
+                } else {
+                    throw new SaldoInsuficienteException("Saldo insuficiente!");
+                }            
+            } catch (RecargaNaoEncontradaException e) {
                 throw new SaldoInsuficienteException("Saldo insuficiente!");
-            }            
-        } catch (RecargaNaoEncontradaException e) {
-            throw new SaldoInsuficienteException("Saldo insuficiente!");
-        }        
-    }
-    
-    // Apos execucao, o metodo realizarVendaAlmocoCartao deve retornar para o operador
-    // de caixa a foto, o nome completo, o saldo e o valor do almoco a pagar pelo
-    // aluno. O operador, entao, confirma ou nao a venda. Caso confirme, da-se um 
-    // commit na transaco, caso nao confirme, da-se um rollback na transacao
-    public void finalizarAlmoco(boolean confirmar) {
-        if (confirmar) {            
-            // commit na transacao
-            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
-            daoVendaAlmoco.salvar(this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1));
-        } else {
-            // rollback na trasacao
-            this.getCaixaRU().setVendaAlmoco(null);
+            }      
+        } catch (MatriculaInvalidaException | UsuarioInvalidoException | 
+                SaldoInsuficienteException e) {
+            retorno = "caixa";
+            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
         }
-    }
+        
+        return retorno;
+    }    
     
     /**
      * Verifica se o cliente possuir saldo no cartão. Caso negativo, verifica se existe recarga
@@ -169,32 +192,21 @@ public class CaixaRUBean {
         }
         return autorizado;
     }
-    
-    public void realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {                       
-        // verifica se já existe um caixa aberto para o operador
-        caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
-        
-        // Nao encontrou caixa aberto. Abre o caixa
-        if (caixaRU == null) {
-            caixaRU  = new CaixaRU();
-            caixaRU.setOperadorCaixa(oper);
-            caixaRU.setValorAbertura(valorAbertura);
-            caixaRU.setDataAbertura(Calendar.getInstance());
-            dao.salvar(caixaRU);
+
+    /**
+     * Confirma ou não confirmar a a venda do almoço
+     * @param confirmar True, para confirmar a venda, e false para não confirmar
+     */
+    public void finalizarAlmoco(boolean confirmar) {
+        VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();            
+        if (confirmar) {            
+            // Salva a venda
+            daoVendaAlmoco.salvar(this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1));            
+        } else {
+            // exclui a venda da lista
+            this.getCaixaRU().getLstVendaAlmoco().remove(this.getCaixaRU().getLstVendaAlmoco().size()-1);
         }
-        
-        // Verifica se o valor atual do almoco estah setado
-        if (caixaRU.getValorAtualAlmoco() == null) {
-            caixaRU.carregarValorAtualAlmoco();
-        }        
-        
-        // verifica se a lista de almocos estah preenchida
-        if (caixaRU.getLstVendaAlmoco().isEmpty()) {
-            // realiza a consulta para verificar se existe alguma venda para o dia
-            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
-            caixaRU.setLstVendaAlmoco(daoVendaAlmoco.carregar(Calendar.getInstance()));
-        }                
-        
+        daoVendaAlmoco.confirmarVendaAlmco(confirmar);
     }
     
     /**
@@ -202,7 +214,13 @@ public class CaixaRUBean {
      * dados do fechamento na base de dados
      */
     public void realizarFechamentoCaixa() {
-        // calcula a soma de todos os almocos vendidos no dia
+        // calcula a soma de todos os almocos vendidos no dia e
+        // seta o valor do fechamento
+        double valorFechamento = 0;
+        for (VendaAlmoco vendaAlmoco : caixaRU.getLstVendaAlmoco()) {
+            valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
+        }
+        caixaRU.setValorFechamento(valorFechamento);
     }
 
     public void realizarVendaAlmocoTicket(int codigo) throws TicketInvalidoException {

@@ -5,11 +5,13 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.OperadorCaixaDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -46,17 +48,30 @@ public class OperadorCaixaBean {
     }
     
     /**
-     * Solicita a pesquisa de um operador de caixa para a camada de persistência
-     * @param matricula A matricula do operador de caixa a ser pesquisado
-     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se a matrícula não for localizada     
+     * Autentica um usuário no sistema
+     * @return A página a ser visualizada pelo usuário após o login     
      */
-    public void carregar(String matricula) throws MatriculaInvalidaException {
-        OperadorCaixa tmpOperadorCaixa = dao.carregar(matricula);
-        if (tmpOperadorCaixa == null) {
-            throw new MatriculaInvalidaException("Matrícula não encontrada!");
+    public String autenticar() {        
+        String retorno = "caixa";
+        try {
+            PessoaDAO daoPessoa = new PessoaDAO();
+            Pessoa pessoa = daoPessoa.autenticar(operadorCaixa.getLogin(), operadorCaixa.getSenha());
+
+            if (!(pessoa instanceof OperadorCaixa)) {
+                throw new LoginInvalidoException("Usuário ou senha incorretos!");                
+            }
+            
+            operadorCaixa = (OperadorCaixa) pessoa;
+            // abre o caixa
+            CaixaRUBean caixaRUBean = new CaixaRUBean();
+            caixaRUBean.realizarAberturaCaixa(operadorCaixa, 0);                        
+        } catch (LoginInvalidoException e) {
+            operadorCaixa = new OperadorCaixa();
+            retorno = "index";
+            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
         }
-        operadorCaixa = tmpOperadorCaixa;
-    }    
+        return retorno;
+    }
     
     /**
      * Envia à viewer uma mensagem com o status da operação

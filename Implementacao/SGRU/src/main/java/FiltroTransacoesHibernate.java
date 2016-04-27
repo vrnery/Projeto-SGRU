@@ -33,12 +33,30 @@ public class FiltroTransacoesHibernate implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
+        
         Session sessao = HibernateUtil.getSessionFactory().getCurrentSession();
+        /*
         if(sessao.getTransaction() == null)
             sessao.beginTransaction();
         chain.doFilter(request, response);
         if(sessao.getTransaction() != null)
             sessao.getTransaction().commit();
+        */
+        try {
+            sessao.beginTransaction();
+            chain.doFilter(request, response);
+            sessao.getTransaction().commit();
+            //sessao.close();
+        } catch (Throwable ex){
+            try{
+                if(sessao.getTransaction().isActive()){
+                   sessao.getTransaction().rollback();
+                }
+            } catch (Throwable t){
+                t.printStackTrace();
+            }
+            throw new ServletException(ex);
+        }        
     }
 
     @Override

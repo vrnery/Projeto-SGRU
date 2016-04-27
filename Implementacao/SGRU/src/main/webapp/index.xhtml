@@ -2,27 +2,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="padraoInterno.xhtml">
-        <ui:define name="titulo">Restaurante Universitário </ui:define>
-        <ui:define name="conteudo">
-            <p:messages/>
-            <h:form>
-                <p:commandButton value="Login" type="button" onclick="PF('dlgLogin').show();"/>
-            </h:form>
-            <p:dialog header="Login" widgetVar="dlgLogin" modal="true">
-                <h:form>
-                    <h:panelGrid columns="2">
-                        <p:outputLabel for="txtNome" value="Login: "/>
-                        <p:inputText id="txtNome" label="Login" maxlength="100" size="60" value="" required="true"/>
-                        <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:inputText id="txtSenha" label="Login" maxlength="100" size="60" value="" required="true"/>
-                    </h:panelGrid>
-                    <p:commandButton ajax="false" value="Salvar" />
-                </h:form>
-            </p:dialog>
-        </ui:define>
-    </ui:composition>
+      xmlns:p="http://primefaces.org/ui">
+    <p:messages/>
+    <h:form>
+        <h:panelGrid columns="2">
+            <p:outputLabel for="txtUsuario" value="Login: "/>
+            <p:inputText id="txtUsuario" maxlength="30" size="20" required="true" value="#{operadorCaixaBean.operadorCaixa.login}"/>
+            <p:outputLabel for="txtSenha" value="Senha: "/>
+            <p:inputText id="txtSenha" maxlength="32" size="20" required="true" value="#{operadorCaixaBean.operadorCaixa.senha}"/>
+        </h:panelGrid>
+        <p:commandButton ajax="false" value="Entrar" action="#{operadorCaixaBean.autenticar()}" />        
+    </h:form>    
 </html>
 

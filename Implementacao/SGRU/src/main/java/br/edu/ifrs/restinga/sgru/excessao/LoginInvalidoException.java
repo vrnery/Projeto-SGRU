@@ -9,9 +9,9 @@ package br.edu.ifrs.restinga.sgru.excessao;
  *
  * @author marcelo.lima
  */
-public class MatriculaInvalidaException extends Exception {
+public class LoginInvalidoException extends Exception {
 
-    public MatriculaInvalidaException(String msg) {
+    public LoginInvalidoException(String msg) {
         super(msg);
     }
     

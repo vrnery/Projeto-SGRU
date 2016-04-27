@@ -38,20 +38,6 @@ public class ValorAlmocoDAO {
     }
 
     /**
-     * Ajusta o valor a ser cobrado pelo almoço devido a data da compra do credito
-     * @param expira Data de expiração do cartão
-     * @return Objeto do tipo ValorAlmoco
-     */
-    /*
-    public ValorAlmoco almocoCartao(Calendar expira) {
-        long data = 86400000L * 60;
-        Calendar verificar = new Date(expira.getTime() - data);
-        System.out.println("Expira: " + expira + " Procura: " + verificar.toString());
-        return (ValorAlmoco) sessao.createQuery("FROM ValorAlmoco WHERE dataValor >= :verifica ORDER BY dataValor").setDate("verifica", verificar).setMaxResults(1).uniqueResult();
-    }
-    */
-
-    /**
      * O valor a ser cobrado pelo almoco com base na data enviada
      * @param dataCredito Data em que os creditos foram inseridos no cartao
      * @return Um objeto do tipo ValorAlmoco
