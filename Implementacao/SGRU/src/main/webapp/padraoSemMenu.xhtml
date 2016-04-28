@@ -12,13 +12,16 @@
         <p:layout fullPage="true">
             <p:layoutUnit position="north" size="110">                
                 <f:facet name="header">
-                    <h1 align="center">SGRU</h1>
-                    <h1 align="center">Olá #{autenticarBean.nomeUsuario}</h1>                    
+                    <h1 align="center">
+                        <p:graphicImage name="banner.jpg" id="imagem"/>
+                    </h1>        
+                    <h5 align="right">Olá #{autenticarBean.nomeUsuario}</h5> 
                 </f:facet>
             </p:layoutUnit>                     
             <p:layoutUnit position="center">
                 <ui:insert name="conteudo"/>
             </p:layoutUnit>
+            
         </p:layout>
     </h:body>
 </html>

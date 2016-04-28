@@ -12,20 +12,36 @@
         <p:layout fullPage="true">
             <p:layoutUnit position="north" size="110">                
                 <f:facet name="header">
-                    <h1 align="center">SGRU</h1>                    
-                    <h1 align="center">Olá #{autenticarBean.nomeUsuario}</h1>                    
+                    <h1 align="center">SGRU</h1>
+                    <!-- If para verificar se o bean nome usuario está vazio -->
+                    <!--Se estiver tag de imagem com icone para chamar o login numa modal
+                    else mostra o bean-->
+                    <h5 align="right">Olá #{autenticarBean.nomeUsuario}</h5>                    
                 </f:facet>
             </p:layoutUnit>
             <p:layoutUnit position="west">
                 <h:form>
                     <p:menu>
                         <p:menuitem ajax="false" value="Fechamento de Caixa" action="#{caixaRUBean.realizarFechamentoCaixa()}"/>                        
+                        <p:menuitem ajax="false" value="Abertura de Caixa" onclick="PF('dlgAbrirCaixa').show();"/>                        
                     </p:menu>
                 </h:form>
             </p:layoutUnit>            
             <p:layoutUnit position="center">
                 <ui:insert name="conteudo"/>
             </p:layoutUnit>
+            <ui:insert name ="dlg">
+                <p:dialog header="Abrir Caixa" widgetVar="dlgAbrirCaixa" modal="true">
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="txtValorAbertura" value="Informe o valor para abertura do caixa: "/>
+                        <p:inputText id="txtValorAbertura" maxlength="15" size="20" required="true" 
+                        value="#{caixaRUBean.caixaRU.valorAbertura}"/>                    
+                    </h:panelGrid>
+                    <p:commandButton ajax="false" value="Abrir" action="#{caixaRUBean.realizarAberturaCaixa(autenticarBean.operadorCaixa, caixaRUBean.caixaRU.valorAbertura)}"/>                 
+                </h:form>
+                </p:dialog>   
+            </ui:insert>
         </p:layout>
     </h:body>
 </html>
