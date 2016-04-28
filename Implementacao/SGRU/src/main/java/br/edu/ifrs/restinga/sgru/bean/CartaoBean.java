@@ -41,7 +41,7 @@ public class CartaoBean {
      */
     public void salvar() {
         dao.salvar(cartao);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Cartão cadastrado com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Cartão cadastrado com sucesso!");
     }
     
     /**

@@ -18,9 +18,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @Entity
 @PrimaryKeyJoinColumn(name="id")
 public class Aluno extends Pessoa {            
-    private String caminhoFoto;                
+    private String caminhoFoto;                    
+    @JoinColumn(name="idCartao")    
     @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name="idCartao")
     private Cartao cartao;    
 
     /**

@@ -17,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -24,7 +25,7 @@ import javax.persistence.Temporal;
  * @author marcelo.lima
  */
 @Entity
-public class Cartao implements Serializable {
+public class Cartao implements Serializable {   
     @Id
     @GeneratedValue
     private int id;
@@ -33,6 +34,8 @@ public class Cartao implements Serializable {
     private double saldo;    
     @OneToMany(mappedBy = "cartao", cascade = {CascadeType.ALL})
     private List<Recarga> lstRecarga = new ArrayList();
+    @OneToOne(mappedBy = "cartao")
+    private Aluno aluno;
 
     /**
      * @return the id
@@ -98,7 +101,21 @@ public class Cartao implements Serializable {
     public void setDebitar(double valor) {
         this.saldo -= valor;
     }
-    
+ 
+    /**     
+     * @return the Aluno
+     */
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    /**     
+     * @param aluno The Aluno to set
+     */
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
+    }
+        
     /**
      * Carrega a lstRecarga mais antiga para o cartao. Se houver mais de uma lstRecarga
      * realizada na mesma data, soma os valores

@@ -41,7 +41,7 @@ public class RecargaBean {
      */
     public void salvar() {
         dao.salvar(recarga);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
     }
     
     /**

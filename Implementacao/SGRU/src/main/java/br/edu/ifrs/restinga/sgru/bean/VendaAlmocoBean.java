@@ -42,7 +42,7 @@ public class VendaAlmocoBean {
      */
     public void salvar(VendaAlmoco vendaAlmoco) {
         dao.salvar(vendaAlmoco);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
     }
     
     /**

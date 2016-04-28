@@ -8,18 +8,20 @@
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">            
             <h:form>
-                <h:panelGrid columns="2">
+                <h:panelGrid columns="2">                    
                     <p:graphicImage name="demo/images/misc/kobe.png" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <h:outputText id="txtNome" value="#{clientesBean.cliente.id}"/>
+                        <h:outputText id="txtNome" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.nome}"/>
                         <p:outputLabel for="txtMatricula" value="Matrícula: "/>
-                        <h:outputText id="txtMatricula" value="#{clientesBean.cliente.nome}"/>            
+                        <h:outputText id="txtMatricula" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.matricula}"/>            
                         <p:outputLabel for="txtSaldoCartao" value="Saldo do Cartão: "/>
-                        <h:outputText id="txtSaldoCartao" value="#{clientesBean.cliente.cpf}"/>            
+                        <h:outputText id="txtSaldoCartao" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.saldo}"/>            
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
-                        <h:outputText id="txtValorAlmoco" value="#{clientesBean.cliente.endereco}"/>            
+                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().valorAlmoco.valorAlmoco}"/>            
                     </h:panelGrid>
+                    <p:commandButton ajax="false" value="Confirmar" action="#{caixaRUBean.finalizarAlmoco(true)}" />
+                    <p:commandButton ajax="false" value="Cancelar" action="#{caixaRUBean.finalizarAlmoco(false)}" />
                 </h:panelGrid>
             </h:form>
         </ui:define>

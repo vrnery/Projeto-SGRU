@@ -16,10 +16,10 @@ import org.hibernate.Session;
  * @author marcelo.lima
  */
 public class CaixaRUDAO {
-    private final Session sessao;
+    private Session sessao;
 
     public CaixaRUDAO() {
-        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
+        //sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
     
     /**
@@ -27,6 +27,7 @@ public class CaixaRUDAO {
      * @param caixaRU O caixa a ser cadastrado no sistema
      */
     public void salvar(CaixaRU caixaRU) {
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
         sessao.saveOrUpdate(caixaRU);        
     }  
     
@@ -37,6 +38,7 @@ public class CaixaRUDAO {
      * @return Um objeto CaixaRU
      */
     public CaixaRU carregarCaixaAberto(OperadorCaixa operador, Calendar dataAbertura) {        
+        sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador AND valorFechamento='0'")

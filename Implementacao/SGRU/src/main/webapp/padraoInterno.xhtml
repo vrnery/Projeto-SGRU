@@ -10,20 +10,20 @@
     </h:head>
     <h:body>
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="110">
-                <h1 align="center">SGRU</h1>
+            <p:layoutUnit position="north" size="110">                
+                <f:facet name="header">
+                    <h1 align="center">SGRU</h1>
+                    <h1 align="center">Olá #{autenticarBean.nomeUsuario}</h1>                    
+                </f:facet>
             </p:layoutUnit>
             <p:layoutUnit position="west">
                 <h:form>
                     <p:menu>
-                        <p:menuitem ajax="false" value="Fechamento de Caixa" action="alterar"/>                        
+                        <p:menuitem ajax="false" value="Fechamento de Caixa" action="#{caixaRUBean.realizarFechamentoCaixa()}"/>                        
                     </p:menu>
                 </h:form>
             </p:layoutUnit>            
             <p:layoutUnit position="center">
-                <f:facet name="header">
-                    <ui:insert name="mensagem"/>
-                </f:facet>
                 <ui:insert name="conteudo"/>
             </p:layoutUnit>
         </p:layout>

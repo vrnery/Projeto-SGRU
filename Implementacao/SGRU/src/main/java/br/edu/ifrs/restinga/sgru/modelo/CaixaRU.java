@@ -157,9 +157,20 @@ public class CaixaRU implements Serializable {
         return valorAtualAlmoco;
     }
     
+    /**
+     * Carrega o valor cobrado atualmente pelo almoço
+     */
     public void carregarValorAtualAlmoco() {
         // Carrega o valor de almoco atual        
         ValorAlmocoDAO dao = new ValorAlmocoDAO();
         valorAtualAlmoco = dao.carregarValorAtualAlmoco();
+    }
+    
+    /**
+     * Extrai da lista o último almoço vendido no caixa
+     * @return O último almoço vendido no caixa
+     */
+    public VendaAlmoco ultimoAlmocoVendido() {
+        return lstVendaAlmoco.get(lstVendaAlmoco.size()-1);
     }
 }
