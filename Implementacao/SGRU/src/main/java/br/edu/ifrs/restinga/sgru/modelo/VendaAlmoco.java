@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,7 +36,7 @@ public class VendaAlmoco implements Serializable {
     @OneToOne
     @JoinColumn(name = "idTicket")
     private Ticket ticket;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "idCartao")
     private Cartao cartao;
     @ManyToOne
@@ -122,10 +123,7 @@ public class VendaAlmoco implements Serializable {
     /**
      * @param valorAlmoco the valorAlmoco to set
      */
-    public void setValorAlmoco(ValorAlmoco valorAlmoco) {       
-        // Inicialmente seta o valor atual do almoco
-        this.valorAlmoco = valorAlmoco;
-        
+    public void setValorAlmoco(ValorAlmoco valorAlmoco) {                       
         // verifica a necessidade de atualizar o valor do almoco
         if (this.getCartao() != null) {
             long miliSecondsCartao = this.getCartao().getDataCredito().getTimeInMillis();            
@@ -140,6 +138,13 @@ public class VendaAlmoco implements Serializable {
                    this.valorAlmoco = dao.getValorAlmocoPorData(this.getCartao().getDataCredito());                   
                 }
             }
+        }
+        
+        // Se nao encontrar valor de almoco para a data enviada, seta o valor do almoco
+        // com o valor atual
+        if (this.valorAlmoco == null) {
+            // Inicialmente seta o valor atual do almoco
+            this.valorAlmoco = valorAlmoco;
         }
     }
 }

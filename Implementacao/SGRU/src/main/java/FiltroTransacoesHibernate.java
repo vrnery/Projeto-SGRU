@@ -12,7 +12,10 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.hibernate.Session;
+import org.hibernate.context.internal.ManagedSessionContext;
 
 /**
  *
@@ -34,6 +37,9 @@ public class FiltroTransacoesHibernate implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
         
+        HttpSession sessaoHttp =((HttpServletRequest)request).getSession(true);
+        ManagedSessionContext.bind((Session)sessaoHttp.getAttribute("sessaoHibernate"));
+        
         Session sessao = HibernateUtil.getSessionFactory().getCurrentSession();
         /*
         if(sessao.getTransaction() == null)
@@ -42,10 +48,11 @@ public class FiltroTransacoesHibernate implements Filter {
         if(sessao.getTransaction() != null)
             sessao.getTransaction().commit();
         */
-        try {
+        try {            
             sessao.beginTransaction();
             chain.doFilter(request, response);
             sessao.getTransaction().commit();
+            ManagedSessionContext.unbind (HibernateUtil.getSessionFactory());
             //sessao.close();
         } catch (Throwable ex){
             try{

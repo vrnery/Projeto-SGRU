@@ -58,18 +58,24 @@ public class CaixaRUBean {
         dao.salvar(caixaRU);
         enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
     }
-    
-    /*
-    public String isCaixaAberto(OperadorCaixa oper) {
+            
+    public void isCaixaAberto(OperadorCaixa oper) {
         caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
         
-        if (caixaRU == null) {
-            return "abrirCaixa";
-        } else {
-            return "caixa";
+        if (caixaRU != null) {
+            // Verifica se o valor atual do almoco estah setado
+            if (caixaRU.getValorAtualAlmoco() == null) {
+                caixaRU.carregarValorAtualAlmoco();
+            }        
+
+            // verifica se a lista de almocos estah preenchida
+            if (caixaRU.getLstVendaAlmoco().isEmpty()) {
+                // realiza a consulta para verificar se existe alguma venda para o dia
+                VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+                caixaRU.setLstVendaAlmoco(daoVendaAlmoco.carregar(caixaRU.getId(),Calendar.getInstance()));
+            }                    
         }
-    }
-    */
+    }     
     
     /**
      * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa
@@ -78,17 +84,11 @@ public class CaixaRUBean {
      * @return A próxima página a ser exibida pelo usuário
      */
     public String realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {                       
-        // verifica se já existe um caixa aberto para o operador        
-        caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());        
-        
-        // Nao encontrou caixa aberto. Abre o caixa
-        if (caixaRU == null) {
-            caixaRU = new CaixaRU();
-            caixaRU.setOperadorCaixa(oper);
-            caixaRU.setValorAbertura(valorAbertura);
-            caixaRU.setDataAbertura(Calendar.getInstance());
-            dao.salvar(caixaRU);
-        }         
+        caixaRU = new CaixaRU();
+        caixaRU.setOperadorCaixa(oper);
+        caixaRU.setValorAbertura(valorAbertura);
+        caixaRU.setDataAbertura(Calendar.getInstance());
+        dao.salvar(caixaRU);
         
         // Verifica se o valor atual do almoco estah setado
         if (caixaRU.getValorAtualAlmoco() == null) {
@@ -141,9 +141,6 @@ public class CaixaRUBean {
                     vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
                     vendaAlmoco.setDataVenda(Calendar.getInstance());
                     caixaRU.setVendaAlmoco(vendaAlmoco);               
-
-                    //System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
-                    //System.out.println("Valor do almoco pago pelo cliente: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());        
                 } else {
                     throw new SaldoInsuficienteException("Saldo insuficiente!");
                 }            
@@ -206,9 +203,13 @@ public class CaixaRUBean {
      */
     public String finalizarAlmoco(boolean confirmar) {
         VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();            
-        if (confirmar) {            
+        VendaAlmoco ultimoAlmocoVendido = this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1);
+        
+        if (confirmar) {                   
+            // Desconta o valor do almoco do aluno
+            ultimoAlmocoVendido.getCartao().setSaldo(ultimoAlmocoVendido.getCartao().getSaldo()-ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
             // Salva a venda
-            daoVendaAlmoco.salvar(this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1));
+            daoVendaAlmoco.salvar(ultimoAlmocoVendido);
             // Descontar o valor do almoco aqui!
             /*
                     // Desconta o valor do almoco do saldo do cliente
@@ -220,7 +221,7 @@ public class CaixaRUBean {
             */
         } else {
             // exclui a venda da lista
-            this.getCaixaRU().getLstVendaAlmoco().remove(this.getCaixaRU().getLstVendaAlmoco().size()-1);
+            this.getCaixaRU().getLstVendaAlmoco().remove(ultimoAlmocoVendido);
         }
         daoVendaAlmoco.confirmarVendaAlmco(confirmar);
         return "caixa";
@@ -239,6 +240,7 @@ public class CaixaRUBean {
             valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
         }
         caixaRU.setValorFechamento(valorFechamento);
+        caixaRU.setDataFechamento(Calendar.getInstance());
         dao.salvar(caixaRU);
         
         return "index";

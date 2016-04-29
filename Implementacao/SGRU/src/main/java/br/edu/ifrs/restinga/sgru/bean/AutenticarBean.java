@@ -11,6 +11,7 @@ import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
@@ -24,7 +25,16 @@ public class AutenticarBean {
     private OperadorCaixa operadorCaixa;    
     private String login;
     private String senha;
-    private String nomeUsuario;    
+    private String nomeUsuario;
+    @ManagedProperty(value="#{caixaRUBean}")
+    private CaixaRUBean caixaRUBean;
+
+    /**     
+     * @param caixaRUBean The caixaRUBean to set
+     */
+    public void setCaixaRUBean(CaixaRUBean caixaRUBean) {
+        this.caixaRUBean = caixaRUBean;
+    }        
     
     /**
      * @return the operadorCaixa
@@ -88,6 +98,7 @@ public class AutenticarBean {
      */
     public String autenticar() {        
         String retorno = "abrirCaixa";
+        
         Pessoa pessoa;
         PessoaDAO daoPessoa = new PessoaDAO();
         try {                        
@@ -101,7 +112,11 @@ public class AutenticarBean {
             if (pessoa instanceof OperadorCaixa) {
                 operadorCaixa = (OperadorCaixa) pessoa;
                 // abre o caixa
-                //CaixaRUBean caixaRUBean = new CaixaRUBean();
+                caixaRUBean.isCaixaAberto(operadorCaixa);
+                
+                if (caixaRUBean.getCaixaRU() != null) {
+                    retorno = "caixa";
+                }
                 //caixaRUBean.realizarAberturaCaixa(getOperadorCaixa(), 0);                                        
             }                        
         } catch (LoginInvalidoException e) {

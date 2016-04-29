@@ -7,7 +7,7 @@
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/SGRU?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">USERSGRUAPP</property>
     <property name="hibernate.connection.password">APPURGSUSER</property>
-    <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.current_session_context_class">managed</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.format_sql">true</property>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Aluno"/>
@@ -19,6 +19,6 @@
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Recarga"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Ticket"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco"/>
-    <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco"/>    
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco"/>
   </session-factory>
 </hibernate-configuration>
