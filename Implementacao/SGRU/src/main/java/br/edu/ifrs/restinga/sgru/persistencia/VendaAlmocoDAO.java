@@ -42,17 +42,5 @@ public class VendaAlmocoDAO {
                 .setString("dataVenda", f.format(dataVenda.getTime()))
                 .setString("idCaixaRU", String.valueOf(idCaixaRU))
                 .list();
-    }
-    
-    /**
-     * Executa commit, para confirmação, e rollback, para não confirmação
-     * @param confirmar True, para confirmar a operação, e false para não confirmar
-     */
-    public void confirmarVendaAlmco(boolean confirmar) {
-        if (confirmar) {
-            sessao.getTransaction().commit();
-        } else {
-            sessao.getTransaction().rollback();
-        }
-    }
+    }    
 }

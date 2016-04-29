@@ -6,6 +6,7 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
+import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
@@ -116,8 +117,11 @@ public class AutenticarBean {
                 
                 if (caixaRUBean.getCaixaRU() != null) {
                     retorno = "caixa";
-                }
-                //caixaRUBean.realizarAberturaCaixa(getOperadorCaixa(), 0);                                        
+                } else {
+                    // garante que haverah um caixaRU para setar as propriedades
+                    // na abertura de caixa
+                    caixaRUBean.setCaixaRU(new CaixaRU());
+                }                
             }                        
         } catch (LoginInvalidoException e) {
             retorno = "index";

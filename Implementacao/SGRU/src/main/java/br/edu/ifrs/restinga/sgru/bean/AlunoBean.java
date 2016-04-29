@@ -42,7 +42,7 @@ public class AlunoBean {
      */
     public void salvar() {
         dao.salvar(aluno);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Aluno cadastrado com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Aluno cadastrado com sucesso!");
     }    
     
     /**

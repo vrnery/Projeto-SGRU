@@ -5,11 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -73,8 +72,12 @@ public class VendaAlmoco implements Serializable {
 
     /**
      * @return the valorAlmoco
+     * @throws br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException Caso não encontre um valor de almoço cadastrado
      */
-    public ValorAlmoco getValorAlmoco() {
+    public ValorAlmoco getValorAlmoco() throws ValorAlmocoInvalidoException  {
+        if (valorAlmoco == null) {
+            throw new ValorAlmocoInvalidoException("Valor de almoço não cadastrado!");
+        }
         return valorAlmoco;
     }
     

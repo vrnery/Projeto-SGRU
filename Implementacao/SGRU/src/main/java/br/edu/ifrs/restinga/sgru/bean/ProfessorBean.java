@@ -42,7 +42,7 @@ public class ProfessorBean {
      */
     public void salvar() {
         dao.salvar(professor);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Professor cadastrado com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Professor cadastrado com sucesso!");
     }    
     
     /**

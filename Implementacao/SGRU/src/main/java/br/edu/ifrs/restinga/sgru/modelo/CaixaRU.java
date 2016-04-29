@@ -36,8 +36,7 @@ public class CaixaRU implements Serializable {
     private double valorFechamento;        
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="idOperadorCaixa")
-    private OperadorCaixa operadorCaixa;              
-    //@OneToMany(fetch = FetchType.EAGER, mappedBy = "caixaRU", cascade = {CascadeType.ALL})
+    private OperadorCaixa operadorCaixa;                  
     // Atributos nao persistidos no banco
     @Transient
     private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();        

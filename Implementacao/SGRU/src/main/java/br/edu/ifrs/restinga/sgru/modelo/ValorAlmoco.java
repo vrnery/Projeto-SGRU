@@ -42,7 +42,7 @@ public class ValorAlmoco implements Serializable {
     /**
      * @return the valorAlmoco
      */
-    public double getValorAlmoco() {
+    public double getValorAlmoco() {        
         return valorAlmoco;
     }
 

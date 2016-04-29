@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
@@ -34,7 +35,7 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean
 @SessionScoped
 public class CaixaRUBean {
-    private CaixaRU caixaRU = new CaixaRU();
+    private CaixaRU caixaRU;
     private final CaixaRUDAO dao = new CaixaRUDAO();    
     
     /**
@@ -59,6 +60,10 @@ public class CaixaRUBean {
         enviarMensagem(FacesMessage.SEVERITY_INFO, "Caixa cadastrado com sucesso!");
     }
             
+    /**
+     * Verifica se já existe um caixa aberto, que ainda não foi fechado, para o operador naquele dia
+     * @param oper O operador de caixa
+     */
     public void isCaixaAberto(OperadorCaixa oper) {
         caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
         
@@ -157,6 +162,42 @@ public class CaixaRUBean {
     }    
     
     /**
+     * Realiza uma venda de almoço com ticket
+     * @param codigo O código do ticket apresentado
+     * @return  A próxima página a ser visualizada pelo operador de caixa
+     */
+    public String realizarVendaAlmocoTicket(int codigo) {
+        String retorno = "caixa";
+        TicketDAO ticketDAO = new TicketDAO();
+        Ticket ticket = ticketDAO.carregar(codigo);
+        
+        try {
+            if (ticket == null) {
+                throw new TicketInvalidoException("Ticket não encontrado!");
+            } else if (ticket.getValor() != caixaRU.getValorAtualAlmoco().getValorAlmoco()) {
+                throw new TicketInvalidoException("Ticket vencido!");
+            } else {
+                // Cria o objeto VendaAlmoco
+                VendaAlmoco vendaAlmoco = new VendaAlmoco();
+                vendaAlmoco.setCaixaRU(caixaRU);
+            
+                // seta o ticket
+                vendaAlmoco.setTicket(ticket);
+                vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());
+                vendaAlmoco.setDataVenda(Calendar.getInstance());
+                caixaRU.setVendaAlmoco(vendaAlmoco);
+            
+                // Coloca o ticket como utilizado
+                ticket.setDataUtilizado(vendaAlmoco.getDataVenda());
+            }
+        } catch (TicketInvalidoException e) {
+            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            retorno = "venda";
+        }
+        return retorno;
+    }    
+    
+    /**
      * Verifica se o cliente possuir saldo no cartão. Caso negativo, verifica se existe recarga
      * para o cartao e transfere o saldo. O almoco eh autorizado ainda que o valor do saldo do 
      * cartão seja menor que o valor do almoco. Não será autorizado, no entanto, a venda para
@@ -202,28 +243,23 @@ public class CaixaRUBean {
      * @return A próxima página que o operador será redirecionado
      */
     public String finalizarAlmoco(boolean confirmar) {
-        VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();            
-        VendaAlmoco ultimoAlmocoVendido = this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1);
-        
-        if (confirmar) {                   
-            // Desconta o valor do almoco do aluno
-            ultimoAlmocoVendido.getCartao().setSaldo(ultimoAlmocoVendido.getCartao().getSaldo()-ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
-            // Salva a venda
-            daoVendaAlmoco.salvar(ultimoAlmocoVendido);
-            // Descontar o valor do almoco aqui!
-            /*
-                    // Desconta o valor do almoco do saldo do cliente
-                    if (pessoa instanceof Aluno) {
-                        ((Aluno)pessoa).getCartao().setSaldo(((Aluno)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
-                    } else if (pessoa instanceof Professor) {
-                        ((Professor)pessoa).getCartao().setSaldo(((Professor)pessoa).getCartao().getSaldo() - vendaAlmoco.getValorAlmoco().getValorAlmoco());
-                    }
-            */
-        } else {
-            // exclui a venda da lista
-            this.getCaixaRU().getLstVendaAlmoco().remove(ultimoAlmocoVendido);
+        try {
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();            
+            VendaAlmoco ultimoAlmocoVendido = this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1);
+
+            if (confirmar) {                   
+                // Desconta o valor do almoco do aluno
+                ultimoAlmocoVendido.getCartao().setSaldo(ultimoAlmocoVendido.getCartao().getSaldo()-ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
+                // Salva a venda
+                daoVendaAlmoco.salvar(ultimoAlmocoVendido);
+            } else {
+                // exclui a venda da lista
+                this.getCaixaRU().getLstVendaAlmoco().remove(ultimoAlmocoVendido);
+            }            
+        } catch (ValorAlmocoInvalidoException e) {
+            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            return "venda";
         }
-        daoVendaAlmoco.confirmarVendaAlmco(confirmar);
         return "caixa";
     }
     
@@ -233,53 +269,21 @@ public class CaixaRUBean {
      * @return A página para onde o operador será redirecionado
      */
     public String realizarFechamentoCaixa() {
-        // calcula a soma de todos os almocos vendidos no dia e
-        // seta o valor do fechamento
-        double valorFechamento = 0;
-        for (VendaAlmoco vendaAlmoco : caixaRU.getLstVendaAlmoco()) {
-            valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
-        }
-        caixaRU.setValorFechamento(valorFechamento);
-        caixaRU.setDataFechamento(Calendar.getInstance());
-        dao.salvar(caixaRU);
-        
-        return "index";
-    }
-
-    /**
-     * 
-     * @param codigo 
-     */
-    public void realizarVendaAlmocoTicket(int codigo) {
-        TicketDAO ticketDAO = new TicketDAO();
-        Ticket ticket = ticketDAO.carregar(codigo);
-        
-        try {
-            if (ticket == null) {
-                throw new TicketInvalidoException("Ticket não encontrado!");
-            } else if (ticket.getValor() != caixaRU.getValorAtualAlmoco().getValorAlmoco()) {
-                throw new TicketInvalidoException("Ticket vencido!");
-            } else {
-                // Cria o objeto VendaAlmoco
-                VendaAlmoco vendaAlmoco = new VendaAlmoco();
-                vendaAlmoco.setCaixaRU(caixaRU);
-            
-                // seta o ticket
-                vendaAlmoco.setTicket(ticket);
-                vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());
-                vendaAlmoco.setDataVenda(Calendar.getInstance());
-                caixaRU.setVendaAlmoco(vendaAlmoco);
-            
-                // o valor a ser pago pelo almoco
-                System.out.println("Valor atual do almoco: " + caixaRU.getValorAtualAlmoco().getValorAlmoco());
-                System.out.println("Valor do almoco pago pelo cliente: " + vendaAlmoco.getValorAlmoco().getValorAlmoco());
-            
-                // Coloca o ticket como utilizado
-                ticket.setDataUtilizado(vendaAlmoco.getDataVenda());
+        try {            
+            // calcula a soma de todos os almocos vendidos no dia e
+            // seta o valor do fechamento            
+            double valorFechamento = 0;
+            for (VendaAlmoco vendaAlmoco : caixaRU.getLstVendaAlmoco()) {
+                valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
             }
-        } catch (TicketInvalidoException e) {
+            caixaRU.setValorFechamento(valorFechamento);
+            caixaRU.setDataFechamento(Calendar.getInstance());            
+            dao.salvar(caixaRU);            
+        } catch (ValorAlmocoInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
-        }
+            return "";
+        }                
+        return "index";
     }
     
     /**

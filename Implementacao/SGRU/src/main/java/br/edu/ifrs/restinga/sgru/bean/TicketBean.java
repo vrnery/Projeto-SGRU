@@ -41,7 +41,7 @@ public class TicketBean {
      */
     public void salvar() {
         dao.salvar(ticket);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Ticket cadastrado com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Ticket cadastrado com sucesso!");
     }
     
     /**

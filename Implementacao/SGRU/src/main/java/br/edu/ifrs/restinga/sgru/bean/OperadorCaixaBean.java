@@ -41,7 +41,7 @@ public class OperadorCaixaBean {
      */
     public void salvar() {
         dao.salvar(operadorCaixa);
-        //enviarMensagem(FacesMessage.SEVERITY_INFO, "Operador de caixa cadastrado com sucesso!");
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Operador de caixa cadastrado com sucesso!");
     }    
     
     /**
