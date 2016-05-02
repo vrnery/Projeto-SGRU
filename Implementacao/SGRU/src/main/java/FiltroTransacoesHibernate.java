@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import java.io.IOException;
@@ -14,7 +9,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StaleObjectStateException;
@@ -44,22 +38,26 @@ public class FiltroTransacoesHibernate implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {                
-        Session currentSession;
+        
+        //Session currentSession;
 
         // Try to get a Hibernate Session from the HttpSession
         HttpSession httpSession = ((HttpServletRequest) request).getSession();
-        Session disconnectedSession = (Session) httpSession.getAttribute(HIBERNATE_SESSION_KEY);
+        //Session disconnectedSession = (Session) httpSession.getAttribute(HIBERNATE_SESSION_KEY);
+        Session currentSession = (Session) httpSession.getAttribute(HIBERNATE_SESSION_KEY);
 
         try {
             // Start a new conversation or in the middle?
+            /*
             if (disconnectedSession == null) {            
                 currentSession = sf.openSession();
                 currentSession.setFlushMode(FlushMode.MANUAL);                
             } else {            
                 currentSession = disconnectedSession;
             }
+            */
           
-            ManagedSessionContext.bind(currentSession);          
+            ManagedSessionContext.bind(currentSession);                                  
             chain.doFilter(request, response);         
             currentSession = ManagedSessionContext.unbind(sf);
             

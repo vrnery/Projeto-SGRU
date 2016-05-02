@@ -115,7 +115,7 @@ public class CaixaRUBean {
      * @return Retorna a próxima página a ser exibida para o operador     
      */
     public String realizarVendaAlmocoCartao(String matricula) {
-        String retorno = "venda";
+        String retorno = "confirmarVenda";
         try {
             PessoaDAO pessoaDAO = new PessoaDAO();
             Pessoa pessoa = pessoaDAO.carregar(matricula);        
@@ -192,13 +192,13 @@ public class CaixaRUBean {
             }
         } catch (TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
-            retorno = "venda";
+            retorno = "confirmarVenda";
         }
         return retorno;
     }    
     
     /**
-     * Verifica se o cliente possuir saldo no cartão. Caso negativo, verifica se existe recarga
+     * Verifica se o cliente possui saldo no cartão. Caso negativo, verifica se existe recarga
      * para o cartao e transfere o saldo. O almoco eh autorizado ainda que o valor do saldo do 
      * cartão seja menor que o valor do almoco. Não será autorizado, no entanto, a venda para
      * cartões que tenham saldo negativos ou ainda iguais a zero
@@ -245,7 +245,7 @@ public class CaixaRUBean {
     public String finalizarAlmoco(boolean confirmar) {
         try {
             VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();            
-            VendaAlmoco ultimoAlmocoVendido = this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1);
+            VendaAlmoco ultimoAlmocoVendido = this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1);        
 
             if (confirmar) {                   
                 // Desconta o valor do almoco do aluno

@@ -38,6 +38,8 @@ public class TicketDAO {
 
     /**
      * Consulta codigo do Ticket não utilizado
+     * @param codigo O codigo do ticket a ser pesquisado
+     * @return Um objeto ticket
      */
     public Ticket usarTicket(int codigo) {
         return (Ticket) sessao.createQuery("FROM Ticket WHERE id=:id AND dataUtilizado = NULL").setInteger("id", codigo).uniqueResult();

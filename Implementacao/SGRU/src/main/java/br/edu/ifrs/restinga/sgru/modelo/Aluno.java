@@ -21,7 +21,7 @@ public class Aluno extends Pessoa {
     private String caminhoFoto;                    
     @JoinColumn(name="idCartao")    
     @OneToOne(cascade = {CascadeType.ALL})
-    private Cartao cartao;    
+    private Cartao cartao;  
 
     /**
      * @return the caminhoFoto
