@@ -33,10 +33,10 @@ insert into recarga values(10,200,'2016-04-29',0,3);
 insert into recarga values(11,300,'2016-04-29',0,3);
 insert into recarga values(12,400,'2016-04-29',0,3);
 
-insert into recarga values(1,100,'2016-04-14',0,4);
-insert into recarga values(2,200,'2016-04-14',0,4);
-insert into recarga values(3,300,'2016-04-15',0,4);
-insert into recarga values(4,400,'2016-04-16',0,4);
+insert into recarga values(13,100,'2016-04-14',0,4);
+insert into recarga values(14,200,'2016-04-14',0,4);
+insert into recarga values(15,300,'2016-04-15',0,4);
+insert into recarga values(16,400,'2016-04-16',0,4);
 
 insert into valoralmoco values(1,1,'2016-04-14');
 insert into valoralmoco values(2,2,'2016-04-15');
