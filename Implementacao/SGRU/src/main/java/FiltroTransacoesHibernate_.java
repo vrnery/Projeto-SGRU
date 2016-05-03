@@ -28,13 +28,15 @@ public class FiltroTransacoesHibernate_ implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession sessaoHTTP = req.getSession(false);
-        TransacaoCaixaRU transacaoCorrente = null;
+        TransacaoCaixaRU transacaoCorrente = null;        
+
         if(sessaoHTTP != null) {
             transacaoCorrente = (TransacaoCaixaRU) sessaoHTTP.getAttribute("transacaoCorrente");
             if(transacaoCorrente != null) {
                 transacaoCorrente.iniciarRequisicao();
             }
         }
+
         chain.doFilter(request, response);
         if(sessaoHTTP != null && transacaoCorrente != null) {
             transacaoCorrente.finalizarRequisicao();

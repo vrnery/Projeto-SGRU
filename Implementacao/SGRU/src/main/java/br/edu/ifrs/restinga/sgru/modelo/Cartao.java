@@ -33,9 +33,11 @@ public class Cartao implements Serializable {
     private Calendar dataCredito;
     private double saldo;    
     @OneToMany(mappedBy = "cartao", cascade = {CascadeType.ALL})
-    private List<Recarga> lstRecarga = new ArrayList();
+    private List<Recarga> lstRecarga = new ArrayList();    
     @OneToOne(mappedBy = "cartao")
     private Aluno aluno;
+    @OneToOne(mappedBy = "cartao")
+    private Professor professor;        
 
     /**
      * @return the id
@@ -101,21 +103,36 @@ public class Cartao implements Serializable {
     public void setDebitar(double valor) {
         this.saldo -= valor;
     }
- 
-    /**     
-     * @return the Aluno
+        
+    /**
+     * @return the aluno
      */
     public Aluno getAluno() {
         return aluno;
     }
 
-    /**     
-     * @param aluno The Aluno to set
+    /**
+     * @param aluno the aluno to set
      */
     public void setAluno(Aluno aluno) {
         this.aluno = aluno;
     }
-        
+
+    /**
+     * @return the professor
+     */
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    /**
+     * @param professor the professor to set
+     */
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+    
+    
     /**
      * Carrega a lstRecarga mais antiga para o cartao. Se houver mais de uma lstRecarga
      * realizada na mesma data, soma os valores

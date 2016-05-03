@@ -9,12 +9,12 @@
         <ui:define name="conteudo">            
             <h:form>
                 <h:panelGrid columns="2">                    
-                    <p:graphicImage width="130" height="100" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.caminhoFoto}" />
+                    <p:graphicImage width="130" height="100" value="#{pessoaBean.imagem}" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <h:outputText id="txtNome" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.nome}"/>
+                        <h:outputText id="txtNome" value="#{pessoaBean.nome}"/>
                         <p:outputLabel for="txtMatricula" value="Matrícula: "/>
-                        <h:outputText id="txtMatricula" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.matricula}"/>            
+                        <h:outputText id="txtMatricula" value="#{pessoaBean.matricula}"/>                                    
                         <p:outputLabel for="txtSaldoCartao" value="Saldo do Cartão: "/>
                         <h:outputText id="txtSaldoCartao" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.saldo}"/>            
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>

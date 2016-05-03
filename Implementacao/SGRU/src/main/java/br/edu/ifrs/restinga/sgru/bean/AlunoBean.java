@@ -26,7 +26,7 @@ public class AlunoBean {
     /**
      * @return the aluno
      */
-    public Aluno getAluno() {
+    public Aluno getAluno() {        
         return aluno;        
     }
 
@@ -34,7 +34,7 @@ public class AlunoBean {
      * @param aluno the aluno to set
      */
     public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
+        this.aluno = aluno;        
     }
     
     /**
@@ -56,6 +56,8 @@ public class AlunoBean {
         if (tmpAluno == null) {
             throw new MatriculaInvalidaException("Matrícula não encontrada!");
         }
+        
+        
     }
     
     /**

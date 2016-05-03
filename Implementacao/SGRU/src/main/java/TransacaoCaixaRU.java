@@ -10,7 +10,7 @@ import org.hibernate.context.internal.ManagedSessionContext;
  */
 public class TransacaoCaixaRU {
     private Session sessaoHibernate;
-    
+
     public void iniciar() {
         sessaoHibernate = HibernateUtil.getSessionFactory().openSession();
         sessaoHibernate.setFlushMode(FlushMode.MANUAL);
