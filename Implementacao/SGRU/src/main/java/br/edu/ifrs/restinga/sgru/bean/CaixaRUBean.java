@@ -182,14 +182,14 @@ public class CaixaRUBean {
                 VendaAlmoco vendaAlmoco = new VendaAlmoco();
                 vendaAlmoco.setCaixaRU(caixaRU);
             
+                // Coloca o ticket como utilizado
+                ticket.setDataUtilizado(vendaAlmoco.getDataVenda());
+                
                 // seta o ticket
                 vendaAlmoco.setTicket(ticket);
                 vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());
                 vendaAlmoco.setDataVenda(Calendar.getInstance());
                 caixaRU.setVendaAlmoco(vendaAlmoco);
-            
-                // Coloca o ticket como utilizado
-                ticket.setDataUtilizado(vendaAlmoco.getDataVenda());
             }
         } catch (TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
@@ -253,7 +253,7 @@ public class CaixaRUBean {
                 // Desconta o valor do almoco do aluno
                 ultimoAlmocoVendido.getCartao().setSaldo(ultimoAlmocoVendido.getCartao().getSaldo()-ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
                 }else{
-                    ultimoAlmocoVendido.getTicket().setDataUtilizado(ultimoAlmocoVendido.getDataVenda());                    
+                    ultimoAlmocoVendido.getTicket().setDataUtilizado((Calendar) ultimoAlmocoVendido.getDataVenda());                    
                 }
                 
                 // Salva a venda
