@@ -169,7 +169,7 @@ public class CaixaRUBean {
     public String realizarVendaAlmocoTicket(int codigo) {
         String retorno = "caixa";
         TicketDAO ticketDAO = new TicketDAO();
-        Ticket ticket = ticketDAO.carregar(codigo);
+        Ticket ticket = ticketDAO.usarTicket(codigo);
         
         try {
             if (ticket == null) {
