@@ -12,9 +12,9 @@
                     <p:graphicImage width="130" height="100" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.caminhoFoto}" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtCodigo" value="Código: "/>
-                        <h:outputText id="txtNome" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.id}"/>
-                        <p:outputLabel for="txtMatricula" value="Data da Compra: "/>
-                        <h:outputText id="txtMatricula" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.dataCriado}"/>  
+                        <h:outputText id="txtCodigo" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.id}"/>
+                        <p:outputLabel for="txtDataCompra" value="Data da Compra: "/>
+                        <h:outputText id="txtDataCompra" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.dataCriado.time}"/>  
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
                         <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().valorAlmoco.valorAlmoco}"/>            
                     </h:panelGrid>

@@ -25,6 +25,7 @@ import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -167,7 +168,7 @@ public class CaixaRUBean {
      * @return  A próxima página a ser visualizada pelo operador de caixa
      */
     public String realizarVendaAlmocoTicket(int codigo) {
-        String retorno = "caixa";
+        String retorno = "confirmarVendaTicket";
         TicketDAO ticketDAO = new TicketDAO();
         Ticket ticket = ticketDAO.usarTicket(codigo);
         
@@ -192,7 +193,7 @@ public class CaixaRUBean {
             }
         } catch (TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
-            retorno = "confirmarVenda";
+            retorno = "caixa";
         }
         return retorno;
     }    
@@ -247,9 +248,14 @@ public class CaixaRUBean {
             VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();            
             VendaAlmoco ultimoAlmocoVendido = this.getCaixaRU().getLstVendaAlmoco().get(this.getCaixaRU().getLstVendaAlmoco().size()-1);        
 
-            if (confirmar) {                   
+            if (confirmar) {
+                if(ultimoAlmocoVendido.getCartao() != null){                
                 // Desconta o valor do almoco do aluno
                 ultimoAlmocoVendido.getCartao().setSaldo(ultimoAlmocoVendido.getCartao().getSaldo()-ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
+                }else{
+                    ultimoAlmocoVendido.getTicket().setDataUtilizado(ultimoAlmocoVendido.getDataVenda());                    
+                }
+                
                 // Salva a venda
                 daoVendaAlmoco.salvar(ultimoAlmocoVendido);
             } else {
