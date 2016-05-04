@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/SGRU">
-  <Resources allowLinking="false">
-    <PostResources base="c:\imagens" className="org.apache.catalina.webresources.DirResourceSet" readOnly="true" webAppMount="/imagens"/>
-  </Resources>
-</Context>
+<Context antiJARLocking="true" path="/SGRU"/>

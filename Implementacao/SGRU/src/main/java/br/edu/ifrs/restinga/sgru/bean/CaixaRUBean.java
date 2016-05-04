@@ -7,25 +7,28 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.PeriodoEntreAlmocosInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
 import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.Cartao;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
 import br.edu.ifrs.restinga.sgru.modelo.Ticket;
+import br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -37,7 +40,9 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class CaixaRUBean {
     private CaixaRU caixaRU;
-    private final CaixaRUDAO dao = new CaixaRUDAO();    
+    private final CaixaRUDAO dao = new CaixaRUDAO();
+    private static final int NUM_MAX_MINUTOS_ULTIMO_ALMOCO = 270;
+    private static final int NUM_DIAS_VALIDADE_RECARGA = 60;
     
     /**
      * @return the caixaRU
@@ -116,7 +121,7 @@ public class CaixaRUBean {
      * @return Retorna a próxima página a ser exibida para o operador     
      */
     public String realizarVendaAlmocoCartao(String matricula) {
-        String retorno = "confirmarVenda";
+        String retorno = "confirmarVendaCartao";
         try {
             PessoaDAO pessoaDAO = new PessoaDAO();
             Pessoa pessoa = pessoaDAO.carregar(matricula);        
@@ -142,9 +147,9 @@ public class CaixaRUBean {
                     } else if (pessoa instanceof Professor) {
                         vendaAlmoco.setCartao(((Professor)pessoa).getCartao());
                     }
-                    // O metodo setValorAlmoco verifica, com base na dataCredito do cartao
-                    // o valor a ser pago pelo almoco
-                    vendaAlmoco.setValorAlmoco(caixaRU.getValorAtualAlmoco());        
+                    
+                    // o valor a ser pago pelo almoco                    
+                    vendaAlmoco.setValorAlmoco(verificarValorPagarAlmoco(vendaAlmoco.getCartao()));
                     vendaAlmoco.setDataVenda(Calendar.getInstance());
                     caixaRU.setVendaAlmoco(vendaAlmoco);               
                 } else {
@@ -154,7 +159,7 @@ public class CaixaRUBean {
                 throw new SaldoInsuficienteException("Saldo insuficiente!");
             }      
         } catch (MatriculaInvalidaException | UsuarioInvalidoException | 
-                SaldoInsuficienteException e) {
+                SaldoInsuficienteException | PeriodoEntreAlmocosInvalidoException e) {
             retorno = "caixa";
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
         }
@@ -207,13 +212,43 @@ public class CaixaRUBean {
      * @return True, para almoço autorizado e false para almoço não autorizado
      * @throws RecargaNaoEncontradaException 
      */
-    private boolean autorizaVendaAlmoco(Pessoa pessoa) throws 
-            RecargaNaoEncontradaException {
+    private boolean autorizaVendaAlmoco(Pessoa pessoa) throws RecargaNaoEncontradaException, 
+            PeriodoEntreAlmocosInvalidoException, PeriodoEntreAlmocosInvalidoException {
         boolean autorizado = true;
         // primeiramente, verifica se eh necessario atualizar o saldo da
         // cartao da pessoa        
         if (pessoa instanceof Aluno) {            
             Aluno aluno = (Aluno) pessoa;
+            // Verifica se o aluno já fez alguma compra em um determinado 
+            // intervalo de tempo
+            // ultimo almoco do aluno realizado naquele dia
+            VendaAlmoco ultimoAlmocoAluno = null;
+            for (VendaAlmoco vendaAlmoco : getCaixaRU().getLstVendaAlmoco()) {                
+                // Procura almoco vendido para o aluno
+                try {
+                    if (vendaAlmoco.getCartao().getAluno().getId() == aluno.getId()) {                    
+                        if (ultimoAlmocoAluno == null) {                        
+                            ultimoAlmocoAluno = vendaAlmoco;
+                        } else {
+                            // Ja havia encontrado almoco anteriormente na lista
+                            if (ultimoAlmocoAluno.getDataVenda().after(vendaAlmoco.getDataVenda())) {
+                                ultimoAlmocoAluno = vendaAlmoco;
+                            }
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    // o almoco foi vendido para um professor
+                }
+            }
+            
+            // Se o aluno jah almocou, verifica se pode comprar novamente
+            if (ultimoAlmocoAluno != null) {
+                int numMinutos = (int) ((Calendar.getInstance().getTimeInMillis() - ultimoAlmocoAluno.getDataVenda().getTimeInMillis())* 0.0000166667);
+                if (numMinutos <= NUM_MAX_MINUTOS_ULTIMO_ALMOCO) {
+                    throw new PeriodoEntreAlmocosInvalidoException("Período entre almoços menor que " + NUM_MAX_MINUTOS_ULTIMO_ALMOCO + " minutos!");
+                }
+            }
+            
             if (aluno.getCartao().getSaldo() <= 0) {
                 // eh necessario atualizar o saldo
                 aluno.getCartao().transferirRecargaParaCartao();
@@ -225,6 +260,35 @@ public class CaixaRUBean {
             }
         } else if (pessoa instanceof Professor) {
             Professor professor = (Professor) pessoa;
+            // Verifica se o aluno já fez alguma compra em um determinado 
+            // intervalo de tempo
+            // ultimo almoco do aluno realizado naquele dia
+            VendaAlmoco ultimoAlmocoProfessor = null;
+            for (VendaAlmoco vendaAlmoco : getCaixaRU().getLstVendaAlmoco()) {
+                try {
+                    // Procura almoco vendido para o aluno
+                    if (vendaAlmoco.getCartao().getProfessor().getId() == professor.getId()) {                    
+                        if (ultimoAlmocoProfessor == null) {                        
+                            ultimoAlmocoProfessor = vendaAlmoco;
+                        } else {
+                            // Ja havia encontrado almoco anteriormente na lista
+                            if (ultimoAlmocoProfessor.getDataVenda().after(vendaAlmoco.getDataVenda())) {
+                                ultimoAlmocoProfessor = vendaAlmoco;
+                            }
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    // o almoco foi vendido para um aluno
+                }
+            }
+            
+            // Se o professor jah almocou, verifica se pode comprar novamente
+            if (ultimoAlmocoProfessor != null) {
+                int numMinutos = (int) ((Calendar.getInstance().getTimeInMillis() - ultimoAlmocoProfessor.getDataVenda().getTimeInMillis())*0.0000166667);
+                if (numMinutos <= NUM_MAX_MINUTOS_ULTIMO_ALMOCO) {
+                    throw new PeriodoEntreAlmocosInvalidoException("Período entre almoços menor que " + NUM_MAX_MINUTOS_ULTIMO_ALMOCO + " minutos!");
+                }
+            }            
             if (professor.getCartao().getSaldo() <= 0) {
                 // eh necessario atualizar o saldo
                 professor.getCartao().transferirRecargaParaCartao();
@@ -290,6 +354,38 @@ public class CaixaRUBean {
             return "";
         }                
         return "index";
+    }
+    
+    /**
+     * Verifica o valor a ser pago pelo almoço com base na data do crédito da recarga no cartão
+     * @param cartao O cartão utilizado para pagar o almoço     
+     * @return Um objeto ValorAlmoco com o valor a ser pago pelo almoco
+     */
+    public ValorAlmoco verificarValorPagarAlmoco(Cartao cartao) {
+        ValorAlmoco valorAlmoco = null;
+        // verifica a necessidade de atualizar o valor do almoco
+        if (cartao != null) {            
+            // Se a data do cretito no cartao for menor que a data do valor
+            // do almoco atual, verifica se eh necessario atualizar valor            
+            if (caixaRU.getValorAtualAlmoco().getDataValor().after(cartao.getDataCredito())) {
+                long miliSecondsCartao = cartao.getDataCredito().getTimeInMillis();            
+                int numDias = (int) ((Calendar.getInstance().getTimeInMillis() - miliSecondsCartao)/86400000L);                
+                
+                // Os creditos podem ser usados em ateh 60 dias
+                if (numDias <= NUM_DIAS_VALIDADE_RECARGA) {
+                   ValorAlmocoDAO daoValorAlmoco = new ValorAlmocoDAO();
+                   valorAlmoco = daoValorAlmoco.getValorAlmocoPorData(cartao.getDataCredito());                   
+                }
+            }
+        }
+        
+        // Se nao encontrar valor de almoco para a data enviada, seta o valor do almoco
+        // com o valor atual
+        if (valorAlmoco == null) {
+            // Inicialmente seta o valor atual do almoco
+            valorAlmoco = caixaRU.getValorAtualAlmoco();
+        }    
+        return valorAlmoco;
     }
     
     /**

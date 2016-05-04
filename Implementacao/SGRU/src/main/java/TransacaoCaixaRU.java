@@ -23,8 +23,11 @@ public class TransacaoCaixaRU {
     
     public void iniciarRequisicao() {
         ManagedSessionContext.bind(sessaoHibernate);
-        if(!sessaoHibernate.getTransaction().isActive())
-            sessaoHibernate.beginTransaction();
+        if(!sessaoHibernate.getTransaction().isActive()) {
+            sessaoHibernate.beginTransaction();        
+        } else {
+            finalizarRequisicao();
+        }
     }
     
     public void finalizarRequisicao() {

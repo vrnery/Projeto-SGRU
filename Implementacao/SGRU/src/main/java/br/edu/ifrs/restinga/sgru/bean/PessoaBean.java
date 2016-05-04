@@ -8,11 +8,17 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.modelo.Aluno;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.modelo.Professor;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
+import javax.imageio.ImageIO;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -26,8 +32,8 @@ public class PessoaBean {
     private Aluno aluno;
     private Professor professor;
     private Pessoa pessoa;
-    private String nome;
-    private String matricula;
+    private byte[] foto = null;
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";
 
     public PessoaBean() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -65,13 +71,6 @@ public class PessoaBean {
     }
 
     /**
-     * @param nome the nome to set
-     */
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    /**
      * @return the matricula
      */
     public String getMatricula() {
@@ -81,43 +80,65 @@ public class PessoaBean {
             return professor.getMatricula();
         }
     }
-
-    /**
-     * @param matricula the matricula to set
-     */
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }    
     
-    public StreamedContent getImagem() {
+    /**
+     * Retorna uma imagem para apresentar em um componente p:graphicImage
+     * @return Um objeto StreamedContent, que pode ser apresentado em um componente p:graphicImage
+     */
+    public StreamedContent getFoto() {
         FacesContext context = FacesContext.getCurrentInstance();
-
-        //if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
-        //    return new DefaultStreamedContent();
-        //}
-
-        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.                        
-        /*
-        CaixaRUBean caixaRUBean = (CaixaRUBean) context.getExternalContext().getSessionMap().get("caixaRUBean");                
-        if (caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getAluno() != null) {
-            Aluno aluno = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getAluno();
-            return new DefaultStreamedContent(new ByteArrayInputStream(aluno.getFoto()));            
-        } else {
-            Professor professor = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getProfessor();
-            return new DefaultStreamedContent(new ByteArrayInputStream(professor.getFoto()));            
-        } 
-        */
+        
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
-        }
+        }        
         
         // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+        boolean clienteComFoto;
         if (aluno != null) {
-            return new DefaultStreamedContent(new ByteArrayInputStream(aluno.getFoto()));            
+            clienteComFoto = converterFoto(aluno.getCaminhoFoto());            
         } else {
-            return new DefaultStreamedContent(new ByteArrayInputStream(professor.getFoto()));            
+            clienteComFoto = converterFoto(professor.getCaminhoFoto());                
         }
+        // Caso nao encontre foto alguma, deve solicitar a apresentacao de um documento
+        // de identidade par o cliente         
+        if (!clienteComFoto) {            
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                    "A apresentação de um documento de identidade com foto é obrigatória!", ""));            
+        }
+        return new DefaultStreamedContent(new ByteArrayInputStream(foto));                    
+    }        
+    
+    /**
+     * Converte um arquivo de imagem em um array de baytes     
+     * @param caminhoFoto A localização do arquivo de imagem no computador
+     * @return Um array de bytes com a representação da imagem
+     */
+    public boolean converterFoto(String caminhoFoto) {                                        
+        boolean retorno = true;
+        
+        // Carrega a imagem para um array de bytes no atributo foto        
+        File imgFile = new File(caminhoFoto);
+        if (!imgFile.exists()) {
+            // Nao localizou a foto para a matricula informada, entao carrega a imagem default                
+            // Pega o diretorio onde estah localizada a imagem default
+            String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(CAMINHO_FOTO_DEFAULT);
+            imgFile = new File(realPath);
+            retorno = false;
+        }
+        
+        // Converte o arquivo em um array de bytes
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {            
+            BufferedImage imagem = ImageIO.read(imgFile);
+            ImageIO.write(imagem, "PNG", bos);
+            bos.flush();  
+            foto = bos.toByteArray();                
+        } catch (IOException e) {
+            // Nao foi possivel localizar nenhuma foto
+            retorno = false;
+        }                    
+        
+        return retorno;
     }    
 }

@@ -6,7 +6,6 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
-import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.CascadeType;
@@ -40,7 +39,7 @@ public class VendaAlmoco implements Serializable {
     private Cartao cartao;
     @ManyToOne
     @JoinColumn(name = "idCaixaRU")
-    private CaixaRU caixaRU;
+    private CaixaRU caixaRU;        
 
     /**
      * @return the id
@@ -127,27 +126,6 @@ public class VendaAlmoco implements Serializable {
      * @param valorAlmoco the valorAlmoco to set
      */
     public void setValorAlmoco(ValorAlmoco valorAlmoco) {                       
-        // verifica a necessidade de atualizar o valor do almoco
-        if (this.getCartao() != null) {
-            long miliSecondsCartao = this.getCartao().getDataCredito().getTimeInMillis();            
-            // Se a data do cretito no cartao for menor que a data do valor
-            // do almoco atual, verifica se eh necessario atualizar valor
-            if (miliSecondsCartao < valorAlmoco.getDataValor().getTimeInMillis()) {
-                int numDias = (int) ((Calendar.getInstance().getTimeInMillis() - miliSecondsCartao)/86400000L);
-                
-                // Os creditos podem ser usados em ateh 60 dias
-                if (numDias <= 60) {
-                   ValorAlmocoDAO dao = new ValorAlmocoDAO();
-                   this.valorAlmoco = dao.getValorAlmocoPorData(this.getCartao().getDataCredito());                   
-                }
-            }
-        }
-        
-        // Se nao encontrar valor de almoco para a data enviada, seta o valor do almoco
-        // com o valor atual
-        if (this.valorAlmoco == null) {
-            // Inicialmente seta o valor atual do almoco
-            this.valorAlmoco = valorAlmoco;
-        }
+        this.valorAlmoco = valorAlmoco;
     }
 }

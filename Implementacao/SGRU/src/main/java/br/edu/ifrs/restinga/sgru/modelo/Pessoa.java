@@ -152,5 +152,5 @@ public abstract class Pessoa implements Serializable {
      */
     public void setSenha(String senha) {
         this.senha = senha;
-    }    
+    }            
 }
