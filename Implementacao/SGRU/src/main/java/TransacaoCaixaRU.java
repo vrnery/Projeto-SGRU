@@ -1,6 +1,5 @@
 import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.context.internal.ManagedSessionContext;
 
@@ -32,9 +31,5 @@ public class TransacaoCaixaRU {
         if(sessaoHibernate.isOpen() && sessaoHibernate.getTransaction().isActive())
             sessaoHibernate.getTransaction().commit();
         ManagedSessionContext.unbind(HibernateUtil.getSessionFactory());
-    }
-    
-    public boolean isOpen() {
-        return !(sessaoHibernate==null);
     }
 }

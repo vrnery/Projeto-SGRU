@@ -106,22 +106,18 @@ public class PessoaBean {
         } else {
             Professor professor = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getProfessor();
             return new DefaultStreamedContent(new ByteArrayInputStream(professor.getFoto()));            
-        }         
+        } 
         */
-        /*
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
-        } 
-        */
+        }
         
-        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.        
+        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
         if (aluno != null) {
-            aluno.setFoto(null);
-            return new DefaultStreamedContent(new ByteArrayInputStream(aluno.getFoto()));                        
+            return new DefaultStreamedContent(new ByteArrayInputStream(aluno.getFoto()));            
         } else {
-            professor.setFoto(null);
-            return new DefaultStreamedContent(new ByteArrayInputStream(professor.getFoto()));                        
-        }        
+            return new DefaultStreamedContent(new ByteArrayInputStream(professor.getFoto()));            
+        }
     }    
 }

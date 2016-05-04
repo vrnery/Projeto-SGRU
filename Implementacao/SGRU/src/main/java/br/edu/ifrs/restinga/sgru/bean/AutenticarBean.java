@@ -28,8 +28,8 @@ public class AutenticarBean {
     private String senha;
     private String nomeUsuario;
     @ManagedProperty(value="#{caixaRUBean}")
-    private CaixaRUBean caixaRUBean;    
-    
+    private CaixaRUBean caixaRUBean;
+
     /**     
      * @param caixaRUBean The caixaRUBean to set
      */

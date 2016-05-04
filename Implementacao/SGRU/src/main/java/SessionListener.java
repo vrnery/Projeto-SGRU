@@ -1,5 +1,7 @@
+import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import org.hibernate.Session;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,18 +15,13 @@ import javax.servlet.http.HttpSessionListener;
  * @author 10070133
  */
 public class SessionListener implements HttpSessionListener {
-    private TransacaoCaixaRU transacao = new TransacaoCaixaRU();
-    
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        //Session sessao = HibernateUtil.getSessionFactory().openSession();        
-        //se.getSession().setAttribute(FiltroTransacoesHibernate.HIBERNATE_SESSION_KEY, sessao);        
-        transacao.iniciar();
-        se.getSession().setAttribute("transacaoCorrente", transacao);
+        Session sessao = HibernateUtil.getSessionFactory().openSession();        
+        se.getSession().setAttribute(FiltroTransacoesHibernate.HIBERNATE_SESSION_KEY, sessao);
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {        
-        transacao.finalizar();
     }    
 }
