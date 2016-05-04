@@ -68,7 +68,7 @@ public class Professor extends Pessoa {
             File imgFile = new File(getCaminhoFoto());
             if (!imgFile.exists()) {
                 // Nao localizou a foto para a matricula informada
-                imgFile = new File("c:\\imagens\\semFoto.jpg");
+                imgFile = new File("/imagens/semFoto.png");
             }
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {            
