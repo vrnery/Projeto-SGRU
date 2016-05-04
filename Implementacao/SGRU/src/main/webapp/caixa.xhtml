@@ -14,7 +14,7 @@
                     <p:inputText id="txtMatricula" maxlength="15" size="20" required="true" binding="#{matricula}" value="#{alunoBean.aluno.matricula}"/>                
                 </h:panelGrid>
                 <p:commandButton ajax="false" value="Venda Cartão" action="#{caixaRUBean.realizarVendaAlmocoCartao(matricula.value)}"/>
-                <p:commandButton ajax="false" value="Venda Ticket" />
+                <p:commandButton ajax="false" value="Venda Ticket" action="#{caixaRUBean.realizarVendaAlmocoTicket(matricula.value)}" />
             </h:form>
         </ui:define>
     </ui:composition>
