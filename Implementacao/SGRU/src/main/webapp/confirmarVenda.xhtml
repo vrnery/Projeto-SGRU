@@ -9,7 +9,7 @@
         <ui:define name="conteudo">            
             <h:form>
                 <h:panelGrid columns="2">                    
-                    <p:graphicImage width="130" height="100" value="#{pessoaBean.imagem}" />
+                    <p:graphicImage width="130" cache="false" height="100" value="#{pessoaBean.imagem}" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtNome" value="Nome: "/>
                         <h:outputText id="txtNome" value="#{pessoaBean.nome}"/>

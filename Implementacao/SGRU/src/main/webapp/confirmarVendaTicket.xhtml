@@ -9,7 +9,7 @@
         <ui:define name="conteudo">            
             <h:form>
                 <h:panelGrid columns="2">                    
-                    <p:graphicImage width="130" height="100" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.caminhoFoto}" />
+                    <p:graphicImage width="130" height="100" cache="false" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.aluno.caminhoFoto}" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtCodigo" value="Código: "/>
                         <h:outputText id="txtCodigo" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.id}"/>
