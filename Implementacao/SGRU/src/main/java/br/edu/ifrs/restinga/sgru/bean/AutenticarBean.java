@@ -132,7 +132,7 @@ public class AutenticarBean {
     
     public String realizarLogout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "index";
+        return "index.xhtml?faces-redirect=true";
     }
 
     /**
