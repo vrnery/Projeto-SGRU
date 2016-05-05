@@ -10,12 +10,15 @@
     </filter>
     <filter-mapping>
         <filter-name>FiltroTransacoesHibernate</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>      
+        <!--<servlet-name>Faces Servlet</servlet-name>-->
+        <!-- Paginas css nao passarao pelo filtro -->
+        <url-pattern>*.xhtml</url-pattern>
+    </filter-mapping>          
     <listener>
         <description>HttpSessionListener</description>
         <listener-class>SessionListener</listener-class>
-    </listener>                
+    </listener>    
+    <!--                
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -25,6 +28,7 @@
         <servlet-name>Faces Servlet</servlet-name>        
         <url-pattern>/faces/*</url-pattern>        
     </servlet-mapping>
+    -->
     <session-config>
         <session-timeout>
             30

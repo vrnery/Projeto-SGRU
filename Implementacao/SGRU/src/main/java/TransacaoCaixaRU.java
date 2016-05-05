@@ -17,8 +17,10 @@ public class TransacaoCaixaRU {
     }
     
     public void finalizar() {
-        sessaoHibernate.flush();
-        sessaoHibernate.close();
+        if (sessaoHibernate.isOpen()) {
+            sessaoHibernate.flush();
+            sessaoHibernate.close();            
+        }
     }
     
     public void iniciarRequisicao() {
@@ -34,5 +36,5 @@ public class TransacaoCaixaRU {
         if(sessaoHibernate.isOpen() && sessaoHibernate.getTransaction().isActive())
             sessaoHibernate.getTransaction().commit();
         ManagedSessionContext.unbind(HibernateUtil.getSessionFactory());
-    }
+    }    
 }

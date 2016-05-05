@@ -129,6 +129,11 @@ public class AutenticarBean {
         }        
         return retorno;
     }    
+    
+    public String realizarLogout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index";
+    }
 
     /**
      * Envia à viewer uma mensagem com o status da operação

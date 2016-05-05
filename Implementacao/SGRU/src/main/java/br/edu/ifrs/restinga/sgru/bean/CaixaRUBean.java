@@ -94,7 +94,12 @@ public class CaixaRUBean {
      * @param valorAbertura O valor de abertura do caixa
      * @return A próxima página a ser exibida pelo usuário
      */
-    public String realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {                       
+    public String realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {
+        if (valorAbertura < 0) {
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Valor inválido!");
+            return null;
+        }
+        
         caixaRU = new CaixaRU();
         caixaRU.setOperadorCaixa(oper);
         caixaRU.setValorAbertura(valorAbertura);
@@ -351,8 +356,8 @@ public class CaixaRUBean {
             dao.salvar(caixaRU);            
         } catch (ValorAlmocoInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
-            return "";
-        }                
+            return null;
+        }              
         return "index";
     }
     

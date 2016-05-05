@@ -17,8 +17,6 @@ public class SessionListener implements HttpSessionListener {
     
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        //Session sessao = HibernateUtil.getSessionFactory().openSession();        
-        //se.getSession().setAttribute(FiltroTransacoesHibernate.HIBERNATE_SESSION_KEY, sessao);
         transacao.iniciar();
         se.getSession().setAttribute("transacaoCorrente", transacao);
         

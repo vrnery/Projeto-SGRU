@@ -10,11 +10,26 @@
     </h:head>
     <h:body>
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="140">                
-                <f:facet name="header">
-                    <h1 align="center">SGRU</h1>                    
-                    <h1 align="center">Olá #{autenticarBean.nomeUsuario}</h1>                    
-                </f:facet>
+            <p:layoutUnit position="north" size="144">
+                <f:facet name="header">                    
+                    <div id="top" 
+                         style="height: 70px;text-align: center;line-height:70px;font-size: 40px">
+                        <h:outputText value="SGRU"/>
+                    </div>                                
+                    <div id="middle" style="height: 25px;text-align: center;">
+                        <h:outputText value="Olá, #{autenticarBean.nomeUsuario}"/>
+                    </div>                                
+                    <div id="botton" style="height: 20px;text-align: right;">
+                        <h:form>                                                                                        
+                            <p:commandLink id="lnkLogout"
+                                style="color: black; font-size: 14px"
+                                value="Sair"
+                                action="#{autenticarBean.realizarLogout()}"
+                                ajax="false">
+                            </p:commandLink>
+                        </h:form>                        
+                    </div>                    
+                </f:facet>                
             </p:layoutUnit>
             <p:layoutUnit position="west">
                 <h:form>
