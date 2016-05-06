@@ -5,13 +5,6 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema sgru
--- -----------------------------------------------------
-
--- -----------------------------------------------------
 -- Schema sgru
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
@@ -21,7 +14,7 @@ USE `sgru` ;
 -- Table `sgru`.`pessoa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT(10) UNSIGNED NOT NULL,
   `matricula` VARCHAR(15) NOT NULL,
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
@@ -34,47 +27,10 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `sgru`.`cartao`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `dataCredito` DATETIME NOT NULL,
-  `saldo` DECIMAL(6,2) NULL DEFAULT 0,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `sgru`.`aluno`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`aluno` (
-  `id` INT(10) UNSIGNED NOT NULL,
-  `caminhoFoto` TEXT NULL DEFAULT NULL,
-  `idCartao` INT(10) UNSIGNED NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_Aluno_Pessoa1_idx` (`id` ASC),
-  INDEX `fk_aluno_cartao1_idx` (`idCartao` ASC),
-  CONSTRAINT `fk_Aluno_Pessoa1`
-    FOREIGN KEY (`id`)
-    REFERENCES `sgru`.`pessoa` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_aluno_cartao1`
-    FOREIGN KEY (`idCartao`)
-    REFERENCES `sgru`.`cartao` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
 -- Table `sgru`.`operadorcaixa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`operadorcaixa` (
   `id` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
   INDEX `fk_OperadorCaixa_Pessoa1_idx` (`id` ASC),
   CONSTRAINT `fk_OperadorCaixa_Pessoa1`
     FOREIGN KEY (`id`)
@@ -92,9 +48,9 @@ CREATE TABLE IF NOT EXISTS `sgru`.`caixaru` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
-  `dataFechamento` DATETIME NULL,
+  `dataFechamento` DATETIME NULL DEFAULT NULL,
   `valorFechamento` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
-  `idOperadorCaixa` INT(10) UNSIGNED NULL,
+  `idOperadorCaixa` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idOperadorCaixa` ASC),
   CONSTRAINT `fk_CaixaRU_OperadorCaixa1`
@@ -107,18 +63,49 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `sgru`.`professor`
+-- Table `sgru`.`cartao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`professor` (
+CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `dataCredito` DATETIME NOT NULL,
+  `saldo` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `sgru`.`codtipocliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`codtipocliente` (
+  `id` INT(10) UNSIGNED NOT NULL,
+  `descricao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `sgru`.`cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`cliente` (
   `id` INT(10) UNSIGNED NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
-  `idCartao` INT(10) UNSIGNED NULL,
-  PRIMARY KEY (`id`),
+  `idCartao` INT(10) UNSIGNED NOT NULL,
+  `idCodTipoCliente` INT(10) UNSIGNED NOT NULL,
   INDEX `fk_Professor_Pessoa1_idx` (`id` ASC),
   INDEX `fk_professor_cartao1_idx` (`idCartao` ASC),
+  INDEX `fk_cliente_codTipoCliente1_idx` (`idCodTipoCliente` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_Professor_Pessoa1`
     FOREIGN KEY (`id`)
     REFERENCES `sgru`.`pessoa` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_cliente_codTipoCliente1`
+    FOREIGN KEY (`idCodTipoCliente`)
+    REFERENCES `sgru`.`codtipocliente` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_professor_cartao1`
@@ -147,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `sgru`.`recarga` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 17
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -154,7 +142,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`ticket`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
-  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT(10) UNSIGNED NOT NULL,
   `valor` DECIMAL(6,2) NOT NULL,
   `dataCriado` DATETIME NOT NULL,
   `dataUtilizado` DATETIME NULL DEFAULT NULL,
@@ -172,6 +160,7 @@ CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
   `dataValor` DATETIME NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -179,12 +168,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
-  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataVenda` DATETIME NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
   `idValorAlmoco` INT(10) UNSIGNED NOT NULL,
   `idCartao` INT(10) UNSIGNED NULL DEFAULT NULL,
-  `idTicket` INT(11) UNSIGNED NULL DEFAULT NULL,
+  `idTicket` INT(10) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_VendaAlmoco_Cartao1_idx` (`idCartao` ASC),
   INDEX `fk_VendaAlmoco_ValorAlmoco1_idx` (`idValorAlmoco` ASC),

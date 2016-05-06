@@ -13,10 +13,13 @@ insert into cartao values(2,'2016-04-29',0);
 insert into cartao values(3,'2016-04-29',0);
 insert into cartao values(4,'2016-04-29',0);
 
-insert into Aluno values(2, 'C:\\imagens\\123.jpg',1);
-insert into Aluno values(3, 'C:\\imagens\\456.jpg',2);
-insert into Aluno values(4, 'C:\\imagens\\789.jpg',3);
-insert into Professor values(5, 'C:\\imagens\\987.jpg',4);
+insert into codTipoCliente values(1,'Aluno');
+insert into codTipoCliente values(2,'Professor');
+
+insert into Cliente values(2, 'C:\\imagens\\123.jpg',1,1);
+insert into Cliente values(3, 'C:\\imagens\\456.jpg',2,1);
+insert into Cliente values(4, 'C:\\imagens\\789.jpg',3,1);
+insert into Cliente values(5, 'C:\\imagens\\987.jpg',4,2);
 
 insert into recarga values(1,100,'2016-04-14',0,1);
 insert into recarga values(2,200,'2016-04-14',0,1);
