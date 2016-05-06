@@ -10,12 +10,12 @@
             <p:messages/>
             <h:form>                                
                 <h:panelGrid columns="2">
-                    <p:graphicImage id="foto" width="130" cache="false" height="100" value="#{pessoaBean.foto}" />                    
+                    <p:graphicImage id="foto" width="130" cache="false" height="100" value="#{clienteBean.foto}" />                    
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <h:outputText id="txtNome" value="#{pessoaBean.nome}"/>
+                        <h:outputText id="txtNome" value="#{clienteBean.cliente.nome}"/>
                         <p:outputLabel for="txtMatricula" value="Matrícula: "/>
-                        <h:outputText id="txtMatricula" value="#{pessoaBean.matricula}"/>                                    
+                        <h:outputText id="txtMatricula" value="#{clienteBean.cliente.matricula}"/>                                    
                         <p:outputLabel for="txtSaldoCartao" value="Saldo do Cartão: "/>
                         <h:outputText id="txtSaldoCartao" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().cartao.saldo}"/>            
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>

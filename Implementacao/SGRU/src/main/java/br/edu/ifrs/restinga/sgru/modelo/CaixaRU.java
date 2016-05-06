@@ -5,7 +5,11 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.PeriodoEntreAlmocosInvalidoException;
+import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
+import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ValorAlmocoDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +45,10 @@ public class CaixaRU implements Serializable {
     @Transient
     private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();        
     @Transient
-    private ValorAlmoco valorAtualAlmoco = null;    
+    private ValorAlmoco valorAtualAlmoco = null;  
+    @Transient
+    // Intervalo mínimo entre compra de almoco por cliente
+    private static final int NUM_MAX_MINUTOS_ULTIMO_ALMOCO = 270;
     
     /**
      * @return the id
@@ -172,4 +179,64 @@ public class CaixaRU implements Serializable {
     public VendaAlmoco ultimoAlmocoVendido() {
         return lstVendaAlmoco.get(lstVendaAlmoco.size()-1);
     }
+    
+    /**
+     * Verifica o prazo para aquisição de um novo almoço já expirou
+     * @param id O id do cliente que está comprando o almoço     
+     * @throws PeriodoEntreAlmocosInvalidoException Caso o prazo para aquisição de um outro almoço não tenha expirado
+     */
+    public void validarPeriodoEntreAlmocos(int id) throws PeriodoEntreAlmocosInvalidoException {
+        // Verifica se o cliente já fez alguma compra em um determinado intervalo de tempo
+        // ultimo almoco do aluno realizado naquele dia
+        VendaAlmoco ultimoAlmocoAluno = null;
+        for (VendaAlmoco vendaAlmoco : getLstVendaAlmoco()) {                
+            // Procura almoco vendido para o id do cliente
+            if (vendaAlmoco.getCartao().getCliente().getId() == id) {                    
+                if (ultimoAlmocoAluno == null) {                        
+                    ultimoAlmocoAluno = vendaAlmoco;
+                } else {
+                    // Ja havia encontrado almoco anteriormente na lista
+                    if (ultimoAlmocoAluno.getDataVenda().after(vendaAlmoco.getDataVenda())) {
+                        ultimoAlmocoAluno = vendaAlmoco;
+                    }
+                }
+            }
+        }
+
+        // Se o aluno jah almocou, verifica se pode comprar novamente
+        if (ultimoAlmocoAluno != null) {
+            int numMinutos = (int) ((Calendar.getInstance().getTimeInMillis() - ultimoAlmocoAluno.getDataVenda().getTimeInMillis())* 0.0000166667);
+            if (numMinutos <= NUM_MAX_MINUTOS_ULTIMO_ALMOCO) {
+                throw new PeriodoEntreAlmocosInvalidoException("Período entre almoços menor que " + NUM_MAX_MINUTOS_ULTIMO_ALMOCO + " minutos!");
+            }
+        }                
+    }  
+    
+    /**
+     * Realiza o fechamento de caixa
+     * @throws ValorAlmocoInvalidoException Caso encontre algum valor de almoco invalido
+     */
+    public void realizarFechamentoCaixa() throws ValorAlmocoInvalidoException {
+        // calcula a soma de todos os almocos vendidos no dia e
+        // seta o valor do fechamento                    
+        valorFechamento = 0;
+        for (VendaAlmoco vendaAlmoco : getLstVendaAlmoco()) {
+            valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
+        }        
+        setDataFechamento(Calendar.getInstance());            
+        
+        CaixaRUDAO dao = new CaixaRUDAO();
+        dao.salvar(this);        
+    }
+    
+    /**
+     * Carrega os almoços vendidos no dia para determinado caixa
+     */
+    public void preencherListaAlmoco() {
+        if (getLstVendaAlmoco().isEmpty()) {
+            // realiza a consulta para verificar se existe alguma venda para o dia
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+            setLstVendaAlmoco(daoVendaAlmoco.carregar(getId(),Calendar.getInstance()));
+        }
+    }        
 }

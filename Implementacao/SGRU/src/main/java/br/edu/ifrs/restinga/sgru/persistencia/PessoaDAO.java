@@ -27,11 +27,11 @@ public class PessoaDAO {
      * @return um objeto Pessoa
      * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Caso não enconte a matrícula informada
      */
-    public Pessoa carregar(String matricula) throws MatriculaInvalidaException {
+    public Pessoa carregar(String matricula) throws MatriculaInvalidaException {        
         Pessoa tmpPessoa = (Pessoa) sessao.createQuery("FROM Pessoa WHERE matricula=:matricula").setString("matricula", matricula).uniqueResult();
         if (tmpPessoa == null) {
             throw new MatriculaInvalidaException("Matrícula não encontrada!");
-        }
+        }        
         return tmpPessoa;
     }        
     

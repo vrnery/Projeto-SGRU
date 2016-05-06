@@ -27,14 +27,14 @@ public class TransacaoCaixaRU {
         ManagedSessionContext.bind(sessaoHibernate);
         if(!sessaoHibernate.getTransaction().isActive()) {
             sessaoHibernate.beginTransaction();        
-        } else {
-            finalizarRequisicao();
         }
     }
     
-    public void finalizarRequisicao() {
-        if(sessaoHibernate.isOpen() && sessaoHibernate.getTransaction().isActive())
+    public void finalizarRequisicao() {        
+        if(sessaoHibernate.isOpen() && sessaoHibernate.getTransaction().isActive()) {
+            sessaoHibernate.flush();
             sessaoHibernate.getTransaction().commit();
+        }
         ManagedSessionContext.unbind(HibernateUtil.getSessionFactory());
     }    
 }

@@ -11,7 +11,7 @@
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtMatricula" value="Matrícula: "/>
-                    <p:inputText id="txtMatricula" maxlength="15" size="20" required="true" binding="#{matricula}" value="#{alunoBean.aluno.matricula}"/>                
+                    <p:inputText id="txtMatricula" maxlength="15" size="20" required="true" binding="#{matricula}" value="#{clienteBean.cliente.matricula}"/>                
                 </h:panelGrid>
                 <p:commandButton ajax="false" value="Venda Cartão" action="#{caixaRUBean.realizarVendaAlmocoCartao(matricula.value)}"/>
                 <p:commandButton ajax="false" value="Venda Ticket" action="#{caixaRUBean.realizarVendaAlmocoTicket(matricula.value)}" />

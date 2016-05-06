@@ -9,8 +9,10 @@ import java.io.File;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Transient;
 
 /**
  *
@@ -18,11 +20,19 @@ import javax.persistence.PrimaryKeyJoinColumn;
  */
 @Entity
 @PrimaryKeyJoinColumn(name="id")
-public class Aluno extends Pessoa {            
-    private String caminhoFoto;                    
-    @JoinColumn(name="idCartao")    
+public class Cliente extends Pessoa {            
+    private String caminhoFoto;                        
     @OneToOne(cascade = {CascadeType.ALL})
-    private Cartao cartao; 
+    @JoinColumn(name = "idCartao")
+    private Cartao cartao;     
+    @ManyToOne
+    @JoinColumn(name = "idCodTipoCliente")
+    private CodTipoCliente codTipoCliente;
+    // Tipos de cliente, segundo tabela codTipoCliente
+    @Transient
+    public final static int ALUNO = 1;
+    @Transient
+    public final static int PROFESSOR = 2;
 
     /**
      * @return the caminhoFoto
@@ -53,6 +63,20 @@ public class Aluno extends Pessoa {
     }    
     
     /**
+     * @return the codTipoCliente
+     */
+    public CodTipoCliente getCodTipoCliente() {
+        return codTipoCliente;
+    }
+
+    /**
+     * @param codTipoCliente the codTipoCliente to set
+     */
+    public void setCodTipoCliente(CodTipoCliente codTipoCliente) {
+        this.codTipoCliente = codTipoCliente;
+    }        
+    
+    /**
      * Verifica se a foto do usuário existe
      * @return True, caso a foto exista e false caso não exista
      */
@@ -62,5 +86,5 @@ public class Aluno extends Pessoa {
             return true;
         }
         return false;
-    }    
+    }        
 }

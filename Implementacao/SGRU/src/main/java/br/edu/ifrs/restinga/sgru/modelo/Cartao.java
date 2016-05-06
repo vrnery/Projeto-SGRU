@@ -6,6 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
+import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,11 +34,9 @@ public class Cartao implements Serializable {
     private Calendar dataCredito;
     private double saldo;    
     @OneToMany(mappedBy = "cartao", cascade = {CascadeType.ALL})
-    private List<Recarga> lstRecarga = new ArrayList();    
+    private List<Recarga> lstRecarga = new ArrayList();            
     @OneToOne(mappedBy = "cartao")
-    private Aluno aluno;
-    @OneToOne(mappedBy = "cartao")
-    private Professor professor;        
+    private Cliente cliente;
 
     /**
      * @return the id
@@ -102,40 +101,44 @@ public class Cartao implements Serializable {
      */
     public void setDebitar(double valor) {
         this.saldo -= valor;
-    }
-        
-    /**
-     * @return the aluno
-     */
-    public Aluno getAluno() {
-        return aluno;
-    }
-
-    /**
-     * @param aluno the aluno to set
-     */
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
-    }
-
-    /**
-     * @return the professor
-     */
-    public Professor getProfessor() {
-        return professor;
-    }
-
-    /**
-     * @param professor the professor to set
-     */
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
-    }
-    
+    }            
     
     /**
-     * Carrega a lstRecarga mais antiga para o cartao. Se houver mais de uma lstRecarga
-     * realizada na mesma data, soma os valores
+     * @return the cliente
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    /**
+     * @param cliente the cliente to set
+     */
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }    
+    
+    /**
+     * Verifica se o saldo do cartão é maior que zero     
+     * @throws SaldoInsuficienteException Se o cartão não possui saldo para a compra do almoço
+     */
+    public void verificarSaldoCartao() throws SaldoInsuficienteException {
+        try {
+            if (getSaldo() <= 0) {
+                // eh necessario atualizar o saldo
+                transferirRecargaParaCartao();
+
+                // Caso recarga zerada
+                if (getSaldo() <= 0) {
+                    throw new SaldoInsuficienteException("Saldo insuficiente!");
+                }
+            }
+        } catch(RecargaNaoEncontradaException e) {
+            throw new SaldoInsuficienteException("Saldo insuficiente!");
+        }
+    }    
+    
+    /**
+     * Carrega a recarga mais antiga para o cartao. Se houver mais de uma recarga realizada na mesma data, soma os valores
      * @throws br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException Se o cartão não possui recargas
      */
     public void transferirRecargaParaCartao() throws RecargaNaoEncontradaException {
@@ -156,7 +159,7 @@ public class Cartao implements Serializable {
             }
         });
         
-        // Se o cliente fez mais de uma lstRecarga no mesmo dia, entao
+        // Se o cliente fez mais de uma recarga no mesmo dia, entao
         // carrega todas as recargas daquele dia
         double valRecargas = 0;
         Calendar dataRecarga = lstRecarga.get(0).getDataCredito();
@@ -174,5 +177,5 @@ public class Cartao implements Serializable {
         }
         // Transfere o saldo da lstRecarga para o cartao
         this.setSaldo(valRecargas);
-    }
+    }    
 }
