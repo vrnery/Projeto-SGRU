@@ -148,9 +148,17 @@ public class CaixaRUBean {
 
                     // seta cartao                
                     if (pessoa instanceof Aluno) {
-                        vendaAlmoco.setCartao(((Aluno)pessoa).getCartao());                    
+                        vendaAlmoco.setCartao(((Aluno)pessoa).getCartao());
+                        if (!((Aluno)pessoa).verificarExistenciaFoto()) {
+                            enviarMensagem(FacesMessage.SEVERITY_WARN, 
+                                    "A apresentação de um documento de identidade com foto é obrigatória!");
+                        }
                     } else if (pessoa instanceof Professor) {
                         vendaAlmoco.setCartao(((Professor)pessoa).getCartao());
+                        if (!((Professor)pessoa).verificarExistenciaFoto()) {
+                            enviarMensagem(FacesMessage.SEVERITY_WARN, 
+                                    "A apresentação de um documento de identidade com foto é obrigatória!");
+                        }                        
                     }
                     
                     // o valor a ser pago pelo almoco                    
@@ -168,7 +176,7 @@ public class CaixaRUBean {
             retorno = "caixa";
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
         }
-        
+                
         return retorno;
     }    
     

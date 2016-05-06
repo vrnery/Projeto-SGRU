@@ -93,38 +93,27 @@ public class PessoaBean {
             return new DefaultStreamedContent();
         }        
         
-        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
-        boolean clienteComFoto;
+        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.        
         if (aluno != null) {
-            clienteComFoto = converterFoto(aluno.getCaminhoFoto());            
+            converterFoto(aluno.getCaminhoFoto());            
         } else {
-            clienteComFoto = converterFoto(professor.getCaminhoFoto());                
-        }
-        // Caso nao encontre foto alguma, deve solicitar a apresentacao de um documento
-        // de identidade par o cliente         
-        if (!clienteComFoto) {            
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
-                    "A apresentação de um documento de identidade com foto é obrigatória!", ""));            
+            converterFoto(professor.getCaminhoFoto());                
         }
         return new DefaultStreamedContent(new ByteArrayInputStream(foto));                    
     }        
     
     /**
      * Converte um arquivo de imagem em um array de baytes     
-     * @param caminhoFoto A localização do arquivo de imagem no computador
-     * @return Um array de bytes com a representação da imagem
+     * @param caminhoFoto A localização do arquivo de imagem no computador     
      */
-    public boolean converterFoto(String caminhoFoto) {                                        
-        boolean retorno = true;
-        
+    public void converterFoto(String caminhoFoto) {                                                        
         // Carrega a imagem para um array de bytes no atributo foto        
         File imgFile = new File(caminhoFoto);
         if (!imgFile.exists()) {
             // Nao localizou a foto para a matricula informada, entao carrega a imagem default                
             // Pega o diretorio onde estah localizada a imagem default
             String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(CAMINHO_FOTO_DEFAULT);
-            imgFile = new File(realPath);
-            retorno = false;
+            imgFile = new File(realPath);            
         }
         
         // Converte o arquivo em um array de bytes
@@ -135,10 +124,6 @@ public class PessoaBean {
             bos.flush();  
             foto = bos.toByteArray();                
         } catch (IOException e) {
-            // Nao foi possivel localizar nenhuma foto
-            retorno = false;
-        }                    
-        
-        return retorno;
+        }                            
     }    
 }

@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import java.io.File;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -49,5 +50,17 @@ public class Professor extends Pessoa {
      */
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
+    }
+    
+    /**
+     * Verifica se a foto do usuário existe
+     * @return True, caso a foto exista e false caso não exista
+     */
+    public boolean verificarExistenciaFoto() {
+        File foto = new File(caminhoFoto);
+        if (foto.exists()) {
+            return true;
+        }
+        return false;
     }
 }
