@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"      
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInterno.xhtml">        
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">            
@@ -14,9 +15,13 @@
                         <p:outputLabel for="txtCodigo" value="Código: "/>
                         <h:outputText id="txtCodigo" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.id}"/>
                         <p:outputLabel for="txtDataCompra" value="Data da Compra: "/>
-                        <h:outputText id="txtDataCompra" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.dataUtilizado.time}"/>  
+                        <h:outputText id="txtDataCompra" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().ticket.dataCriado.time}">
+                            <f:convertDateTime type="both"/>
+                        </h:outputText>
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
-                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().valorAlmoco.valorAlmoco}"/>            
+                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().valorAlmoco.valorAlmoco}">
+                            <f:convertNumber type="currency"/>
+                        </h:outputText>
                     </h:panelGrid>
                     <p:commandButton ajax="false" value="Confirmar" action="#{caixaRUBean.finalizarAlmoco(true)}" />
                     <p:commandButton ajax="false" value="Cancelar" action="#{caixaRUBean.finalizarAlmoco(false)}" />
