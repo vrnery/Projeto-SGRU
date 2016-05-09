@@ -10,7 +10,7 @@
             <p:messages/>
             <h:form>                                
                 <h:panelGrid columns="2">
-                    <p:graphicImage id="foto" width="130" cache="false" height="100" value="#{clienteBean.foto}" />                    
+                    <p:graphicImage width="130" height="100" cache="false" value="#{clienteBean.foto}" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtNome" value="Nome: "/>
                         <h:outputText id="txtNome" value="#{clienteBean.cliente.nome}"/>

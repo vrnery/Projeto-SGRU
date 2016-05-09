@@ -29,10 +29,8 @@ public class FiltroTransacoesHibernate implements Filter {
         req.getPathInfo();
         String paginaAtual = new String(req.getRequestURL());
         
-        // dont filter index.xhtml because otherwise an endless loop.
-	// & only filter .xhtml otherwise it will filter all images etc as well.
-        if ((request.getAttribute(FILTER_APPLIED) == null) && (!paginaAtual.endsWith("index.xhtml"))
-                && (paginaAtual.endsWith(".xhtml"))) {
+        // dont filter index.xhtml because otherwise an endless loop.	
+        if ((request.getAttribute(FILTER_APPLIED) == null) && (!paginaAtual.endsWith("index.xhtml"))) {
             request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
             // If the session bean is not null get the session bean property
             // username.

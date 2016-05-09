@@ -25,7 +25,7 @@ public class ClienteDAO {
      * @param matricula Número de matrícula do cliente
      * @return um objeto Cliente
      * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se a matrícula não seja localizada
-     */
+     */     
     public Cliente carregar(String matricula) throws MatriculaInvalidaException {        
         Cliente tmpCliente = (Cliente) sessao.createQuery("FROM Cliente WHERE matricula=:matricula").setString("matricula", matricula).uniqueResult();
         if (tmpCliente == null) {

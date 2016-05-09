@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSessionListener;
  * @author 10070133
  */
 public class SessionListener implements HttpSessionListener {
-    private TransacaoCaixaRU transacao = new TransacaoCaixaRU();
+    private final TransacaoCaixaRU transacao = new TransacaoCaixaRU();
     
     @Override
     public void sessionCreated(HttpSessionEvent se) {

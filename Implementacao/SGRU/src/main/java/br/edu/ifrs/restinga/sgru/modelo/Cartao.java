@@ -118,7 +118,7 @@ public class Cartao implements Serializable {
     }    
     
     /**
-     * Verifica se o saldo do cartão é maior que zero     
+     * Verifica se o saldo do cartão é maior que zero. Caso afirmativo, transfere o valor de recarga para o cartão, caso exista. 
      * @throws SaldoInsuficienteException Se o cartão não possui saldo para a compra do almoço
      */
     public void verificarSaldoCartao() throws SaldoInsuficienteException {
@@ -154,7 +154,8 @@ public class Cartao implements Serializable {
             public int compare(Recarga rec1, Recarga rec2) {                
                 if ((rec1.getDataCredito() == null) || rec2.getDataCredito() == null) {
                     return 0;
-                }
+                }                
+                // Date possui um metodo compareTo para comparar as datas
                 return rec1.getDataCredito().compareTo(rec2.getDataCredito());
             }
         });

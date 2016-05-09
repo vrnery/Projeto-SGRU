@@ -31,7 +31,7 @@ public class VendaAlmocoDAO {
     }  
     
     /**
-     * Carrega uma lista de almoços vendidos em uma determinada data
+     * Carrega uma lista de almoços vendidos em uma determinada data para um determinado caixa
      * @param idCaixaRU Id do caixa onde forma realizadas as vendas
      * @param dataVenda A data da venda dos almoços a serem carregados
      * @return Uma lista de almoços vendidos na data informada
@@ -43,4 +43,17 @@ public class VendaAlmocoDAO {
                 .setString("idCaixaRU", String.valueOf(idCaixaRU))
                 .list();
     }    
+    
+    /**
+     * Carrega uma lista de almoços pagos com um determinado cartão no dia corrente
+     * @param idCartao O id do cartão a ser pesquisado
+     * @return Uma lista de objetos VendaAlmoco
+     */
+    public List<VendaAlmoco> carregarAlmocosCartaoDia(int idCartao) {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        return (List<VendaAlmoco>) sessao.createQuery("FROM VendaAlmoco WHERE DATE(dataVenda)=:dataVenda AND idCartao=:idCartao")
+                .setString("dataVenda", f.format(Calendar.getInstance().getTime()))
+                .setString("idCartao", String.valueOf(idCartao))
+                .list(); 
+    }
 }

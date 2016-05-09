@@ -199,7 +199,7 @@ public class CaixaRUBean {
     public void autorizarVendaAlmoco(Cliente cliente) throws SaldoInsuficienteException,
             PeriodoEntreAlmocosInvalidoException {            
         // verifica se o aluno pode efetuar nova aquisição de almoço naquele momento
-        caixaRU.validarPeriodoEntreAlmocos(cliente.getId());
+        VendaAlmoco.validarPeriodoEntreAlmocos(cliente.getCartao().getId());
         // Verifica se o cliente tem saldo no cartao para comprar o almoco
         cliente.getCartao().verificarSaldoCartao();        
     }

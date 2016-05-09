@@ -32,7 +32,7 @@ public class ClienteBean {
     private Cliente cliente = new Cliente();
     private final ClienteDAO dao = new ClienteDAO();
     // Caso nao consiga carregar foto do cliente
-    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";    
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";        
 
     /**
      * @return the cliente
@@ -70,18 +70,17 @@ public class ClienteBean {
      * @return Um objeto StreamedContent, que pode ser apresentado em um componente p:graphicImage
      */
     public StreamedContent getFoto() {                        
-        FacesContext context = FacesContext.getCurrentInstance();
-        
+        FacesContext context = FacesContext.getCurrentInstance();        
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } 
+                
+        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.        
         // Pega o cliente da sessao
         CaixaRUBean caixaRUBean = (CaixaRUBean) context.getExternalContext().getSessionMap().get("caixaRUBean");                
         cliente = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();
                 
-        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
-            return new DefaultStreamedContent();
-        }         
-        
-        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.        
         // A foto convertida para o componente p:graphicImage
         byte[] foto = converterFoto(cliente.getCaminhoFoto());                
         return new DefaultStreamedContent(new ByteArrayInputStream(foto));                    
@@ -110,7 +109,7 @@ public class ClienteBean {
             ImageIO.write(imagem, "PNG", bos);
             bos.flush();  
             retorno = bos.toByteArray();                
-        } catch (IOException e) {
+        } catch (IOException e) {            
         }          
         return retorno;
     }    
