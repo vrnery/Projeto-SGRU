@@ -5,16 +5,23 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema SGRU
+-- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `SGRU` DEFAULT CHARACTER SET utf8 ;
-USE `SGRU` ;
+-- -----------------------------------------------------
+-- Schema sgru
+-- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Table `SGRU`.`pessoa`
+-- Schema sgru
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`Pessoa` (
-  `id` INT(10) UNSIGNED NOT NULL,
+CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
+USE `sgru` ;
+
+-- -----------------------------------------------------
+-- Table `sgru`.`pessoa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `matricula` VARCHAR(15) NOT NULL,
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
@@ -27,14 +34,14 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`operadorcaixa`
+-- Table `sgru`.`operadorcaixa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`OperadorCaixa` (
+CREATE TABLE IF NOT EXISTS `sgru`.`operadorcaixa` (
   `id` INT(10) UNSIGNED NOT NULL,
   INDEX `fk_OperadorCaixa_Pessoa1_idx` (`id` ASC),
   CONSTRAINT `fk_OperadorCaixa_Pessoa1`
     FOREIGN KEY (`id`)
-    REFERENCES `SGRU`.`Pessoa` (`id`)
+    REFERENCES `sgru`.`pessoa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -42,9 +49,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`caixaru`
+-- Table `sgru`.`caixaru`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`CaixaRU` (
+CREATE TABLE IF NOT EXISTS `sgru`.`caixaru` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
@@ -55,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `SGRU`.`CaixaRU` (
   INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idOperadorCaixa` ASC),
   CONSTRAINT `fk_CaixaRU_OperadorCaixa1`
     FOREIGN KEY (`idOperadorCaixa`)
-    REFERENCES `SGRU`.`OperadorCaixa` (`id`)
+    REFERENCES `sgru`.`operadorcaixa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -63,9 +70,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`cartao`
+-- Table `sgru`.`cartao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`Cartao` (
+CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataCredito` DATETIME NOT NULL,
   `saldo` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
@@ -76,9 +83,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`codtipocliente`
+-- Table `sgru`.`codtipocliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`CodTipoCliente` (
+CREATE TABLE IF NOT EXISTS `sgru`.`codtipocliente` (
   `id` INT(10) UNSIGNED NOT NULL,
   `descricao` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
@@ -87,9 +94,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`cliente`
+-- Table `sgru`.`cliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`Cliente` (
+CREATE TABLE IF NOT EXISTS `sgru`.`cliente` (
   `id` INT(10) UNSIGNED NOT NULL,
   `caminhoFoto` TEXT NULL DEFAULT NULL,
   `idCartao` INT(10) UNSIGNED NOT NULL,
@@ -100,17 +107,17 @@ CREATE TABLE IF NOT EXISTS `SGRU`.`Cliente` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Professor_Pessoa1`
     FOREIGN KEY (`id`)
-    REFERENCES `SGRU`.`Pessoa` (`id`)
+    REFERENCES `sgru`.`pessoa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_cliente_codTipoCliente1`
     FOREIGN KEY (`idCodTipoCliente`)
-    REFERENCES `SGRU`.`CodTipoCliente` (`id`)
+    REFERENCES `sgru`.`codtipocliente` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_professor_cartao1`
     FOREIGN KEY (`idCartao`)
-    REFERENCES `SGRU`.`Cartao` (`id`)
+    REFERENCES `sgru`.`cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -118,9 +125,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`recarga`
+-- Table `sgru`.`recarga`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`Recarga` (
+CREATE TABLE IF NOT EXISTS `sgru`.`recarga` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorRecarregado` DECIMAL(6,2) NOT NULL,
   `dataCredito` DATE NOT NULL,
@@ -130,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `SGRU`.`Recarga` (
   INDEX `fk_Recarga_Cartao1_idx` (`idCartao` ASC),
   CONSTRAINT `fk_Recarga_Cartao1`
     FOREIGN KEY (`idCartao`)
-    REFERENCES `SGRU`.`Cartao` (`id`)
+    REFERENCES `sgru`.`cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -139,10 +146,10 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`ticket`
+-- Table `sgru`.`ticket`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`Ticket` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
+  `id` INT(10) UNSIGNED NOT NULL,
   `valor` DECIMAL(6,2) NOT NULL,
   `dataCriado` DATETIME NOT NULL,
   `dataUtilizado` DATETIME NULL DEFAULT NULL,
@@ -152,9 +159,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`valoralmoco`
+-- Table `sgru`.`valoralmoco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`ValorAlmoco` (
+CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorAlmoco` DECIMAL(6,2) NOT NULL,
   `dataValor` DATETIME NOT NULL,
@@ -165,9 +172,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `SGRU`.`vendaalmoco`
+-- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SGRU`.`VendaAlmoco` (
+CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataVenda` DATETIME NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
@@ -181,22 +188,22 @@ CREATE TABLE IF NOT EXISTS `SGRU`.`VendaAlmoco` (
   INDEX `fk_VendaAlmoco_CaixaRU1_idx` (`idCaixaRU` ASC),
   CONSTRAINT `fk_VendaAlmoco_CaixaRU1`
     FOREIGN KEY (`idCaixaRU`)
-    REFERENCES `SGRU`.`CaixaRU` (`id`)
+    REFERENCES `sgru`.`caixaru` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_VendaAlmoco_Cartao1`
     FOREIGN KEY (`idCartao`)
-    REFERENCES `SGRU`.`Cartao` (`id`)
+    REFERENCES `sgru`.`cartao` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_VendaAlmoco_Ticket1`
     FOREIGN KEY (`idTicket`)
-    REFERENCES `SGRU`.`Ticket` (`id`)
+    REFERENCES `sgru`.`ticket` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_VendaAlmoco_ValorAlmoco1`
     FOREIGN KEY (`idValorAlmoco`)
-    REFERENCES `SGRU`.`ValorAlmoco` (`id`)
+    REFERENCES `sgru`.`valoralmoco` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
