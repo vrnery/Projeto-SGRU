@@ -30,10 +30,10 @@ import org.primefaces.model.StreamedContent;
 @RequestScoped
 public class ClienteBean {
     private Cliente cliente = new Cliente();
-    private final ClienteDAO dao = new ClienteDAO();
+    //private final ClienteDAO dao = new ClienteDAO();    
     // Caso nao consiga carregar foto do cliente
-    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";        
-
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";           
+    
     /**
      * @return the cliente
      */
@@ -49,70 +49,79 @@ public class ClienteBean {
     }
     
     /**
-     * Solicita à camada de persistência o cadastro de um aluno
+     * @return the foto
      */
-    public void salvar() {
-        dao.salvar(cliente);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Cliente cadastrado com sucesso!");
-    }    
-    
-    /**
-     * Solicita a pesquisa de um cliente para a camada de persistência
-     * @param matricula A matricula do cliente a ser pesquisada
-     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se a matrícula não seja localizada
-     */
-    public void carregar(String matricula) throws MatriculaInvalidaException {
-        dao.carregar(matricula);                        
-    }
-    
-    /**
-     * Retorna uma imagem para apresentar em um componente p:graphicImage
-     * @return Um objeto StreamedContent, que pode ser apresentado em um componente p:graphicImage
-     */
-    public StreamedContent getFoto() {                        
+    public StreamedContent getFoto() {        
         FacesContext context = FacesContext.getCurrentInstance();        
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
-        } 
-                
-        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.        
-        // Pega o cliente da sessao
-        CaixaRUBean caixaRUBean = (CaixaRUBean) context.getExternalContext().getSessionMap().get("caixaRUBean");                
-        cliente = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();
-                
-        // A foto convertida para o componente p:graphicImage
-        byte[] foto = converterFoto(cliente.getCaminhoFoto());                
-        return new DefaultStreamedContent(new ByteArrayInputStream(foto));                    
+        }         
+        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+        return converterFoto();                
     }
 
+    /*
     /**
-     * Converte um arquivo de imagem em um array de bytes     
-     * @param caminhoFoto A localização do arquivo de imagem no computador     
-     * @return Um array de bytes com a representação da foto    
+     * Solicita à camada de persistência o cadastro de um aluno
+     */    
+    public void salvar() {
+        ClienteDAO dao = new ClienteDAO();
+        dao.salvar(cliente);
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Cliente cadastrado com sucesso!");
+    }     
+        
+    /**
+     * Carrega um cliente no Bean
+     * @param matricula A matrícula do cliente a ser carregado
      */
-    public byte[] converterFoto(String caminhoFoto) {                                                        
-        byte[] retorno = null;
-        // Carrega a imagem para um array de bytes no atributo foto        
-        File imgFile = new File(caminhoFoto);
+    public void carregar(String matricula) {
+        // Carrega dados do cliente
+        ClienteDAO dao = new ClienteDAO();                
+        try {
+            cliente = dao.carregar(matricula);
+        } catch(MatriculaInvalidaException e) {
+            // essa excessao serah tratada no realizarVendaAlmocoCartao do CaixaRUBean
+        }
+    }
+    
+    /**
+     * Converte uma imagem para apresentar em um componente p:graphicImage     
+     * @return Um objeto StreamedContent
+     */
+    public StreamedContent converterFoto() {
+        // Carrega o cliente da sessao
+        FacesContext context = FacesContext.getCurrentInstance();
+        CaixaRUBean caixaRUBean = (CaixaRUBean) context.getExternalContext().getSessionMap().get("caixaRUBean");                
+        cliente = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();
+        
+        // Cria um objeto File com a foto do cliente        
+        File imgFile = new File(cliente.getCaminhoFoto());
         if (!imgFile.exists()) {
-            // Nao localizou a foto para a matricula informada, entao carrega a imagem default                
-            // Pega o diretorio onde estah localizada a imagem default
+            // Nao localizou a foto para a matricula informada, entao carrega a imagem default                            
             String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(CAMINHO_FOTO_DEFAULT);
+            // Cria um objeto File com a foto default
             imgFile = new File(realPath);            
         }
         
         // Converte o arquivo em um array de bytes
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] fotoCliente = null;
         try {            
             BufferedImage imagem = ImageIO.read(imgFile);
             ImageIO.write(imagem, "PNG", bos);
             bos.flush();  
-            retorno = bos.toByteArray();                
+            fotoCliente = bos.toByteArray();                
         } catch (IOException e) {            
-        }          
-        return retorno;
-    }    
+        }        
+        
+        try {
+            return new DefaultStreamedContent(new ByteArrayInputStream(fotoCliente));
+        } catch(NullPointerException e) {
+            // Nao foi possivel localizar nenhuma foto ...
+            return new DefaultStreamedContent();
+        }
+    }
     
     /**
      * Envia à viewer uma mensagem com o status da operação

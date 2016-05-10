@@ -33,7 +33,7 @@ public class CaixaRU implements Serializable {
     private int id;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar dataAbertura;
-    private double valorAbertura;
+    private double valorAbertura = 0;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar dataFechamento;
     private double valorFechamento;        
@@ -172,7 +172,7 @@ public class CaixaRU implements Serializable {
      * Extrai da lista o último almoço vendido no caixa
      * @return O último almoço vendido no caixa
      */
-    public VendaAlmoco ultimoAlmocoVendido() {
+    public VendaAlmoco ultimoAlmocoVendido() throws ArrayIndexOutOfBoundsException {
         return lstVendaAlmoco.get(lstVendaAlmoco.size()-1);
     }    
     
@@ -182,11 +182,13 @@ public class CaixaRU implements Serializable {
      */
     public void realizarFechamentoCaixa() throws ValorAlmocoInvalidoException {
         // calcula a soma de todos os almocos vendidos no dia e
-        // seta o valor do fechamento                    
+        // seta o valor do fechamento                            
         valorFechamento = 0;
         for (VendaAlmoco vendaAlmoco : getLstVendaAlmoco()) {
             valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
         }        
+        // Soma o valor de abertura no fechamento
+        valorFechamento += valorAbertura;
         setDataFechamento(Calendar.getInstance());            
         
         CaixaRUDAO dao = new CaixaRUDAO();

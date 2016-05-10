@@ -39,7 +39,7 @@ public class CaixaRUDAO {
     public CaixaRU carregarCaixaAberto(OperadorCaixa operador, Calendar dataAbertura) {                
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador AND valorFechamento='0'")
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador AND dataFechamento=null")
                 .setString("dataAbertura", f.format(dataAbertura.getTime()))
                 .setString("idOperador", String.valueOf(operador.getId())).uniqueResult();        
     }    
