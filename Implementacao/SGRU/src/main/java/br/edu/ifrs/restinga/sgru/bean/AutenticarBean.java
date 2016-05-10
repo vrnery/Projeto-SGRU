@@ -112,16 +112,6 @@ public class AutenticarBean {
             
             if (pessoa instanceof OperadorCaixa) {
                 operadorCaixa = (OperadorCaixa) pessoa;
-                // abre o caixa
-                caixaRUBean.isCaixaAberto(operadorCaixa);
-                
-                if (caixaRUBean.getCaixaRU() != null) {
-                    retorno = "caixa";
-                } else {
-                    // garante que haverah um caixaRU para setar as propriedades
-                    // na abertura de caixa
-                    caixaRUBean.setCaixaRU(new CaixaRU());
-                }                
             }                        
         } catch (LoginInvalidoException e) {
             retorno = "index";

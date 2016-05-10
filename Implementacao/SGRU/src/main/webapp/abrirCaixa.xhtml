@@ -1,12 +1,21 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"      
+      xmlns:p="http://primefaces.org/ui"      
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:composition template="padraoSemMenu.xhtml">        
-        <ui:define name="conteudo">                
+    <!--
+        Essa execucao eh realizada automaticamente no load da pagina
+    -->
+    <ui:composition template="padraoSemMenu.xhtml">                
+        <ui:define name="conteudo">
+            <!-- 
+                Verifica se existe caixa aberto para o operador no dia corrente
+                Caso exista, redireciona o operador para a tela do caixa
+                Caso não exista, continua nesta pagina
+            -->
+            <f:event listener="#{caixaRUBean.isCaixaAberto(autenticarBean.operadorCaixa)}" type="preRenderView" />
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtValorAbertura" value="Informe o valor para abertura do caixa: "/>

@@ -26,6 +26,7 @@ import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.util.Calendar;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -76,7 +77,17 @@ public class CaixaRUBean {
 
             // verifica se a lista de almocos estah preenchida
             caixaRU.preencherListaAlmoco();
-        }
+            
+            // Caixa jah aberto, redireciona para a pagina do caixa
+            ConfigurableNavigationHandler nav  = 
+                    (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
+            
+            nav.performNavigation("caixa.xhtml?faces-redirect=true");                    
+        } else {
+            // garante que haverah um caixaRU para setar as propriedades
+            // na abertura de caixa
+            setCaixaRU(new CaixaRU());
+        }        
     }     
     
     /**
