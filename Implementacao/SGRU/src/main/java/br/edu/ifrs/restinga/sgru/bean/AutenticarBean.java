@@ -6,13 +6,11 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
@@ -27,16 +25,7 @@ public class AutenticarBean {
     private String login;
     private String senha;
     private String nomeUsuario;
-    @ManagedProperty(value="#{caixaRUBean}")
-    private CaixaRUBean caixaRUBean;
 
-    /**     
-     * @param caixaRUBean The caixaRUBean to set
-     */
-    public void setCaixaRUBean(CaixaRUBean caixaRUBean) {
-        this.caixaRUBean = caixaRUBean;
-    }        
-    
     /**
      * @return the operadorCaixa
      */
@@ -120,6 +109,10 @@ public class AutenticarBean {
         return retorno;
     }    
     
+    /**
+     * Realiza o logout do usuário
+     * @return A próxima página a ser visualizada pelo usuário após o logout
+     */
     public String realizarLogout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "index.xhtml?faces-redirect=true";
