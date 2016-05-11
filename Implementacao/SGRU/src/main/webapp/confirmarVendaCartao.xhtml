@@ -9,6 +9,12 @@
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">                        
             <p:messages/>
+            <!-- 
+                Verifica se existe um cliente setado
+                Caso exista, permanece nesta pagina
+                Caso não exista, redireciona o operador para a tela do caixa
+            -->
+            <f:event listener="#{clienteBean.isClienteSet()}" type="preRenderView" />
             <h:form>                                
                 <h:panelGrid columns="2">
                     <p:graphicImage width="130" height="100" cache="false" value="#{clienteBean.foto}" />

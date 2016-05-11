@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.bean.ManagedBean;
@@ -82,6 +83,21 @@ public class ClienteBean {
             cliente = dao.carregar(matricula);
         } catch(MatriculaInvalidaException e) {
             // essa excessao serah tratada no realizarVendaAlmocoCartao do CaixaRUBean
+        }
+    }
+    
+    /**
+     * Verifica se existe um cliente setado na sessao para realizar a compra. 
+     * Caso não exista, redireciona o operador para a tela do caixa
+     */
+    public void isClienteSet() {
+        // Se o cliente nao possui nome setado, entao nao ha cliente na sessao        
+        if (cliente.getNome() == null) {
+            // redireciona para tela do caixa
+            ConfigurableNavigationHandler nav  = 
+                    (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
+            
+            nav.performNavigation("caixa.xhtml?faces-redirect=true");                                
         }
     }
     
