@@ -72,9 +72,11 @@ public class NewClass {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession(); 
         sessao.beginTransaction();
         // Encerramento do caixa                
+        /*
         caixaRUBean.getCaixaRU().setDataFechamento(Calendar.getInstance());
         caixaRUBean.realizarFechamentoCaixa();        
         caixaRUBean.salvar();        
+        */
         sessao.getTransaction().commit();        
     }
 }

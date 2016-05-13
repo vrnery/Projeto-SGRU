@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.persistencia.TicketDAO;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Entity;
@@ -81,5 +82,15 @@ public class Ticket implements Serializable {
      */
     public void setDataUtilizado(Calendar dataUtilizado) {
         this.dataUtilizado = dataUtilizado;
+    }
+    
+    /**
+     * Retorna o ticket do código informado
+     * @param codigo O código do ticket apresentado
+     * @return Um objeto Ticket, com o ticket encontrado ou nulo
+     */
+    public static Ticket carregarTicket(int codigo) {
+        TicketDAO dao = new TicketDAO();
+        return dao.usarTicket(codigo);
     }
 }

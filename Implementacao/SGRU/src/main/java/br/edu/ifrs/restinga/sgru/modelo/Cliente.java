@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import java.io.File;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -77,14 +78,13 @@ public class Cliente extends Pessoa {
     }        
     
     /**
-     * Verifica se a foto do usuário existe
-     * @return True, caso a foto exista e false caso não exista
+     * Verifica se a foto do usuário existe     
+     * @throws br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException Caso não encontre a foto do cliente
      */
-    public boolean verificarExistenciaFoto() {
+    public void verificarExistenciaFoto() throws FotoNaoEncontradaException  {
         File foto = new File(caminhoFoto);
-        if (foto.exists()) {
-            return true;
-        }
-        return false;
+        if (!foto.exists()) {            
+            throw new FotoNaoEncontradaException("A apresentação de um documento de identidade com foto é obrigatória!");
+        }        
     }        
 }

@@ -10,10 +10,7 @@ import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import javax.ejb.TransactionAttribute;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -144,7 +141,7 @@ public class VendaAlmoco implements Serializable {
      * @param idCartao O id do cartao que está senado utilizado na compra do almoço     
      * @throws PeriodoEntreAlmocosInvalidoException Caso o prazo para aquisição de um outro almoço não tenha expirado
      */
-    public static void validarPeriodoEntreAlmocos(int idCartao) throws PeriodoEntreAlmocosInvalidoException {
+    public void validarPeriodoEntreAlmocos(int idCartao) throws PeriodoEntreAlmocosInvalidoException {
         // Primeiramente carrega a lista de almocos vendidos para o cliente no dia
         // Nao podemos utilizar a lista de almocos do CaixaRU, porque essa lista contem
         // apenas almocos para um determinado id de caixa

@@ -75,13 +75,22 @@ public class ValorAlmoco implements Serializable {
     }            
 
     /**
+     * Carrega o valor cobrado atualmente pelo almoço
+     * @return Um objeto ValorAlmoco, com o valor cobrado no dia
+     */
+    public static ValorAlmoco carregarValorAtualAlmoco() {    
+        ValorAlmocoDAO dao = new ValorAlmocoDAO();
+        return dao.carregarValorAtualAlmoco();
+    }
+    
+    /**
      * Verifica qual valor a pagar pelo almoço, com base na data informada
      * @param dataCreditoCartao A data de crédito da(s) recarga(s) no cartão
      * @param valorAtualAlmoco Um objeto ValorAlmoco com o valor praticado atualmente
      * @return Um objeto ValorAlmoco
      * @throws ValorAlmocoInvalidoException Caso não encontre um valor de almoço para a data de crédito do cartão
      */
-    public ValorAlmoco verificarValorPagarAlmoco(Calendar dataCreditoCartao,
+    public static ValorAlmoco verificarValorPagarAlmoco(Calendar dataCreditoCartao,
             ValorAlmoco valorAtualAlmoco) throws ValorAlmocoInvalidoException {
         // Se a data do cretito no cartao for menor que a data do valor
         // do almoco atual, verifica se eh necessario atualizar valor            

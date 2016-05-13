@@ -28,7 +28,7 @@
                             <f:convertNumber type="currency"/>
                         </h:outputText>            
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
-                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.caixaRU.ultimoAlmocoVendido().valorAlmoco.valorAlmoco}">
+                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.controlador.valorPagoAlmoco}">
                             <f:convertNumber type="currency"/>
                         </h:outputText>
                     </h:panelGrid>

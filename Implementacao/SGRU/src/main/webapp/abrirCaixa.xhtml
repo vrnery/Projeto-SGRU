@@ -15,15 +15,18 @@
                 Caso exista, redireciona o operador para a tela do caixa
                 Caso não exista, continua nesta pagina
             -->
-            <f:event listener="#{caixaRUBean.isCaixaAberto(autenticarBean.operadorCaixa)}" type="preRenderView" />
+            <f:metadata>
+                <f:event listener="#{caixaRUBean.carregarCaixaAberto(autenticarBean.operadorCaixa)}" type="preRenderView" />
+            </f:metadata>
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtValorAbertura" value="Informe o valor para abertura do caixa: "/>
-                    <p:inputText id="txtValorAbertura" size="20" required="true" value="#{caixaRUBean.caixaRU.valorAbertura}">                    
+                    <p:inputText id="txtValorAbertura" size="20" required="true" value="#{caixaRUBean.controlador.caixaRU.valorAbertura}">                    
                         <f:convertNumber type="currency"/>
                     </p:inputText>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Abrir" action="#{caixaRUBean.realizarAberturaCaixa(autenticarBean.operadorCaixa, caixaRUBean.caixaRU.valorAbertura)}"/>                
+                <p:commandButton ajax="false" value="Abrir" action="#{caixaRUBean.realizarAberturaCaixa(autenticarBean.operadorCaixa, 
+                                                                      caixaRUBean.controlador.caixaRU.valorAbertura)}"/>                
             </h:form>
         </ui:define>
     </ui:composition>

@@ -109,7 +109,7 @@ public class ClienteBean {
         // Carrega o cliente da sessao
         FacesContext context = FacesContext.getCurrentInstance();
         CaixaRUBean caixaRUBean = (CaixaRUBean) context.getExternalContext().getSessionMap().get("caixaRUBean");                
-        cliente = caixaRUBean.getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();
+        cliente = caixaRUBean.getControlador().getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();
         
         // Cria um objeto File com a foto do cliente        
         File imgFile = new File(cliente.getCaminhoFoto());
