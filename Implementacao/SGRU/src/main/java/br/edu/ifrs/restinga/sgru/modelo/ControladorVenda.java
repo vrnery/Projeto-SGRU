@@ -52,10 +52,7 @@ public class ControladorVenda {
      */
     public boolean carregarCaixaAberto(OperadorCaixa oper) {
         this.caixaRU = CaixaRU.carregarCaixaAberto(oper);
-        if (this.caixaRU != null) {
-            return true;
-        }       
-        return false;
+        return this.caixaRU != null;
     }
     
     /**

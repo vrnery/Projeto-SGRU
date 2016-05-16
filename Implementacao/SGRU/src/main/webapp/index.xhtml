@@ -10,11 +10,11 @@
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtUsuario" value="Login: "/>
-                    <p:inputText id="txtUsuario" maxlength="30" size="20" required="true" value="#{autenticarBean.login}"/>
+                    <p:inputText id="txtUsuario" maxlength="30" size="20" required="true" binding="#{login}"/>
                     <p:outputLabel for="txtSenha" value="Senha: "/>
-                    <p:password id="txtSenha" maxlength="32" size="20" required="true" value="#{autenticarBean.senha}"/>
+                    <p:password id="txtSenha" maxlength="32" size="20" required="true" binding="#{senha}"/>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Entrar" action="#{autenticarBean.autenticar()}" />                
+                <p:commandButton ajax="false" value="Entrar" action="#{autenticarBean.autenticar(login.value, senha.value)}" />                
             </h:form>
         </ui:define>
     </ui:composition>

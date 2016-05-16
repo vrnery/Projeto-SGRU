@@ -6,9 +6,7 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
-import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
-import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
-import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
+import br.edu.ifrs.restinga.sgru.modelo.ControladorAutenticacao;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -21,87 +19,33 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @SessionScoped
 public class AutenticarBean {            
-    private OperadorCaixa operadorCaixa;    
-    private String login;
-    private String senha;
-    private String nomeUsuario;
+    private ControladorAutenticacao controlador = new ControladorAutenticacao();
 
     /**
-     * @return the operadorCaixa
+     * @return the controlador
      */
-    public OperadorCaixa getOperadorCaixa() {
-        return operadorCaixa;
+    public ControladorAutenticacao getControlador() {
+        return controlador;
     }
 
     /**
-     * @param operadorCaixa the operadorCaixa to set
+     * @param controlador the controlador to set
      */
-    public void setOperadorCaixa(OperadorCaixa operadorCaixa) {
-        this.operadorCaixa = operadorCaixa;
-    }    
-    
-    /**
-     * @return the login
-     */
-    public String getLogin() {
-        return login;
-    }
-
-    /**
-     * @param login the login to set
-     */
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    /**
-     * @return the senha
-     */
-    public String getSenha() {
-        return senha;
-    }
-
-    /**
-     * @param senha the senha to set
-     */
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }        
-
-    /**
-     * @return the nomeUsuario
-     */
-    public String getNomeUsuario() {
-        return nomeUsuario;
-    }
-
-    /**
-     * @param nomeUsuario the nomeUsuario to set
-     */
-    public void setNomeUsuario(String nomeUsuario) {
-        this.nomeUsuario = nomeUsuario;
+    public void setControlador(ControladorAutenticacao controlador) {
+        this.controlador = controlador;
     }    
     
     /**
      * Autentica um usuário no sistema
+     * @param login O login do usuário
+     * @param senha A senha do usuário
      * @return A página a ser visualizada pelo usuário após o login     
      */
-    public String autenticar() {        
+    public String autenticar(String login, String senha) {        
         String retorno = "abrirCaixa";
         
-        Pessoa pessoa;
-        PessoaDAO daoPessoa = new PessoaDAO();
         try {                        
-            pessoa = daoPessoa.autenticar(getLogin(), getSenha());
-         
-            // Nome do usuario para apresentacao nas demais telas
-            if (pessoa != null) {
-                setNomeUsuario(pessoa.getNome());
-            }
-            
-            if (pessoa instanceof OperadorCaixa) {
-                operadorCaixa = (OperadorCaixa) pessoa;
-            }                        
+            controlador.realizarLogin(login, senha);
         } catch (LoginInvalidoException e) {
             retorno = "index";
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());

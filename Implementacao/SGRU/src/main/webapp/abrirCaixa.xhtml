@@ -14,10 +14,8 @@
                 Verifica se existe caixa aberto para o operador no dia corrente
                 Caso exista, redireciona o operador para a tela do caixa
                 Caso não exista, continua nesta pagina
-            -->
-            <f:metadata>
-                <f:event listener="#{caixaRUBean.carregarCaixaAberto(autenticarBean.operadorCaixa)}" type="preRenderView" />
-            </f:metadata>
+            -->            
+            <f:event listener="#{caixaRUBean.carregarCaixaAberto(autenticarBean.controlador.operadorCaixa)}" type="preRenderView" />
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtValorAbertura" value="Informe o valor para abertura do caixa: "/>
@@ -25,7 +23,7 @@
                         <f:convertNumber type="currency"/>
                     </p:inputText>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Abrir" action="#{caixaRUBean.realizarAberturaCaixa(autenticarBean.operadorCaixa, 
+                <p:commandButton ajax="false" value="Abrir" action="#{caixaRUBean.realizarAberturaCaixa(autenticarBean.controlador.operadorCaixa, 
                                                                       caixaRUBean.controlador.caixaRU.valorAbertura)}"/>                
             </h:form>
         </ui:define>

@@ -29,12 +29,8 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean
 @SessionScoped
 public class CaixaRUBean {
-    private final ControladorVenda controlador;    
+    private final ControladorVenda controlador = new ControladorVenda();
 
-    public CaixaRUBean() {        
-        this.controlador = new ControladorVenda();
-    }
-    
     /**     
      * @return the controlador
      */
@@ -60,6 +56,25 @@ public class CaixaRUBean {
             ConfigurableNavigationHandler nav  = 
                     (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();            
             nav.performNavigation("abrirCaixa.xhtml?faces-redirect=true");     
+        }
+    }
+
+    /**
+     * Verifica se existe um ticket setado na sessao
+     */
+    public void isTicketSet() {        
+        boolean isSet = true;
+        if (controlador.getCaixaRU().getLstVendaAlmoco().isEmpty()) {
+            isSet = false;            
+        } else if (controlador.getCaixaRU().ultimoAlmocoVendido().getTicket() == null) {
+            isSet = false;
+        }
+        
+        if (!isSet) {
+            // O ticket nao estah setado
+            ConfigurableNavigationHandler nav  = 
+                    (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();            
+            nav.performNavigation("caixa.xhtml?faces-redirect=true");     
         }
     }
             

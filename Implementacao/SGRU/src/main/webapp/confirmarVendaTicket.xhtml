@@ -7,7 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInterno.xhtml">        
         <ui:define name="titulo">SGRU</ui:define>
-        <ui:define name="conteudo">            
+        <ui:define name="conteudo">
+            <f:event listener="#{caixaRUBean.isTicketSet()}" type="preRenderView" />
             <h:form>
                 <h:panelGrid columns="2">                    
                     <p:graphicImage width="130" height="100" cache="false" value="../imagens/semFoto.png" />
@@ -19,7 +20,7 @@
                             <f:convertDateTime type="both"/>
                         </h:outputText>
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
-                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.controlador.caixaRU.ultimoAlmocoVendido().valorAlmoco.valorAlmoco}">
+                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.controlador.valorPagoAlmoco}">
                             <f:convertNumber type="currency"/>
                         </h:outputText>
                     </h:panelGrid>

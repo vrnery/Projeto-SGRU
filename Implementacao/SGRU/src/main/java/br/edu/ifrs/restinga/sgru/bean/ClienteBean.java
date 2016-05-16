@@ -30,8 +30,7 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean
 @RequestScoped
 public class ClienteBean {
-    private Cliente cliente = new Cliente();
-    //private final ClienteDAO dao = new ClienteDAO();    
+    private Cliente cliente = new Cliente();    
     // Caso nao consiga carregar foto do cliente
     private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";           
     

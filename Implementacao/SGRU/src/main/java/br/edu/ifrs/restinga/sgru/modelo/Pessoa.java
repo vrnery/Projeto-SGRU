@@ -6,6 +6,8 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
+import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
+import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -153,4 +155,16 @@ public abstract class Pessoa implements Serializable {
     public void setSenha(String senha) {
         this.senha = senha;
     }            
+    
+    /**
+     * Retorna um objeto Pessoa com o login e senha informados
+     * @param login O login do usuário
+     * @param senha A senha do usuário
+     * @return Um objeto Pessoa com o login e senha informados
+     * @throws LoginInvalidoException Caso os dados informados sejam inválidos
+     */
+    public static Pessoa validarLoginUsuario(String login, String senha) throws LoginInvalidoException {
+        PessoaDAO daoPessoa = new PessoaDAO();
+        return daoPessoa.autenticar(login, senha);
+    }
 }

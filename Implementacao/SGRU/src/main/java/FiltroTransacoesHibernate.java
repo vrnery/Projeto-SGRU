@@ -36,7 +36,7 @@ public class FiltroTransacoesHibernate implements Filter {
             // username.
             String user = null;
             if ((sessaoHTTP.getAttribute("autenticarBean")) != null) {
-                user = ((br.edu.ifrs.restinga.sgru.bean.AutenticarBean)(sessaoHTTP.getAttribute("autenticarBean"))).getLogin();
+                user = ((br.edu.ifrs.restinga.sgru.bean.AutenticarBean)(sessaoHTTP.getAttribute("autenticarBean"))).getControlador().getPessoa().getLogin();
             }
             if ((user == null) || (user.equals(""))) {
                 // redireciona para a pagina de login
