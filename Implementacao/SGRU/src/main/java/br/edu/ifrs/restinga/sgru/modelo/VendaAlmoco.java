@@ -158,5 +158,23 @@ public class VendaAlmoco implements Serializable {
                 throw new PeriodoEntreAlmocosInvalidoException("Compra permitida somente após " + (NUM_MAX_MINUTOS_ULTIMO_ALMOCO-numMinutos) + " minutos!");
             }            
         }
-    }      
+    }
+    
+    /**
+     * Solicia à camada de persistência que salve a venda
+     */
+    public void salvarVendaAlmoco() {
+        VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+        daoVendaAlmoco.salvar(this);
+    }
+    
+    /**
+     * Carrega todas vendas realizadas no dia
+     * @param idCaixaRU O id do caixa onde as vendas foram realizadas
+     * @return Um lista de objetos VendaAlmoco
+     */
+    public static List<VendaAlmoco> carregaListaVendasDia(int idCaixaRU) {
+        VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+        return daoVendaAlmoco.carregar(idCaixaRU,Calendar.getInstance());
+    }
 }

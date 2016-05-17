@@ -7,6 +7,7 @@ package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
+import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -166,5 +167,16 @@ public abstract class Pessoa implements Serializable {
     public static Pessoa validarLoginUsuario(String login, String senha) throws LoginInvalidoException {
         PessoaDAO daoPessoa = new PessoaDAO();
         return daoPessoa.autenticar(login, senha);
+    }
+    
+    /**
+     * Pesquisa uma pessoa com a matrícula informada
+     * @param matricula A matrícula da pessoa a ser pesquisada
+     * @return Um objeto Pessoa     
+     * @throws MatriculaInvalidaException Caso a matrícula do usuário não seja encontrada
+     */
+    public static Pessoa carregar(String matricula) throws MatriculaInvalidaException {
+        PessoaDAO pessoaDAO = new PessoaDAO();
+        return pessoaDAO.carregar(matricula);
     }
 }

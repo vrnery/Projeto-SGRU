@@ -61,16 +61,6 @@ public class ClienteBean {
         return converterFoto();                
     }
 
-    /*
-    /**
-     * Solicita à camada de persistência o cadastro de um aluno
-     */    
-    public void salvar() {
-        ClienteDAO dao = new ClienteDAO();
-        dao.salvar(cliente);
-        enviarMensagem(FacesMessage.SEVERITY_INFO, "Cliente cadastrado com sucesso!");
-    }     
-        
     /**
      * Carrega um cliente no Bean
      * @param matricula A matrícula do cliente a ser carregado
@@ -136,15 +126,5 @@ public class ClienteBean {
             // Nao foi possivel localizar nenhuma foto ...
             return new DefaultStreamedContent();
         }
-    }
-    
-    /**
-     * Envia à viewer uma mensagem com o status da operação
-     * @param sev A severidade da mensagem
-     * @param msg A mensagem a ser apresentada
-     */
-    private void enviarMensagem(FacesMessage.Severity sev, String msg) {
-        FacesContext context = FacesContext.getCurrentInstance();        
-        context.addMessage(null, new FacesMessage(sev, msg, ""));
-    }            
+    }    
 }

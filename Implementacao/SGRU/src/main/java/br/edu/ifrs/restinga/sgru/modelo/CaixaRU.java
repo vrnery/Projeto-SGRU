@@ -13,8 +13,6 @@ import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -235,10 +233,9 @@ public class CaixaRU implements Serializable {
         vendaAlmoco.setCaixaRU(this);
         
         // Procura o cliente na base
-        PessoaDAO pessoaDAO = new PessoaDAO();
         Cliente cliente;
         try {
-            cliente = (Cliente)pessoaDAO.carregar(matricula);        
+            cliente = (Cliente)Pessoa.carregar(matricula);        
         } catch (ClassCastException e) {
             throw new UsuarioInvalidoException("Venda de almoço não permitida para este perfil de usuário");
         }
@@ -305,9 +302,8 @@ public class CaixaRU implements Serializable {
                 ultimoAlmocoVendido.getTicket().setDataUtilizado((Calendar) ultimoAlmocoVendido.getDataVenda());                    
             }
 
-            // Salva a venda
-            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
-            daoVendaAlmoco.salvar(ultimoAlmocoVendido);
+            // Salva a venda            
+            ultimoAlmocoVendido.salvarVendaAlmoco();
         } else {
             // exclui a venda da lista
             getLstVendaAlmoco().remove(ultimoAlmocoVendido);
@@ -338,9 +334,8 @@ public class CaixaRU implements Serializable {
      */
     public void preencherListaAlmoco() {
         if (getLstVendaAlmoco().isEmpty()) {
-            // realiza a consulta para verificar se existe alguma venda para o dia
-            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
-            setLstVendaAlmoco(daoVendaAlmoco.carregar(getId(),Calendar.getInstance()));
+            // realiza a consulta para verificar se existe alguma venda para o dia            
+            this.lstVendaAlmoco = VendaAlmoco.carregaListaVendasDia(id);
         }
     }        
     
