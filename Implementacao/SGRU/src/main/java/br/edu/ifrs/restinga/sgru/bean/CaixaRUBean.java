@@ -29,7 +29,13 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean
 @SessionScoped
 public class CaixaRUBean {
-    private final ControladorVenda controlador = new ControladorVenda();
+    private final ControladorVenda controlador;
+    private final CaixaRU caixaRU;
+
+    public CaixaRUBean() {
+        this.caixaRU = new CaixaRU();
+        this.controlador = new ControladorVenda(this.caixaRU);
+    }        
 
     /**     
      * @return the controlador

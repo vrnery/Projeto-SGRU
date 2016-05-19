@@ -19,7 +19,7 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @SessionScoped
 public class AutenticarBean {            
-    private ControladorAutenticacao controlador = new ControladorAutenticacao();
+    private final ControladorAutenticacao controlador = new ControladorAutenticacao();
 
     /**
      * @return the controlador
@@ -28,13 +28,6 @@ public class AutenticarBean {
         return controlador;
     }
 
-    /**
-     * @param controlador the controlador to set
-     */
-    public void setControlador(ControladorAutenticacao controlador) {
-        this.controlador = controlador;
-    }    
-    
     /**
      * Autentica um usuário no sistema
      * @param login O login do usuário

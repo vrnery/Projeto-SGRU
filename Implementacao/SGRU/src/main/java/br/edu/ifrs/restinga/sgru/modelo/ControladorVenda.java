@@ -22,6 +22,10 @@ import java.util.Calendar;
  */
 public class ControladorVenda {    
     private CaixaRU caixaRU;    
+
+    public ControladorVenda(CaixaRU caixaRU) {
+        this.caixaRU = caixaRU;
+    }        
     
     /**
      * @return the caixaRU
