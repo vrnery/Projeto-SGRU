@@ -13,6 +13,8 @@ import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
+import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
+import java.util.Calendar;
 
 /**
  * Classe que implementa o padrão GRASP "Controlador" para as vendas realizadas no caixa.
@@ -51,8 +53,18 @@ public class ControladorVenda {
      * @return True, caso o caixa esteja aberto e false, caso contrário
      */
     public boolean carregarCaixaAberto(OperadorCaixa oper) {
-        this.caixaRU = CaixaRU.carregarCaixaAberto(oper);
-        return this.caixaRU != null;
+        CaixaRUDAO dao = new CaixaRUDAO();
+        this.caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
+        if (this.caixaRU != null) {
+            // Carrega o valor atual do almoco
+            this.caixaRU.carregarValorAtualAlmoco();
+            // verifica se a lista de almocos estah preenchida
+            this.caixaRU.preencherListaAlmoco();
+            return true;
+        } else {
+            // Se nao encontrar o caixa, retorna false
+            return false;
+        }
     }
     
     /**

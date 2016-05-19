@@ -13,6 +13,7 @@ import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,25 +179,6 @@ public class CaixaRU implements Serializable {
     }        
     
     /**
-     * Verifica se já existe um caixa aberto, que ainda não foi fechado, para o operador naquele dia
-     * @param oper O operador de caixa
-     * @return Um objeto CaixaRU nulo ou contendo o caixa já aberto
-     */
-    public static CaixaRU carregarCaixaAberto(OperadorCaixa oper) {        
-        CaixaRUDAO dao = new CaixaRUDAO();
-        CaixaRU tmpCaixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
-        if (tmpCaixaRU != null) {
-            // Carrega o valor atual do almoco
-            tmpCaixaRU.carregarValorAtualAlmoco();
-            // verifica se a lista de almocos estah preenchida
-            tmpCaixaRU.preencherListaAlmoco();
-            return tmpCaixaRU;
-        }
-        // Se nao encontrar o caixa, retorna nulo
-        return null;
-    }
-    
-    /**
      * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa
      * @param oper O operador que vai operar o caixa
      * @param valorAbertura O valor de abertura do caixa     
@@ -303,7 +285,8 @@ public class CaixaRU implements Serializable {
             }
 
             // Salva a venda            
-            ultimoAlmocoVendido.salvarVendaAlmoco();
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+            daoVendaAlmoco.salvar(ultimoAlmocoVendido);            
         } else {
             // exclui a venda da lista
             getLstVendaAlmoco().remove(ultimoAlmocoVendido);
@@ -335,7 +318,8 @@ public class CaixaRU implements Serializable {
     public void preencherListaAlmoco() {
         if (getLstVendaAlmoco().isEmpty()) {
             // realiza a consulta para verificar se existe alguma venda para o dia            
-            this.lstVendaAlmoco = VendaAlmoco.carregaListaVendasDia(id);
+            VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
+            this.lstVendaAlmoco = daoVendaAlmoco.carregar(id,Calendar.getInstance());            
         }
     }        
     
