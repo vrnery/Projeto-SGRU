@@ -9,7 +9,9 @@ import br.edu.ifrs.restinga.sgru.excessao.PeriodoEntreAlmocosInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -152,10 +154,19 @@ public class VendaAlmoco implements Serializable {
             // o ultimo almoco vendido para o cliente eh o ultimo da lista
             VendaAlmoco ultimoAlmocoCartao = lstVendaAlmocoCartao.get(lstVendaAlmocoCartao.size()-1);
 
-            // Numero de minutos passados desde a ultima compra                 
-            int numMinutos = (int) ((Calendar.getInstance().getTimeInMillis() - ultimoAlmocoCartao.getDataVenda().getTimeInMillis())* 0.0000166667);
+            // Calcula o numero de minutos necessarios para a proxima compra
+            int numMinutos = NUM_MAX_MINUTOS_ULTIMO_ALMOCO - 
+                    ((int) ((Calendar.getInstance().getTimeInMillis() - ultimoAlmocoCartao.getDataVenda().getTimeInMillis())* 0.0000166667));
+            
+            // Cria um ojjeto GregorianCalendar com a data atual do sistema
+            Calendar horaPermitidaAlmoco = new GregorianCalendar();
+            // Adiciona os minutos ao horario atual
+            horaPermitidaAlmoco.add(Calendar.MINUTE, numMinutos);
+            // Verifica se o cliente pode efetuar a compra
             if (numMinutos <= NUM_MAX_MINUTOS_ULTIMO_ALMOCO) {
-                throw new PeriodoEntreAlmocosInvalidoException("Compra permitida somente após " + (NUM_MAX_MINUTOS_ULTIMO_ALMOCO-numMinutos) + " minutos!");
+                //throw new PeriodoEntreAlmocosInvalidoException("Compra permitida somente após " + (NUM_MAX_MINUTOS_ULTIMO_ALMOCO-numMinutos) + " minutos!");
+                SimpleDateFormat fmt = new SimpleDateFormat("HH'h'mm");
+                throw new PeriodoEntreAlmocosInvalidoException("Compra permitida somente a partir das " + fmt.format(horaPermitidaAlmoco.getTime()));
             }            
         }
     }    

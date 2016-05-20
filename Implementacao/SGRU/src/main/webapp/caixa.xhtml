@@ -20,9 +20,11 @@
                     <p:outputLabel for="txtCodigo" value="Código: "/>
                     <p:inputText id="txtCodigo" maxlength="15" size="20" required="true" binding="#{codigo}"/>                
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Venda Cartão" action="#{caixaRUBean.realizarVendaAlmocoCartao(codigo.value)}"
-                                 actionListener="#{clienteBean.carregar(codigo.value)}"/>
-                <p:commandButton ajax="false" value="Venda Ticket" action="#{caixaRUBean.realizarVendaAlmocoTicket(codigo.value)}" />
+                <p:commandButton ajax="false" id="btnCartao" value="Venda Cartão" action="#{caixaRUBean.realizarVendaAlmocoCartao(codigo.value)}"
+                                 actionListener="#{clienteBean.carregar(codigo.value)}"
+                                 style="width:160px;height:40px"/>
+                <p:commandButton ajax="false" id="btnTicket" value="Venda Ticket" action="#{caixaRUBean.realizarVendaAlmocoTicket(codigo.value)}" 
+                                 style="width:160px;height:40px"/>
             </h:form>
         </ui:define>
     </ui:composition>
