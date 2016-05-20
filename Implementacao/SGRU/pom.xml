@@ -49,7 +49,7 @@
     </dependencies>
 
     <build>
-        <finalName>Projeto-SGRU 1.0</finalName>
+        <finalName>SGRU</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

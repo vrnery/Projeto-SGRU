@@ -17,7 +17,7 @@
                         <h:outputText value="SGRU"/>
                     </div>                                
                     <div id="middle" style="height: 25px;text-align: center;">
-                        <h:outputText value="Olá, #{autenticarBean.controlador.operadorCaixa.nome}"/>
+                        <h:outputText value="Olá, #{autenticarBean.controlador.pessoa.nome}"/>
                     </div>                                
                     <div id="botton" style="height: 20px;text-align: right;">
                         <h:form>                                                                                        
@@ -34,7 +34,7 @@
             <p:layoutUnit position="west">
                 <h:form>
                     <p:menu>
-                        <p:menuitem ajax="false" value="Fechamento de Caixa" action="#{caixaRUBean.realizarFechamentoCaixa()}"/>                        
+                        <p:menuitem ajax="false" value="Relatórios" action="relatorios"/>                        
                     </p:menu>
                 </h:form>
             </p:layoutUnit>            

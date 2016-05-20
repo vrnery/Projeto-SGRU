@@ -47,13 +47,15 @@ public class ControladorAutenticacao {
      * Realiza login de um usuário no sistema     
      * @param login O login do usuário
      * @param senha A senha do usuário
+     * @return Um objeto Pessoa, com o objeto correspondente ao login e senha informados
      * @throws br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException Caso os dados informados sejam inválidos
      */
-    public void realizarLogin(String login, String senha) throws LoginInvalidoException {
+    public Pessoa realizarLogin(String login, String senha) throws LoginInvalidoException {
         this.pessoa = Pessoa.validarLoginUsuario(login, senha);
         
         if (pessoa instanceof OperadorCaixa) {
             this.operadorCaixa = (OperadorCaixa) pessoa;
-        }                        
+        }        
+        return pessoa;
     }        
 }
