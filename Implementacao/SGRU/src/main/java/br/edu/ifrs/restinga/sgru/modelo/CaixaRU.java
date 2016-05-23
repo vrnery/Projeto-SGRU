@@ -193,6 +193,7 @@ public class CaixaRU implements Serializable {
         setOperadorCaixa(oper);
         setValorAbertura(valorAbertura);
         setDataAbertura(Calendar.getInstance());
+        this.carregarValorAtualAlmoco();
         
         CaixaRUDAO dao = new CaixaRUDAO();
         dao.salvar(this);        

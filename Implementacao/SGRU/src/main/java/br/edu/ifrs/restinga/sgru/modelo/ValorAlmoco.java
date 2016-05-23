@@ -94,6 +94,9 @@ public class ValorAlmoco implements Serializable {
             ValorAlmoco valorAtualAlmoco) throws ValorAlmocoInvalidoException {
         // Se a data do cretito no cartao for menor que a data do valor
         // do almoco atual, verifica se eh necessario atualizar valor            
+        if (valorAtualAlmoco == null) {
+            throw new ValorAlmocoInvalidoException("Nenhum valor de almoço configurado!");
+        }
         if (valorAtualAlmoco.getDataValor().after(dataCreditoCartao)) {
             long miliSecondsCartao = dataCreditoCartao.getTimeInMillis();            
             int numDias = (int) ((Calendar.getInstance().getTimeInMillis() - miliSecondsCartao)/86400000L);                
