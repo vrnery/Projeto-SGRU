@@ -11,7 +11,22 @@ package br.edu.ifrs.restinga.sgru.excessao;
  */
 public class ValorAlmocoInvalidoException extends Exception {
 
-    public ValorAlmocoInvalidoException(String msg) {
-        super(msg);
-    }    
+    public ValorAlmocoInvalidoException() {
+    }
+
+    public ValorAlmocoInvalidoException(String message) {
+        super(message);
+    }
+
+    public ValorAlmocoInvalidoException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ValorAlmocoInvalidoException(Throwable cause) {
+        super(cause);
+    }
+
+    public ValorAlmocoInvalidoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

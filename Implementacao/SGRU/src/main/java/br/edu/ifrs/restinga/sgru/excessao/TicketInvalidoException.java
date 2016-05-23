@@ -10,7 +10,23 @@ package br.edu.ifrs.restinga.sgru.excessao;
  * @author cstads
  */
 public class TicketInvalidoException extends Exception {
-    public TicketInvalidoException(String msg) {
-        super(msg);
+
+    public TicketInvalidoException() {
+    }
+
+    public TicketInvalidoException(String message) {
+        super(message);
+    }
+
+    public TicketInvalidoException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public TicketInvalidoException(Throwable cause) {
+        super(cause);
+    }
+
+    public TicketInvalidoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

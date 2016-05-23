@@ -16,9 +16,19 @@
                         <f:selectItem itemLabel="Recargas" itemValue="Recargas"/>                        
                     </p:selectOneRadio>     
                     <p:outputLabel for="dataInicial" value="Data Inicial:"/>
-                    <p:calendar id="dataInicial" onselect="#{relatorioBean.maxDate(value)}" />
+                    <p:calendar id="dataInicial"
+                                pattern="dd/MM/yyyy"
+                                maxdate="#{relatorioBean.dataInicialMax}" 
+                                mindate="#{relatorioBean.dataInicialMin}">                                
+                        <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataInicial}" update="dataFinal"/>
+                    </p:calendar>                                    
                     <p:outputLabel for="dataFinal" value="Data Final:"/>
-                    <p:calendar id="dataFinal"/>
+                    <p:calendar id="dataFinal"
+                                pattern="dd/MM/yyyy"
+                                maxdate="#{relatorioBean.dataFinalMax}" 
+                                mindate="#{relatorioBean.dataFinalMin}">
+                        <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataFinal}" update="dataInicial"/>
+                    </p:calendar>
                 </h:panelGrid>
                 <p:commandButton ajax="false" value="Emitir Relatório"/>
             </h:form>

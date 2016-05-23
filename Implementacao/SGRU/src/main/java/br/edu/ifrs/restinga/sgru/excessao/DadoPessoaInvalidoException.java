@@ -10,7 +10,23 @@ package br.edu.ifrs.restinga.sgru.excessao;
  * @author Marcelo
  */
 public class DadoPessoaInvalidoException extends Exception {
-    public DadoPessoaInvalidoException(String msg) {
-        super(msg);
+
+    public DadoPessoaInvalidoException() {
     }
+
+    public DadoPessoaInvalidoException(String message) {
+        super(message);
+    }
+
+    public DadoPessoaInvalidoException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DadoPessoaInvalidoException(Throwable cause) {
+        super(cause);
+    }
+
+    public DadoPessoaInvalidoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }    
 }

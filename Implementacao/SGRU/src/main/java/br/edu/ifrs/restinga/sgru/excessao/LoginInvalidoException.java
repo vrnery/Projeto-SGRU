@@ -11,8 +11,22 @@ package br.edu.ifrs.restinga.sgru.excessao;
  */
 public class LoginInvalidoException extends Exception {
 
-    public LoginInvalidoException(String msg) {
-        super(msg);
+    public LoginInvalidoException() {
     }
-    
+
+    public LoginInvalidoException(String message) {
+        super(message);
+    }
+
+    public LoginInvalidoException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public LoginInvalidoException(Throwable cause) {
+        super(cause);
+    }
+
+    public LoginInvalidoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }    
 }

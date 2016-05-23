@@ -11,7 +11,22 @@ package br.edu.ifrs.restinga.sgru.excessao;
  */
 public class PeriodoEntreAlmocosInvalidoException extends Exception {
 
-    public PeriodoEntreAlmocosInvalidoException(String msg) {
-        super(msg);
-    }    
+    public PeriodoEntreAlmocosInvalidoException() {
+    }
+
+    public PeriodoEntreAlmocosInvalidoException(String message) {
+        super(message);
+    }
+
+    public PeriodoEntreAlmocosInvalidoException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PeriodoEntreAlmocosInvalidoException(Throwable cause) {
+        super(cause);
+    }
+
+    public PeriodoEntreAlmocosInvalidoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

@@ -11,7 +11,22 @@ package br.edu.ifrs.restinga.sgru.excessao;
  */
 public class ValorAberturaCaixaInvalido extends Exception {
 
-    public ValorAberturaCaixaInvalido(String msg) {
-        super(msg);
-    }    
+    public ValorAberturaCaixaInvalido() {
+    }
+
+    public ValorAberturaCaixaInvalido(String message) {
+        super(message);
+    }
+
+    public ValorAberturaCaixaInvalido(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ValorAberturaCaixaInvalido(Throwable cause) {
+        super(cause);
+    }
+
+    public ValorAberturaCaixaInvalido(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

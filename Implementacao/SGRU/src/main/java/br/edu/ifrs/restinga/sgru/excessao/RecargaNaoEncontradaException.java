@@ -10,7 +10,23 @@ package br.edu.ifrs.restinga.sgru.excessao;
  * @author marcelo.lima
  */
 public class RecargaNaoEncontradaException extends Exception {
-    public RecargaNaoEncontradaException(String msg) {
-        super(msg);
+
+    public RecargaNaoEncontradaException() {
+    }
+
+    public RecargaNaoEncontradaException(String message) {
+        super(message);
+    }
+
+    public RecargaNaoEncontradaException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RecargaNaoEncontradaException(Throwable cause) {
+        super(cause);
+    }
+
+    public RecargaNaoEncontradaException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

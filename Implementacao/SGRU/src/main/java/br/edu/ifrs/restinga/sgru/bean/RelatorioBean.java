@@ -5,9 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import java.util.Calendar;
+import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -16,11 +17,51 @@ import javax.faces.bean.RequestScoped;
 @ManagedBean
 @RequestScoped
 public class RelatorioBean {
-    public Calendar maxDate(Calendar data) {
-        return Calendar.getInstance();
+    private Date dataInicialMin;
+    private Date dataInicialMax;
+    private Date dataFinalMin;
+    private Date dataFinalMax;
+
+    public RelatorioBean() {
+        this.dataInicialMax = new Date();
+        this.dataFinalMin = new Date();
+    }
+
+    /**
+     * @return the dataInicialMin
+     */
+    public Date getDataInicialMin() {
+        return dataInicialMin;
+    }
+
+    /**
+     * @return the dataInicialMax
+     */
+    public Date getDataInicialMax() {
+        return dataInicialMax;
+    }
+
+    /**
+     * @return the dataFinalMin
+     */
+    public Date getDataFinalMin() {
+        return dataFinalMin;
+    }
+
+    /**
+     * @return the dataFinalMax
+     */
+    public Date getDataFinalMax() {
+        return dataFinalMax;
+    }
+
+    public void tratarDataInicial(SelectEvent evento) {
+        Date data = (Date) evento.getObject();
+        this.dataFinalMin = data;
     }
     
-    public Calendar minDate(Calendar data) {
-        return Calendar.getInstance();
-    }    
+    public void tratarDataFinal(SelectEvent evento) {
+        Date data = (Date) evento.getObject();
+        this.dataInicialMax = data;
+    }
 }
