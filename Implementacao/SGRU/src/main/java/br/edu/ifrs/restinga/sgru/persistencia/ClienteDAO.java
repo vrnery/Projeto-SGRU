@@ -49,7 +49,11 @@ public class ClienteDAO {
      * @return Uma lista de objetos Cliente
      */
     public List<Cliente> carregarClientesPorTipo(int codTipoCliente) {
-        return sessao.createQuery("FROM Cliente WHERE idCodTipoCliente=:codTipoCliente")
-                .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();
+        if (codTipoCliente == -1) {
+            return sessao.createQuery("FROM Cliente ORDER BY nome").list();
+        } else {
+            return sessao.createQuery("FROM Cliente WHERE idCodTipoCliente=:codTipoCliente ORDER BY nome")
+                .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();   
+        }        
     }
 }
