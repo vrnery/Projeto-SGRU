@@ -17,11 +17,9 @@
                         <p:ajax event="change" listener="#{relatorioBean.alterarStatusFormaPgto()}" update="somFormaPagamento"/>
                     </p:selectOneRadio>
                     
-                    <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"
-                                   rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
+                    <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"/>
                     <p:selectOneRadio id="somFormaPagamento" value="Cartao"
-                                      style="width: 235px"
-                                      rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"
+                                      style="width: 235px"                                      
                                       disabled="#{!relatorioBean.relatorioCompras}">
                         <f:selectItem itemLabel="Cartão" itemValue="Cartao"/>                        
                         <f:selectItem itemLabel="Ticket" itemValue="Ticket"/>                        
