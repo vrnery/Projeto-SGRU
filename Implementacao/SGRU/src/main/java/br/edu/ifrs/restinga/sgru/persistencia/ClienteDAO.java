@@ -7,6 +7,7 @@ package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
+import java.util.List;
 import org.hibernate.Session;
 
 /**
@@ -41,4 +42,14 @@ public class ClienteDAO {
     public void salvar(Cliente cliente) {
         sessao.saveOrUpdate(cliente);        
     }          
+    
+    /**
+     * Retorna uma lista de cliente do tipo desejado
+     * @param codTipoCliente O código que identifica o tipo do cliente
+     * @return Uma lista de objetos Cliente
+     */
+    public List<Cliente> carregarClientesPorTipo(int codTipoCliente) {
+        return sessao.createQuery("FROM Cliente WHERE idCodTipoCliente=:codTipoCliente")
+                .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();
+    }
 }
