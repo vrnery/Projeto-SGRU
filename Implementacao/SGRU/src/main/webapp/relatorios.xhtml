@@ -16,6 +16,7 @@
                         <f:selectItem itemLabel="Recargas" itemValue="Recargas"/>
                         <p:ajax event="change" listener="#{relatorioBean.alterarStatusFormaPgto()}" update="somFormaPagamento"/>
                     </p:selectOneRadio>
+                    
                     <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
                     <p:selectOneRadio id="somFormaPagamento" value="Cartao"
