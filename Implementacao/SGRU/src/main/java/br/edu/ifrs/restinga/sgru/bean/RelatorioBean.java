@@ -28,12 +28,15 @@ public class RelatorioBean {
     private Date dataFinalMin;
     private Date dataFinalMax;
     private boolean relatorioCompras;
+    private int idCodTipoCliente;
 
     public RelatorioBean() {
         this.dataInicialMax = new Date();
         this.dataFinalMin = new Date();
         // A forma de pagamento default eh cartao
         this.relatorioCompras = true;
+        // -1 para todos os clientes
+        this.idCodTipoCliente = -1;
     }
 
     /**
@@ -79,6 +82,20 @@ public class RelatorioBean {
     }    
 
     /**
+     * @return the idCodTipoCliente
+     */
+    public int getIdCodTipoCliente() {
+        return idCodTipoCliente;
+    }
+
+    /**
+     * @param idCodTipoCliente the idCodTipoCliente to set
+     */
+    public void setIdCodTipoCliente(int idCodTipoCliente) {
+        this.idCodTipoCliente = idCodTipoCliente;
+    }    
+    
+    /**
      * Adapta o componente calendar dataFinal da view
      * @param evento 
      */
@@ -122,12 +139,11 @@ public class RelatorioBean {
     
     /**
      * Retorna uma lista de cliente do tipo desejado
-     * @param codTipoCliente O código que identifica o tipo do cliente
      * @return Uma lista de objetos Cliente
      */
-    public List<Cliente> getLstClientes(int codTipoCliente) {
+    public List<Cliente> getLstClientes() {
         ClienteDAO dao = new ClienteDAO();
-        return dao.carregarClientesPorTipo(codTipoCliente);
+        return dao.carregarClientesPorTipo(this.idCodTipoCliente);
     }    
     
     /**
