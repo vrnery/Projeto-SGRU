@@ -12,8 +12,8 @@
                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                     <p:outputLabel for="somTipoRelatorio" value="Tipo de Relatório:"/>
                     <p:selectOneRadio id="somTipoRelatorio" value="#{relatorioBean.controlador.tipoRelatorio}" style="width: 250px"> 
-                        <f:selectItem itemLabel="Compras" itemValue="#{relatorioBean.controlador.RELATORIO_COMPRAS}"/>                           
-                        <f:selectItem itemLabel="Recargas" itemValue="#{relatorioBean.controlador.RELATORIO_RECARGAS}"/>
+                        <f:selectItem itemLabel="Compras" itemValue="#{relatorioBean.RELATORIO_COMPRAS}"/>                           
+                        <f:selectItem itemLabel="Recargas" itemValue="#{relatorioBean.RELATORIO_RECARGAS}"/>
                         <p:ajax event="change" listener="#{relatorioBean.alterarStatusFormaPgto()}" update="somFormaPagamento"/>
                     </p:selectOneRadio>
                     
@@ -21,8 +21,8 @@
                     <p:selectOneRadio id="somFormaPagamento" value="#{relatorioBean.controlador.formaPgto}"
                                       style="width: 235px"                                      
                                       disabled="#{!relatorioBean.relatorioCompras}">
-                        <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.controlador.FORMA_PGTO_CARTAO}"/>                        
-                        <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.controlador.FORMA_PGTO_TICKET}"/>                        
+                        <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.FORMA_PGTO_CARTAO}"/>                        
+                        <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.FORMA_PGTO_TICKET}"/>                        
                     </p:selectOneRadio>
                     <p:outputLabel for="somTipoUsuario" value="Tipo de Usuário:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>

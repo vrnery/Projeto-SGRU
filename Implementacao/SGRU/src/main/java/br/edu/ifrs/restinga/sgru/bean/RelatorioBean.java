@@ -25,6 +25,11 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @ViewScoped
 public class RelatorioBean {
+    private final int RELATORIO_COMPRAS = 1;
+    private final int RELATORIO_RECARGAS = 2;
+    private final int FORMA_PGTO_CARTAO = 1;
+    private final int FORMA_PGTO_TICKET = 2;
+    
     private ControladorRelatorio controlador = new ControladorRelatorio();
     private Date dataInicialMin;
     private Date dataInicialMax;
@@ -35,22 +40,48 @@ public class RelatorioBean {
     RelatoriosDAO rel = new RelatoriosDAO();
     
     public RelatorioBean() {
+        // A data inicial maxima eh a data atual
         this.dataInicialMax = new Date();
+        // A data final minima eh a data atual
         this.dataFinalMin = new Date();
-        /*
-        try {
-            // A forma de pagamento default eh cartao
-            controlador.setFormaPgto(controlador.getFORMA_PGTO_CARTAO());
-            // O tipo de relatorio default eh cartao
-            controlador.setTipoRelatorio(controlador.getRELATORIO_COMPRAS());
-            this.relatorioCompras = true;
-        } catch (RelatorioInvalidoException e) {
-            
-        }*/
+        // O tipo de relatorio default eh cartao
+        controlador.setTipoRelatorio(this.RELATORIO_COMPRAS);
+        // A forma de pagamento default eh cartao
+        controlador.setFormaPgto(this.FORMA_PGTO_CARTAO);        
+        // Flag para controlar a ativacao do campo forma de pagamento
+        this.relatorioCompras = true;
         // -1 para todos os clientes
         this.idCodTipoCliente = -1;
     }
 
+    /**
+     * @return the RELATORIO_COMPRAS
+     */
+    public int getRELATORIO_COMPRAS() {
+        return RELATORIO_COMPRAS;
+    }
+
+    /**
+     * @return the RELATORIO_RECARGAS
+     */
+    public int getRELATORIO_RECARGAS() {
+        return RELATORIO_RECARGAS;
+    }
+
+    /**
+     * @return the FORMA_PGTO_CARTAO
+     */
+    public int getFORMA_PGTO_CARTAO() {
+        return FORMA_PGTO_CARTAO;
+    }
+
+    /**
+     * @return the FORMA_PGTO_TICKET
+     */
+    public int getFORMA_PGTO_TICKET() {
+        return FORMA_PGTO_TICKET;
+    }    
+    
    /**
      * @return the controlador
      */

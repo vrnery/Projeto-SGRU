@@ -14,26 +14,26 @@
                 Caso exista, permanece nesta pagina
                 Caso não exista, redireciona o operador para a tela do caixa
             -->
-            <f:event listener="#{clienteBean.isClienteSet()}" type="preRenderView" />
+            <f:event listener="#{vendaBean.isClienteSet()}" type="preRenderView" />
             <h:form>                                
                 <h:panelGrid columns="2">
-                    <p:graphicImage width="130" height="100" cache="false" value="#{clienteBean.foto}" />
+                    <p:graphicImage width="130" height="100" cache="false" value="#{vendaBean.foto}" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <h:outputText id="txtNome" value="#{clienteBean.cliente.nome}"/>
+                        <h:outputText id="txtNome" value="#{vendaBean.controlador.cliente.nome}"/>
                         <p:outputLabel for="txtMatricula" value="Matrícula: "/>
-                        <h:outputText id="txtMatricula" value="#{clienteBean.cliente.matricula}"/>                                    
+                        <h:outputText id="txtMatricula" value="#{vendaBean.controlador.cliente.matricula}"/>                                    
                         <p:outputLabel for="txtSaldoCartao" value="Saldo do Cartão: "/>
-                        <h:outputText id="txtSaldoCartao" value="#{clienteBean.cliente.cartao.saldo}">
+                        <h:outputText id="txtSaldoCartao" value="#{vendaBean.controlador.cliente.cartao.saldo}">
                             <f:convertNumber type="currency"/>
                         </h:outputText>            
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
-                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.controlador.valorPagoAlmoco}">
+                        <h:outputText id="txtValorAlmoco" value="#{vendaBean.controlador.valorPagoAlmoco}">
                             <f:convertNumber type="currency"/>
                         </h:outputText>
                     </h:panelGrid>
-                    <p:commandButton ajax="false" value="Confirmar" action="#{caixaRUBean.finalizarAlmoco(true)}" />
-                    <p:commandButton ajax="false" value="Cancelar" action="#{caixaRUBean.finalizarAlmoco(false)}" />
+                    <p:commandButton ajax="false" value="Confirmar" action="#{vendaBean.finalizarAlmoco(true)}" />
+                    <p:commandButton ajax="false" value="Cancelar" action="#{vendaBean.finalizarAlmoco(false)}" />
                 </h:panelGrid>
             </h:form>            
         </ui:define>

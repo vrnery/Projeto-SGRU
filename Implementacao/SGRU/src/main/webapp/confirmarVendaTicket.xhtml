@@ -8,24 +8,24 @@
     <ui:composition template="padraoInternoVenda.xhtml">        
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">
-            <f:event listener="#{caixaRUBean.isTicketSet()}" type="preRenderView" />
+            <f:event listener="#{vendaBean.isTicketSet()}" type="preRenderView" />
             <h:form>
                 <h:panelGrid columns="2">                    
                     <p:graphicImage width="130" height="100" cache="false" value="../imagens/semFoto.png" />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtCodigo" value="Código: "/>
-                        <h:outputText id="txtCodigo" value="#{caixaRUBean.controlador.caixaRU.ultimoAlmocoVendido().ticket.id}"/>
+                        <h:outputText id="txtCodigo" value="#{vendaBean.controlador.caixaRU.ultimoAlmocoVendido().ticket.id}"/>
                         <p:outputLabel for="txtDataCompra" value="Data da Compra: "/>
-                        <h:outputText id="txtDataCompra" value="#{caixaRUBean.controlador.caixaRU.ultimoAlmocoVendido().ticket.dataCriado.time}">
+                        <h:outputText id="txtDataCompra" value="#{vendaBean.controlador.caixaRU.ultimoAlmocoVendido().ticket.dataCriado.time}">
                             <f:convertDateTime type="both"/>
                         </h:outputText>
                         <p:outputLabel for="txtValorAlmoco" value="Valor do Almoço: "/>
-                        <h:outputText id="txtValorAlmoco" value="#{caixaRUBean.controlador.valorPagoAlmoco}">
+                        <h:outputText id="txtValorAlmoco" value="#{vendaBean.controlador.valorPagoAlmoco}">
                             <f:convertNumber type="currency"/>
                         </h:outputText>
                     </h:panelGrid>
-                    <p:commandButton ajax="false" value="Confirmar" action="#{caixaRUBean.finalizarAlmoco(true)}" />
-                    <p:commandButton ajax="false" value="Cancelar" action="#{caixaRUBean.finalizarAlmoco(false)}" />
+                    <p:commandButton ajax="false" value="Confirmar" action="#{vendaBean.finalizarAlmoco(true)}" />
+                    <p:commandButton ajax="false" value="Cancelar" action="#{vendaBean.finalizarAlmoco(false)}" />
                 </h:panelGrid>
             </h:form>
         </ui:define>

@@ -11,27 +11,27 @@
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                    <p:inputText id="txtMatricula" value="#{clienteBean.controlCadastro.cliente.matricula}"/>
+                    <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}"/>
                     <p:outputLabel for="txtNome" value="Nome: "/>
-                    <p:inputText id="txtNome" value="#{clienteBean.controlCadastro.cliente.nome}"/>
+                    <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}"/>
                     <p:outputLabel for="txtEmail" value="Email: "/>
-                    <p:inputText id="txtEmail" value="#{clienteBean.controlCadastro.cliente.email}"/>
+                    <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
                     <p:outputLabel for="txtTelefone" value="Telefone: "/>
-                    <p:inputText id="txtTelefone" value="#{clienteBean.controlCadastro.cliente.telefone}"/>
+                    <p:inputText id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
                     <p:outputLabel for="txtLogin" value="Login: "/>
-                    <p:inputText id="txtLogin" value="#{clienteBean.controlCadastro.cliente.login}"/>
+                    <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.cliente.login}"/>
                     <p:outputLabel for="txtSenha" value="Senha: "/>
-                    <p:inputText id="txtSenha" value="#{clienteBean.controlCadastro.cliente.senha}"/>
+                    <p:inputText id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}"/>
                 </h:panelGrid>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtTipo" value="Tipo: "/>
-                    <p:selectOneRadio id="txtTipo" value="#{clienteBean.controlCadastro.cliente.codTipoCliente}" layout="grid" columns="3">
-                        <f:selectItems value="#{clienteBean.controlCadastro.tipoCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
+                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.cliente.codTipoCliente}" layout="grid" columns="3">
+                        <f:selectItems value="#{cadastroBean.controladorCadastro.tipoCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                     </p:selectOneRadio>
                 </h:panelGrid>
                 <h:form enctype="multipart/form-data">
                     <p:growl id="messages" showDetail="true" />
-                    <p:fileUpload value="#{clienteBean.controlCadastro.file}" mode="simple" skinSimple="true" label="Imagem"/>
+                    <p:fileUpload value="#{cadastroBean.controladorCadastro.file}" mode="simple" skinSimple="true" label="Imagem"/>
                 </h:form>
             </h:form>
         </ui:define>

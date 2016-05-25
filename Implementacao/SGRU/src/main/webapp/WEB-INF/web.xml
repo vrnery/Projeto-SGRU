@@ -3,21 +3,21 @@
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
-    </context-param>    
+    </context-param>
     <filter>
         <filter-name>FiltroTransacoesHibernate</filter-name>
-        <filter-class>FiltroTransacoesHibernate</filter-class>
+        <filter-class>br.edu.ifrs.restinga.sgru.bean.FiltroTransacoesHibernate</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>FiltroTransacoesHibernate</filter-name>
         <!--<servlet-name>Faces Servlet</servlet-name>-->
         <!-- Paginas css nao passarao pelo filtro -->
         <url-pattern>*.xhtml</url-pattern>
-    </filter-mapping>          
+    </filter-mapping>
     <listener>
         <description>HttpSessionListener</description>
-        <listener-class>SessionListener</listener-class>
-    </listener>    
+        <listener-class>br.edu.ifrs.restinga.sgru.bean.SessionListener</listener-class>
+    </listener>
     <!--                
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>

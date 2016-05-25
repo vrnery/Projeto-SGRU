@@ -1,3 +1,5 @@
+package br.edu.ifrs.restinga.sgru.bean;
+
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 

@@ -14,13 +14,23 @@ import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
+import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorVenda;
 import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import javax.faces.context.FacesContext;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.PhaseId;
+import javax.imageio.ImageIO;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -28,13 +38,13 @@ import javax.faces.bean.SessionScoped;
  */
 @ManagedBean
 @SessionScoped
-public class CaixaRUBean {
-    private final ControladorVenda controlador;
-    private final CaixaRU caixaRU;
+public class VendaBean {
+    // Caso nao consiga carregar foto do cliente
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";
+    private final ControladorVenda controlador;    
 
-    public CaixaRUBean() {
-        this.caixaRU = new CaixaRU();
-        this.controlador = new ControladorVenda(this.caixaRU);
+    public VendaBean() {        
+        this.controlador = new ControladorVenda();
     }        
 
     /**     
@@ -186,6 +196,82 @@ public class CaixaRUBean {
             return null;
         }              
         return "index";
+    }    
+    
+    /**
+     * Carrega um cliente no controlador
+     * @param matricula A matrícula do cliente a ser carregado
+     */    
+    public void carregarCliente(String matricula) {
+        try {
+            controlador.carregarCliente(matricula);
+        } catch(MatriculaInvalidaException e) {
+            // essa excessao serah tratada no realizarVendaAlmocoCartao do VendaBean
+        }
+    }    
+    
+/**
+     * Verifica se existe um cliente setado na sessao para realizar a compra. 
+     * Caso não exista, redireciona o operador para a tela do caixa
+     */
+    public void isClienteSet() {
+        // Se o cliente nao possui nome setado, entao nao ha cliente na sessao        
+        if (controlador.getCliente().getNome() == null) {
+            // redireciona para tela do caixa
+            ConfigurableNavigationHandler nav  = 
+                    (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
+            
+            nav.performNavigation("caixa.xhtml?faces-redirect=true");                                
+        }
+    }    
+    
+    /**
+     * @return the foto
+     */
+    public StreamedContent getFoto() {        
+        FacesContext context = FacesContext.getCurrentInstance();        
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        }         
+        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+        return converterFoto();                
+    }        
+    
+    /**
+     * Converte uma imagem para apresentar em um componente p:graphicImage     
+     * @return Um objeto StreamedContent
+     */
+    public StreamedContent converterFoto() {        
+        // Carrega o cliente da sessao
+        FacesContext context = FacesContext.getCurrentInstance();
+        Cliente cliente = (Cliente) ((VendaBean) context.getExternalContext().getSessionMap().get("vendaBean"))
+                .getControlador().getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();        
+       
+        // Cria um objeto File com a foto do cliente        
+        File imgFile = new File(cliente.getCaminhoFoto());
+        if (!imgFile.exists()) {
+            // Nao localizou a foto para a matricula informada, entao carrega a imagem default                                        
+            imgFile = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath(CAMINHO_FOTO_DEFAULT));            
+        }
+        
+        // Converte o arquivo em um array de bytes
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] fotoCliente = null;
+        try {            
+            BufferedImage imagem = ImageIO.read(imgFile);
+            ImageIO.write(imagem, "PNG", bos);
+            bos.flush();  
+            fotoCliente = bos.toByteArray();                
+        } catch (IOException e) {            
+        }        
+        
+        try {
+            return new DefaultStreamedContent(new ByteArrayInputStream(fotoCliente));
+        } catch(NullPointerException e) {
+            // Nao foi possivel localizar nenhuma foto ...
+            return new DefaultStreamedContent();
+        }        
     }    
        
     /**

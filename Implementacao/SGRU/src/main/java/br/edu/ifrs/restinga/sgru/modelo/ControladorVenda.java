@@ -14,17 +14,19 @@ import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import java.util.Calendar;
 
 /**
  * Classe que implementa o padrão GRASP "Controlador" para as vendas realizadas no caixa.
  * @author marcelo.lima
  */
-public class ControladorVenda {    
-    private CaixaRU caixaRU;    
+public class ControladorVenda {      
+    private CaixaRU caixaRU;      
+    private Cliente cliente;
 
-    public ControladorVenda(CaixaRU caixaRU) {
-        this.caixaRU = caixaRU;
+    public ControladorVenda() {
+        this.caixaRU = new CaixaRU();
     }        
     
     /**
@@ -39,6 +41,20 @@ public class ControladorVenda {
      */
     public void setCaixaRU(CaixaRU caixaRU) {
         this.caixaRU = caixaRU;
+    }
+    
+    /**
+     * @return the cliente
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    /**
+     * @param cliente the cliente to set
+     */
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }    
 
     /**
@@ -49,7 +65,7 @@ public class ControladorVenda {
      */
     public double getValorPagoAlmoco() throws ArrayIndexOutOfBoundsException, ValorAlmocoInvalidoException {
         return caixaRU.ultimoAlmocoVendido().getValorAlmoco().getValorAlmoco();
-    }
+    }       
     
     /**
      * Verifica se o caixa está aberto
@@ -121,5 +137,15 @@ public class ControladorVenda {
      */
     public void verificarExistenciaFoto() throws FotoNaoEncontradaException  {
         this.caixaRU.ultimoAlmocoVendido().getCartao().getCliente().verificarExistenciaFoto();
-    }                
+    }            
+
+    /**
+     * Carrega um cliente
+     * @param matricula A matrícula do cliente a ser carregado
+     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Se a matrícula não for encontrada
+     */    
+    public void carregarCliente(String matricula) throws MatriculaInvalidaException {
+        ClienteDAO dao = new ClienteDAO();                
+        cliente = dao.carregar(matricula);
+   }
 }

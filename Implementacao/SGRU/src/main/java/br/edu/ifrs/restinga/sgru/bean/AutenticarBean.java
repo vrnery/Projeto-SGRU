@@ -22,8 +22,12 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @SessionScoped
 public class AutenticarBean {            
-    private final ControladorAutenticacao controlador = new ControladorAutenticacao();
+    private final ControladorAutenticacao controlador;
 
+    public AutenticarBean() {
+        this.controlador = new ControladorAutenticacao();              
+    }    
+    
     /**
      * @return the controlador
      */

@@ -5,7 +5,6 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
-import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.CodTipoClienteDAO;
 import java.util.List;

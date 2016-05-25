@@ -1,3 +1,5 @@
+package br.edu.ifrs.restinga.sgru.bean;
+
 import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
