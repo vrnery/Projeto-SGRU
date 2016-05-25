@@ -5,8 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.RelatorioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.CodTipoCliente;
+import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.CodTipoClienteDAO;
@@ -23,6 +25,7 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @ViewScoped
 public class RelatorioBean {
+    private ControladorRelatorio controlador = new ControladorRelatorio();
     private Date dataInicialMin;
     private Date dataInicialMax;
     private Date dataFinalMin;
@@ -32,13 +35,34 @@ public class RelatorioBean {
 
     public RelatorioBean() {
         this.dataInicialMax = new Date();
-        this.dataFinalMin = new Date();
-        // A forma de pagamento default eh cartao
-        this.relatorioCompras = true;
+        this.dataFinalMin = new Date();                
+        try {
+            // A forma de pagamento default eh cartao
+            controlador.setFormaPgto(controlador.getFORMA_PGTO_CARTAO());
+            // O tipo de relatorio default eh cartao
+            controlador.setTipoRelatorio(controlador.getRELATORIO_COMPRAS());
+            this.relatorioCompras = true;
+        } catch (RelatorioInvalidoException e) {
+            
+        }
         // -1 para todos os clientes
         this.idCodTipoCliente = -1;
     }
 
+   /**
+     * @return the controlador
+     */
+    public ControladorRelatorio getControlador() {
+        return controlador;
+    }
+
+    /**
+     * @param controlador the controlador to set
+     */
+    public void setControlador(ControladorRelatorio controlador) {
+        this.controlador = controlador;
+    }    
+    
     /**
      * @return the dataInicialMin
      */
