@@ -16,7 +16,9 @@
                     <p:password id="txtSenha" maxlength="32" size="20" required="true" binding="#{senha}"/>
                 </h:panelGrid>
                 <p:commandButton ajax="false" value="Entrar" action="#{autenticarBean.autenticar(login.value, senha.value)}" />                
-                <p:button outcome="cadastrarCliente" icon="" title="Cadastrar Cliente"/>
+            </h:form>
+            <h:form>
+                <p:commandButton ajax="false" action="cadastrarCliente.xhtml" value="Novo Usuário"/>
             </h:form>
         </ui:define>
     </ui:composition>
