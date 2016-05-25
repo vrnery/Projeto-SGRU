@@ -11,18 +11,18 @@
             <h:form>
                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                     <p:outputLabel for="somTipoRelatorio" value="Tipo de Relatório:"/>
-                    <p:selectOneRadio id="somTipoRelatorio" value="Compras" style="width: 250px"> 
-                        <f:selectItem itemLabel="Compras" itemValue="Compras"/>                           
-                        <f:selectItem itemLabel="Recargas" itemValue="Recargas"/>
+                    <p:selectOneRadio id="somTipoRelatorio" value="#{relatorioBean.controlador.tipoRelatorio}" style="width: 250px"> 
+                        <f:selectItem itemLabel="Compras" itemValue="#{relatorioBean.controlador.RELATORIO_COMPRAS}"/>                           
+                        <f:selectItem itemLabel="Recargas" itemValue="#{relatorioBean.controlador.RELATORIO_RECARGAS}"/>
                         <p:ajax event="change" listener="#{relatorioBean.alterarStatusFormaPgto()}" update="somFormaPagamento"/>
                     </p:selectOneRadio>
                     
                     <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"/>
-                    <p:selectOneRadio id="somFormaPagamento" value="Cartao"
+                    <p:selectOneRadio id="somFormaPagamento" value="#{relatorioBean.controlador.formaPgto}"
                                       style="width: 235px"                                      
                                       disabled="#{!relatorioBean.relatorioCompras}">
-                        <f:selectItem itemLabel="Cartão" itemValue="Cartao"/>                        
-                        <f:selectItem itemLabel="Ticket" itemValue="Ticket"/>                        
+                        <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.controlador.FORMA_PGTO_CARTAO}"/>                        
+                        <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.controlador.FORMA_PGTO_TICKET}"/>                        
                     </p:selectOneRadio>
                     <p:outputLabel for="somTipoUsuario" value="Tipo de Usuário:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
@@ -32,25 +32,28 @@
                                      value="#{relatorioBean.idCodTipoCliente}">
                         <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
                         <f:selectItems var="tipoUsuario" value="#{relatorioBean.lstTipoCliente}" itemLabel="#{tipoUsuario.descricao}" itemValue="#{tipoUsuario.id}"/>
-                        <p:ajax event="change" update="somUsuario"/>
+                        <p:ajax event="change" update="somCliente"/>
                     </p:selectOneMenu>
-                    <p:outputLabel for="somUsuario" value="Usuário:"
+                    <p:outputLabel for="somCliente" value="Cliente:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
-                    <p:selectOneMenu id="somUsuario"                                       
+                    <p:selectOneMenu id="somCliente"                                       
                                      style="width: 190px"
-                                     rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">                                     
+                                     value="#{relatorioBean.controlador.cliente}"
+                                     rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
                         <f:selectItem itemLabel="Todos" itemValue="Todos" noSelectionOption="true"/>
                         <f:selectItems var="usuario" value="#{relatorioBean.lstClientes}" itemLabel="#{usuario.nome}" itemValue="#{usuario.matricula}"/>
                     </p:selectOneMenu>
                     <p:outputLabel for="dataInicial" value="Data Inicial:"/>
                     <p:calendar id="dataInicial"                                
+                                value="#{relatorioBean.controlador.dataInicial}"
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataInicialMax}" 
                                 mindate="#{relatorioBean.dataInicialMin}">                                
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataInicial}" update="dataFinal"/>
                     </p:calendar>                                    
                     <p:outputLabel for="dataFinal" value="Data Final:"/>
-                    <p:calendar id="dataFinal"                                
+                    <p:calendar id="dataFinal"
+                                value="#{relatorioBean.controlador.dataFinal}"
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataFinalMax}" 
                                 mindate="#{relatorioBean.dataFinalMin}">
