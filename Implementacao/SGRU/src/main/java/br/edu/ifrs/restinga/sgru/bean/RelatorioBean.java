@@ -12,6 +12,7 @@ import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.CodTipoClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
 import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -32,7 +33,8 @@ public class RelatorioBean {
     private Date dataFinalMax;
     private boolean relatorioCompras;
     private int idCodTipoCliente;
-
+    RelatoriosDAO rel = new RelatoriosDAO();
+    
     public RelatorioBean() {
         this.dataInicialMax = new Date();
         this.dataFinalMin = new Date();                
@@ -149,6 +151,9 @@ public class RelatorioBean {
         }
         */
         return true;
+    }
+    public void EmitirRelatorio(){
+        rel.relatorio(relatorioCompras);
     }
     
     /**
