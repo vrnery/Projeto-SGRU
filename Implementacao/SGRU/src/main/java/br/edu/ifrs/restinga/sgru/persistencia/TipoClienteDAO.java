@@ -5,25 +5,22 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
+import java.util.List;
 import org.hibernate.Session;
 
 /**
  *
  * @author marcelo.lima
  */
-public class OperadorCaixaDAO {
+public class TipoClienteDAO {
     private final Session sessao;
 
-    public OperadorCaixaDAO() {
+    public TipoClienteDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
-    }    
-        
-    /**
-     * Persiste o operador de caixa enviado na base de dados
-     * @param operadorCaixa O operador de caixa a ser persistido
-     */
-    public void salvar(OperadorCaixa operadorCaixa) {
-        sessao.saveOrUpdate(operadorCaixa);        
-    }      
+    }
+    
+    public List<TipoCliente> getLstTipoClientes() {
+        return sessao.createQuery("FROM TipoCliente").list();
+    }
 }

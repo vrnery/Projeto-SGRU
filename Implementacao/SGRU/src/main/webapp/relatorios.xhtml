@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <ui:composition template="padraoInternoCliente.xhtml">
+    <ui:composition template="padraoInternoGerencial.xhtml">
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">       
             <h:form>
@@ -16,7 +16,6 @@
                         <f:selectItem itemLabel="Recargas" itemValue="#{relatorioBean.RELATORIO_RECARGAS}"/>
                         <p:ajax event="change" listener="#{relatorioBean.alterarStatusFormaPgto()}" update="somFormaPagamento"/>
                     </p:selectOneRadio>
-                    
                     <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"/>
                     <p:selectOneRadio id="somFormaPagamento" value="#{relatorioBean.controlador.formaPgto}"
                                       style="width: 235px"                                      
@@ -24,16 +23,21 @@
                         <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.FORMA_PGTO_CARTAO}"/>                        
                         <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.FORMA_PGTO_TICKET}"/>                        
                     </p:selectOneRadio>
+                    
+                    
                     <p:outputLabel for="somTipoUsuario" value="Tipo de Usuário:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
                     <p:selectOneMenu id="somTipoUsuario"
                                      style="width: 190px"
                                      rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"
-                                     value="#{relatorioBean.idCodTipoCliente}">
+                                     value="#{relatorioBean.idTipoCliente}">
                         <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
-                        <f:selectItems var="tipoUsuario" value="#{relatorioBean.lstTipoCliente}" itemLabel="#{tipoUsuario.descricao}" itemValue="#{tipoUsuario.id}"/>
+                        <f:selectItems var="tipoUsuario" value="#{relatorioBean.lstTipoCliente}" 
+                                       itemLabel="#{tipoUsuario.descricao}" itemValue="#{tipoUsuario.id}"/>
                         <p:ajax event="change" update="somCliente"/>
-                    </p:selectOneMenu>
+                    </p:selectOneMenu>                    
+                    
+                    
                     <p:outputLabel for="somCliente" value="Cliente:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
                     <p:selectOneMenu id="somCliente"                                       
@@ -41,8 +45,9 @@
                                      value="#{relatorioBean.controlador.cliente}"
                                      rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
                         <f:selectItem itemLabel="Todos" itemValue="Todos" noSelectionOption="true"/>
-                        <f:selectItems var="usuario" value="#{relatorioBean.lstClientes}" itemLabel="#{usuario.nome}" itemValue="#{usuario.matricula}"/>
-                    </p:selectOneMenu>
+                        <f:selectItems var="usuario" value="#{relatorioBean.lstClientes}" 
+                                       itemLabel="#{usuario.nome}" itemValue="#{usuario.matricula}"/>
+                    </p:selectOneMenu>                                                                                                                                           
                     <p:outputLabel for="dataInicial" value="Data Inicial:"/>
                     <p:calendar id="dataInicial"                                
                                 value="#{relatorioBean.controlador.dataInicial}"

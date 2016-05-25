@@ -25,7 +25,7 @@
                 </h:panelGrid>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtTipo" value="Tipo: "/>
-                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.cliente.codTipoCliente}" layout="grid" columns="3">
+                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.cliente.tipoCliente}" layout="grid" columns="3">
                         <f:selectItems value="#{cadastroBean.controladorCadastro.tipoCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                     </p:selectOneRadio>
                 </h:panelGrid>

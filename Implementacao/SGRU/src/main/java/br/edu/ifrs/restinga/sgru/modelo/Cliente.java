@@ -22,18 +22,18 @@ import javax.persistence.Transient;
 @Entity
 @PrimaryKeyJoinColumn(name="id")
 public class Cliente extends Pessoa {            
+    // Tipos de cliente, segundo tabela tipoCliente
+    @Transient
+    public final static int ALUNO = 1;
+    @Transient
+    public final static int PROFESSOR = 2;    
     private String caminhoFoto;                        
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "idCartao")
     private Cartao cartao;     
     @ManyToOne
-    @JoinColumn(name = "idCodTipoCliente")
-    private CodTipoCliente codTipoCliente;
-    // Tipos de cliente, segundo tabela codTipoCliente
-    @Transient
-    public final static int ALUNO = 1;
-    @Transient
-    public final static int PROFESSOR = 2;
+    @JoinColumn(name = "idTipoCliente")
+    private TipoCliente tipoCliente;    
 
     /**
      * @return the caminhoFoto
@@ -64,17 +64,17 @@ public class Cliente extends Pessoa {
     }    
     
     /**
-     * @return the codTipoCliente
+     * @return the tipoCliente
      */
-    public CodTipoCliente getCodTipoCliente() {
-        return codTipoCliente;
+    public TipoCliente getTipoCliente() {
+        return tipoCliente;
     }
 
     /**
-     * @param codTipoCliente the codTipoCliente to set
+     * @param tipoCliente the tipoCliente to set
      */
-    public void setCodTipoCliente(CodTipoCliente codTipoCliente) {
-        this.codTipoCliente = codTipoCliente;
+    public void setTipoCliente(TipoCliente tipoCliente) {
+        this.tipoCliente = tipoCliente;
     }        
     
     /**

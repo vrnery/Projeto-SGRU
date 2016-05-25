@@ -72,7 +72,7 @@ public class ControladorVenda {
      * @param oper O operador de caixa
      * @return True, caso o caixa esteja aberto e false, caso contrário
      */
-    public boolean carregarCaixaAberto(OperadorCaixa oper) {
+    public boolean carregarCaixaAberto(Funcionario oper) {
         CaixaRUDAO dao = new CaixaRUDAO();
         this.caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
         if (this.caixaRU != null) {
@@ -93,7 +93,7 @@ public class ControladorVenda {
      * @param valorAbertura O valor de abertura do caixa     
      * @throws br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido Caso o valor de abertura informado seja zero ou negativo     
      */
-    public void realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) throws
+    public void realizarAberturaCaixa(Funcionario oper, double valorAbertura) throws
             ValorAberturaCaixaInvalido {
         this.getCaixaRU().realizarAberturaCaixa(oper, valorAbertura);
     }

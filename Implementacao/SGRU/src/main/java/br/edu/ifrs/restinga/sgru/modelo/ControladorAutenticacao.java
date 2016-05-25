@@ -12,9 +12,9 @@ import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
  * @author marcelo.lima
  */
 public class ControladorAutenticacao {
-    private Pessoa pessoa;
-    private OperadorCaixa operadorCaixa;
-    
+    private Pessoa pessoa;    
+    private Funcionario funcionario;
+
     /**
      * @return the pessoa
      */
@@ -29,33 +29,51 @@ public class ControladorAutenticacao {
         this.pessoa = pessoa;
     }    
     
-    /**
-     * @return the operadorCaixa
+        /**
+     * @return the funcionario
      */
-    public OperadorCaixa getOperadorCaixa() {
-        return operadorCaixa;
+    public Funcionario getFuncionario() {
+        return funcionario;
     }
 
     /**
-     * @param operadorCaixa the operadorCaixa to set
+     * @param funcionario the funcionario to set
      */
-    public void setOperadorCaixa(OperadorCaixa operadorCaixa) {
-        this.operadorCaixa = operadorCaixa;
-    }    
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+    
     
     /**
-     * Realiza login de um usuário no sistema     
+     * Autentica um usuário no sistema
      * @param login O login do usuário
      * @param senha A senha do usuário
-     * @return Um objeto Pessoa, com o objeto correspondente ao login e senha informados
-     * @throws br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException Caso os dados informados sejam inválidos
+     * @return A página a ser visualizada pelo usuário após o login          
+     * @throws br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException Se o login for inválido         
      */
-    public Pessoa realizarLogin(String login, String senha) throws LoginInvalidoException {
+    public String autenticar(String login, String senha) throws LoginInvalidoException {        
+        String retorno = null;        
+        //this.pessoa = this.realizarLogin();
         this.pessoa = Pessoa.validarLoginUsuario(login, senha);
+
+        if (pessoa instanceof Funcionario) {
+            this.funcionario = (Funcionario)pessoa;
+            switch (funcionario.getTipoFuncionario().getId()) {
+                case Funcionario.OPERADOR_CAIXA:
+                    retorno = "abrirCaixa";
+                    break;
+                case Funcionario.GERENTE:
+                    retorno = "paginaGerencial";
+                    break;
+                default:
+                    // Aqui precisa-se verificar o comportamento quando implementados os demais usuarios
+                    retorno = "index";
+                    break;
+            }
+        } else if (pessoa instanceof Cliente) {
+            retorno = "paginaGerencial";
+        }
         
-        if (pessoa instanceof OperadorCaixa) {
-            this.operadorCaixa = (OperadorCaixa) pessoa;
-        }        
-        return pessoa;
+        return retorno;
     }        
 }

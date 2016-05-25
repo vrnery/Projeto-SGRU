@@ -11,14 +11,15 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.format_sql">true</property>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.CaixaRU"/>
-    <mapping class="br.edu.ifrs.restinga.sgru.modelo.Cartao"/>
-    <mapping class="br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa"/>
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.Cartao"/>    
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Pessoa"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Recarga"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Ticket"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Cliente"/>
-    <mapping class="br.edu.ifrs.restinga.sgru.modelo.CodTipoCliente"/>
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.TipoCliente"/>
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.Funcionario"/>
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.TipoFuncionario"/>
   </session-factory>
 </hibernate-configuration>

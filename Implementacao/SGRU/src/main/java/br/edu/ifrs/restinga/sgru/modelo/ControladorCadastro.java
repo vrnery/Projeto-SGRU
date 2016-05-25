@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.CodTipoClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
 import java.util.List;
 import org.primefaces.model.UploadedFile;
 
@@ -16,7 +16,7 @@ import org.primefaces.model.UploadedFile;
  */
 public class ControladorCadastro {
     private Cliente cliente;
-    private List<CodTipoCliente> tipoCliente;
+    private List<TipoCliente> tipoCliente;
     private UploadedFile file;
 
     public Cliente getCliente() {
@@ -27,8 +27,8 @@ public class ControladorCadastro {
         this.cliente = cliente;
     }
 
-    public List<CodTipoCliente> getTipoCliente() {
-        CodTipoClienteDAO dao = new CodTipoClienteDAO();
+    public List<TipoCliente> getTipoCliente() {
+        TipoClienteDAO dao = new TipoClienteDAO();
         tipoCliente = dao.getLstTipoClientes();
         return tipoCliente;
     }

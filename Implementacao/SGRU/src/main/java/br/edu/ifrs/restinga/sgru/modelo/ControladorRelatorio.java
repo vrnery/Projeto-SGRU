@@ -5,7 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -87,4 +90,24 @@ public class ControladorRelatorio {
     public void setDataFinal(Date dataFinal) {
         this.dataFinal = dataFinal;
     }
+    
+    /**
+     * Retorna uma lista de Tipo de Tipos de Clientes cadastrados no sistema
+     * @return Uma lista TipoCliente
+     */
+    public List<TipoCliente> getLstTipoCliente() {
+        TipoClienteDAO dao = new TipoClienteDAO();
+        return dao.getLstTipoClientes();
+        
+    }
+    
+    /**
+     * Retorna uma lista de cliente do tipo desejado
+     * @param idTipoCliente O id do tipo de cliente
+     * @return Uma lista de objetos Cliente
+     */
+    public List<Cliente> getLstClientes(int idTipoCliente) {
+        ClienteDAO dao = new ClienteDAO();
+        return dao.carregarClientesPorTipo(idTipoCliente);
+    }        
 }

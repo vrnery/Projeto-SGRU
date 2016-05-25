@@ -6,12 +6,9 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
-import br.edu.ifrs.restinga.sgru.modelo.CodTipoCliente;
+import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
-import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.CodTipoClienteDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
 import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -30,16 +27,16 @@ public class RelatorioBean {
     private final int FORMA_PGTO_CARTAO = 1;
     private final int FORMA_PGTO_TICKET = 2;
     
-    private ControladorRelatorio controlador = new ControladorRelatorio();
+    private ControladorRelatorio controlador;
     private Date dataInicialMin;
     private Date dataInicialMax;
     private Date dataFinalMin;
     private Date dataFinalMax;
     private boolean relatorioCompras;
-    private int idCodTipoCliente;
-    RelatoriosDAO rel = new RelatoriosDAO();
+    private int idTipoCliente;    
     
     public RelatorioBean() {
+        this. controlador = new ControladorRelatorio();
         // A data inicial maxima eh a data atual
         this.dataInicialMax = new Date();
         // A data final minima eh a data atual
@@ -51,7 +48,7 @@ public class RelatorioBean {
         // Flag para controlar a ativacao do campo forma de pagamento
         this.relatorioCompras = true;
         // -1 para todos os clientes
-        this.idCodTipoCliente = -1;
+        this.idTipoCliente = -1;
     }
 
     /**
@@ -139,17 +136,17 @@ public class RelatorioBean {
     }    
 
     /**
-     * @return the idCodTipoCliente
+     * @return the idTipoCliente
      */
-    public int getIdCodTipoCliente() {
-        return idCodTipoCliente;
+    public int getIdTipoCliente() {
+        return idTipoCliente;
     }
 
     /**
-     * @param idCodTipoCliente the idCodTipoCliente to set
+     * @param idTipoCliente the idTipoCliente to set
      */
-    public void setIdCodTipoCliente(int idCodTipoCliente) {
-        this.idCodTipoCliente = idCodTipoCliente;
+    public void setIdTipoCliente(int idTipoCliente) {
+        this.idTipoCliente = idTipoCliente;
     }    
     
     /**
@@ -175,25 +172,19 @@ public class RelatorioBean {
      * @param pessoa O usuário logado no sistema
      * @return True, se for necessário habilitar o componente e false, caso contrário
      */
-    public boolean habilitarComponentesGerenciais(Pessoa pessoa) {
-        /*
+    public boolean habilitarComponentesGerenciais(Pessoa pessoa) {        
         if (pessoa instanceof Cliente) {
             return false;
-        }
-        */
+        }        
         return true;
-    }
-    public void EmitirRelatorio(){
-        rel.relatorio(relatorioCompras);
-    }
+    }    
     
     /**
      * Retorna uma lista de Tipo de Clientes cadastrados no sistema
      * @return 
      */
-    public List<CodTipoCliente> getLstTipoCliente() {
-        CodTipoClienteDAO dao = new CodTipoClienteDAO();
-        return dao.getLstTipoClientes();
+    public List<TipoCliente> getLstTipoCliente() {        
+        return controlador.getLstTipoCliente();
         
     }
     
@@ -201,9 +192,8 @@ public class RelatorioBean {
      * Retorna uma lista de cliente do tipo desejado
      * @return Uma lista de objetos Cliente
      */
-    public List<Cliente> getLstClientes() {
-        ClienteDAO dao = new ClienteDAO();
-        return dao.carregarClientesPorTipo(this.idCodTipoCliente);
+    public List<Cliente> getLstClientes() {        
+        return controlador.getLstClientes(this.idTipoCliente);
     }    
     
     /**

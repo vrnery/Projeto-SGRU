@@ -5,22 +5,25 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.CodTipoCliente;
-import java.util.List;
+import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
 import org.hibernate.Session;
 
 /**
  *
  * @author marcelo.lima
  */
-public class CodTipoClienteDAO {
+public class FuncionarioDAO {
     private final Session sessao;
 
-    public CodTipoClienteDAO() {
+    public FuncionarioDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
-    }
-    
-    public List<CodTipoCliente> getLstTipoClientes() {
-        return sessao.createQuery("FROM CodTipoCliente").list();
-    }
+    }    
+        
+    /**
+     * Persiste o funcionario enviado na base de dados
+     * @param funcionario O operador de caixa a ser persistido
+     */
+    public void salvar(Funcionario funcionario) {
+        sessao.saveOrUpdate(funcionario);        
+    }      
 }

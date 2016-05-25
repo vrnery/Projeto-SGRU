@@ -16,7 +16,7 @@ import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorVenda;
-import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,7 +67,7 @@ public class VendaBean {
      */
     public void isCaixaRUSet() {        
         // Caso nao haja operador de caixa setado, entao o caixa ainda estah fechado
-        if (controlador.getCaixaRU().getOperadorCaixa() == null) {
+        if (controlador.getCaixaRU().getFuncionario() == null) {
             // O caixa ainda nao esta aberto
             ConfigurableNavigationHandler nav  = 
                     (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();            
@@ -98,7 +98,7 @@ public class VendaBean {
      * Verifica se já existe um caixa aberto, que ainda não foi fechado, para o operador naquele dia
      * @param oper O operador de caixa
      */
-    public void carregarCaixaAberto(OperadorCaixa oper) {
+    public void carregarCaixaAberto(Funcionario oper) {
         if (controlador.carregarCaixaAberto(oper)) {                                   
             // Caixa jah aberto, redireciona para a pagina do caixa
             ConfigurableNavigationHandler nav  = 
@@ -118,7 +118,7 @@ public class VendaBean {
      * @param valorAbertura O valor de abertura do caixa
      * @return A próxima página a ser exibida pelo usuário
      */
-    public String realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) {
+    public String realizarAberturaCaixa(Funcionario oper, double valorAbertura) {
         try {
             controlador.realizarAberturaCaixa(oper, valorAbertura);
         } catch (ValorAberturaCaixaInvalido e) {
@@ -215,8 +215,8 @@ public class VendaBean {
      * Caso não exista, redireciona o operador para a tela do caixa
      */
     public void isClienteSet() {
-        // Se o cliente nao possui nome setado, entao nao ha cliente na sessao        
-        if (controlador.getCliente().getNome() == null) {
+        // Se cliente nao setado, entao nao ha cliente na sessao        
+        if (controlador.getCliente() == null) {
             // redireciona para tela do caixa
             ConfigurableNavigationHandler nav  = 
                     (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();

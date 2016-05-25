@@ -45,15 +45,15 @@ public class ClienteDAO {
     
     /**
      * Retorna uma lista de cliente do tipo desejado
-     * @param codTipoCliente O código que identifica o tipo do cliente
+     * @param tipoCliente O código que identifica o tipo do cliente
      * @return Uma lista de objetos Cliente
      */
-    public List<Cliente> carregarClientesPorTipo(int codTipoCliente) {
-        if (codTipoCliente == -1) {
+    public List<Cliente> carregarClientesPorTipo(int tipoCliente) {
+        if (tipoCliente == -1) {
             return sessao.createQuery("FROM Cliente ORDER BY nome").list();
         } else {
-            return sessao.createQuery("FROM Cliente WHERE idCodTipoCliente=:codTipoCliente ORDER BY nome")
-                .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();   
+            return sessao.createQuery("FROM Cliente WHERE idTipoCliente=:tipoCliente ORDER BY nome")
+                .setString("tipoCliente", String.valueOf(tipoCliente)).list();   
         }        
     }
 }

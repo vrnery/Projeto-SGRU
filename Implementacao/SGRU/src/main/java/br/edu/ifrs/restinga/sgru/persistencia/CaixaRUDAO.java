@@ -6,7 +6,7 @@
 package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
-import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import org.hibernate.Session;
@@ -36,10 +36,10 @@ public class CaixaRUDAO {
      * @param dataAbertura A data de abertura do caixa do RU
      * @return Um objeto CaixaRU
      */
-    public CaixaRU carregarCaixaAberto(OperadorCaixa operador, Calendar dataAbertura) {                
+    public CaixaRU carregarCaixaAberto(Funcionario operador, Calendar dataAbertura) {                
         //return (CaixaRU) sessao.load(CaixaRU.class, id);        
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idOperadorCaixa=:idOperador AND dataFechamento=null")
+        return (CaixaRU) sessao.createQuery("FROM CaixaRU WHERE DATE(dataAbertura)=:dataAbertura AND idFuncionario=:idOperador AND dataFechamento=null")
                 .setString("dataAbertura", f.format(dataAbertura.getTime()))
                 .setString("idOperador", String.valueOf(operador.getId())).uniqueResult();        
     }    

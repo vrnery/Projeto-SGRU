@@ -9,17 +9,15 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  *
  * @author marcelo.lima
  */
 @Entity
-@PrimaryKeyJoinColumn(name="id")
-public class CodTipoCliente implements Serializable {
-    @Id
+public class TipoFuncionario implements Serializable {
     @GeneratedValue
+    @Id
     private int id;
     private String descricao;
 

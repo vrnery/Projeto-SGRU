@@ -8,7 +8,7 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorAutenticacao;
-import br.edu.ifrs.restinga.sgru.modelo.OperadorCaixa;
+import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -42,22 +42,12 @@ public class AutenticarBean {
      * @return A página a ser visualizada pelo usuário após o login     
      */
     public String autenticar(String login, String senha) {        
-        String retorno = null;
-        Pessoa pessoa;
-        
-        try {                        
-            pessoa = controlador.realizarLogin(login, senha);
-            
-            if (pessoa instanceof OperadorCaixa) {
-                retorno = "abrirCaixa";
-            } else if (pessoa instanceof Cliente) {
-                retorno = "paginaCliente";
-            }
-        } catch (LoginInvalidoException e) {
-            retorno = "index";
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
-        }        
-        return retorno;
+        try {
+            return controlador.autenticar(login, senha);
+        } catch(LoginInvalidoException e) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
+            return "index";            
+        }
     }    
     
     /**

@@ -43,8 +43,8 @@ public class CaixaRU implements Serializable {
     private Calendar dataFechamento;
     private double valorFechamento;        
     @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name="idOperadorCaixa")
-    private OperadorCaixa operadorCaixa;                  
+    @JoinColumn(name="idFuncionario")
+    private Funcionario funcionario;                  
     // Atributos nao persistidos no banco
     @Transient
     private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();        
@@ -122,17 +122,17 @@ public class CaixaRU implements Serializable {
     }
 
     /**
-     * @return the operadorCaixa
+     * @return the funcionario
      */
-    public OperadorCaixa getOperadorCaixa() {
-        return operadorCaixa;
+    public Funcionario getFuncionario() {
+        return funcionario;
     }
 
     /**
-     * @param operadorCaixa the operadorCaixa to set
+     * @param funcionario the funcionario to set
      */
-    public void setOperadorCaixa(OperadorCaixa operadorCaixa) {
-        this.operadorCaixa = operadorCaixa;
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
     }
     
     /**
@@ -184,13 +184,13 @@ public class CaixaRU implements Serializable {
      * @param valorAbertura O valor de abertura do caixa     
      * @throws br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido Caso o valor de abertura informado seja zero ou negativo     
      */
-    public void realizarAberturaCaixa(OperadorCaixa oper, double valorAbertura) throws
+    public void realizarAberturaCaixa(Funcionario oper, double valorAbertura) throws
             ValorAberturaCaixaInvalido {
         if (valorAbertura < 0) {
             throw new ValorAberturaCaixaInvalido("Valor inválido!");            
         }
         
-        setOperadorCaixa(oper);
+        setFuncionario(oper);
         setValorAbertura(valorAbertura);
         setDataAbertura(Calendar.getInstance());
         this.carregarValorAtualAlmoco();
