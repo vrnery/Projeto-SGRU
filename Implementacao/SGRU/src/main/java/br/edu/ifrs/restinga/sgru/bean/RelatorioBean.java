@@ -7,9 +7,11 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.CodTipoCliente;
+import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.CodTipoClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
 import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -23,22 +25,46 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @ViewScoped
 public class RelatorioBean {
+    private ControladorRelatorio controlador = new ControladorRelatorio();
     private Date dataInicialMin;
     private Date dataInicialMax;
     private Date dataFinalMin;
     private Date dataFinalMax;
     private boolean relatorioCompras;
     private int idCodTipoCliente;
-
+    RelatoriosDAO rel = new RelatoriosDAO();
+    
     public RelatorioBean() {
         this.dataInicialMax = new Date();
         this.dataFinalMin = new Date();
-        // A forma de pagamento default eh cartao
-        this.relatorioCompras = true;
+        /*
+        try {
+            // A forma de pagamento default eh cartao
+            controlador.setFormaPgto(controlador.getFORMA_PGTO_CARTAO());
+            // O tipo de relatorio default eh cartao
+            controlador.setTipoRelatorio(controlador.getRELATORIO_COMPRAS());
+            this.relatorioCompras = true;
+        } catch (RelatorioInvalidoException e) {
+            
+        }*/
         // -1 para todos os clientes
         this.idCodTipoCliente = -1;
     }
 
+   /**
+     * @return the controlador
+     */
+    public ControladorRelatorio getControlador() {
+        return controlador;
+    }
+
+    /**
+     * @param controlador the controlador to set
+     */
+    public void setControlador(ControladorRelatorio controlador) {
+        this.controlador = controlador;
+    }    
+    
     /**
      * @return the dataInicialMin
      */
@@ -125,6 +151,9 @@ public class RelatorioBean {
         }
         */
         return true;
+    }
+    public void EmitirRelatorio(){
+        rel.relatorio(relatorioCompras);
     }
     
     /**
