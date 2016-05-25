@@ -7,6 +7,7 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
+import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -29,7 +30,8 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean
 @RequestScoped
 public class ClienteBean {
-    private Cliente cliente = new Cliente();    
+    private Cliente cliente = new Cliente();
+    private ControladorCadastro controlCadastro = new ControladorCadastro();
     // Caso nao consiga carregar foto do cliente
     private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";           
     
@@ -46,6 +48,18 @@ public class ClienteBean {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;        
     }
+
+    /**
+     * retorno do controladorCadastro
+     * @return controladorCadastro
+     */
+    public ControladorCadastro getControlCadastro() {
+        return controlCadastro;
+    }
+
+//    public void setControlCadastro(ControladorCadastro controlCadastro) {
+//        this.controlCadastro = controlCadastro;
+//    }
     
     /**
      * @return the foto
@@ -125,5 +139,9 @@ public class ClienteBean {
             // Nao foi possivel localizar nenhuma foto ...
             return new DefaultStreamedContent();
         }
-    }    
+    }
+    
+    public void salvar(){
+        controlCadastro.salvar();
+    }
 }
