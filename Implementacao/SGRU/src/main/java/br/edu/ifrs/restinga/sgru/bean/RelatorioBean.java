@@ -5,7 +5,6 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.excessao.RelatorioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.CodTipoCliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
@@ -37,7 +36,8 @@ public class RelatorioBean {
     
     public RelatorioBean() {
         this.dataInicialMax = new Date();
-        this.dataFinalMin = new Date();                
+        this.dataFinalMin = new Date();
+        /*
         try {
             // A forma de pagamento default eh cartao
             controlador.setFormaPgto(controlador.getFORMA_PGTO_CARTAO());
@@ -46,7 +46,7 @@ public class RelatorioBean {
             this.relatorioCompras = true;
         } catch (RelatorioInvalidoException e) {
             
-        }
+        }*/
         // -1 para todos os clientes
         this.idCodTipoCliente = -1;
     }

@@ -24,7 +24,27 @@ public class RelatoriosDAO {
         if (relatorioCompras == true){
         }
         else{
+            String sql;
+            sql = "FROM Recarga rec";
             /*
+            if (pessoa instanceof Cliente) {
+                return false;
+            }else{
+               sql = "FROM Recarga 
+                      inner join cartao crt on rec.idCartao = crt.id
+                      inner join cliente c on crt.id = c.idCartao"
+                if (idCodTipoCliente <> null){
+                    sql = sql+"where c.idCodTipoCliente = ?"
+                }
+                if (){
+                }
+            }
+                
+                    
+            }
+               
+            }
+            
             return sessao.createQuery("FROM Recarga WHERE idCodTipoCliente=:codTipoCliente ORDER BY nome")
                 .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();   */
         }        
