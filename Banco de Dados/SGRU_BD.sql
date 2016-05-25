@@ -21,7 +21,7 @@ USE `sgru` ;
 -- Table `sgru`.`pessoa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `matricula` VARCHAR(15) NOT NULL,
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
@@ -34,14 +34,32 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `sgru`.`operadorcaixa`
+-- Table `sgru`.`tipofuncionario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`operadorcaixa` (
-  `id` INT(10) UNSIGNED NOT NULL,
-  INDEX `fk_OperadorCaixa_Pessoa1_idx` (`id` ASC),
-  CONSTRAINT `fk_OperadorCaixa_Pessoa1`
+CREATE TABLE IF NOT EXISTS `sgru`.`tipofuncionario` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `sgru`.`funcionario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`funcionario` (
+  `id` INT UNSIGNED NOT NULL,
+  `idTipoFuncionario` INT UNSIGNED NOT NULL,
+  INDEX `fk_Funcionario_Pessoa1_idx` (`id` ASC),
+  INDEX `fk_funcionario_tipoFuncionario1_idx` (`idTipoFuncionario` ASC),
+  CONSTRAINT `fk_Funcionario_Pessoa1`
     FOREIGN KEY (`id`)
     REFERENCES `sgru`.`pessoa` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_funcionario_tipoFuncionario1`
+    FOREIGN KEY (`idTipoFuncionario`)
+    REFERENCES `sgru`.`tipofuncionario` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -52,17 +70,17 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`caixaru`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`caixaru` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataAbertura` DATETIME NOT NULL,
   `valorAbertura` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
   `dataFechamento` DATETIME NULL DEFAULT NULL,
   `valorFechamento` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
-  `idOperadorCaixa` INT(10) UNSIGNED NOT NULL,
+  `idFuncionario` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_CaixaRU_OperadorCaixa1_idx` (`idOperadorCaixa` ASC),
-  CONSTRAINT `fk_CaixaRU_OperadorCaixa1`
-    FOREIGN KEY (`idOperadorCaixa`)
-    REFERENCES `sgru`.`operadorcaixa` (`id`)
+  INDEX `fk_CaixaRU_Funcionario1_idx` (`idFuncionario` ASC),
+  CONSTRAINT `fk_CaixaRU_Funcionario1`
+    FOREIGN KEY (`idFuncionario`)
+    REFERENCES `sgru`.`funcionario` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -73,7 +91,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`cartao`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataCredito` DATETIME NOT NULL,
   `saldo` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`))
@@ -83,10 +101,10 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `sgru`.`codtipocliente`
+-- Table `sgru`.`tipocliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`codtipocliente` (
-  `id` INT(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `sgru`.`tipocliente` (
+  `id` INT UNSIGNED NOT NULL,
   `descricao` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
@@ -97,22 +115,22 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`cliente`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`cliente` (
-  `id` INT(10) UNSIGNED NOT NULL,
-  `caminhoFoto` TEXT NULL DEFAULT NULL,
-  `idCartao` INT(10) UNSIGNED NOT NULL,
-  `idCodTipoCliente` INT(10) UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL,
+  `caminhoFoto` TEXT NULL,
+  `idCartao` INT UNSIGNED NOT NULL,
+  `idTipoCliente` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
   INDEX `fk_Professor_Pessoa1_idx` (`id` ASC),
   INDEX `fk_professor_cartao1_idx` (`idCartao` ASC),
-  INDEX `fk_cliente_codTipoCliente1_idx` (`idCodTipoCliente` ASC),
-  PRIMARY KEY (`id`),
+  INDEX `fk_cliente_codTipoCliente1_idx` (`idTipoCliente` ASC),
   CONSTRAINT `fk_Professor_Pessoa1`
     FOREIGN KEY (`id`)
     REFERENCES `sgru`.`pessoa` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_cliente_codTipoCliente1`
-    FOREIGN KEY (`idCodTipoCliente`)
-    REFERENCES `sgru`.`codtipocliente` (`id`)
+    FOREIGN KEY (`idTipoCliente`)
+    REFERENCES `sgru`.`tipocliente` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_professor_cartao1`
@@ -128,11 +146,11 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`recarga`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`recarga` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorRecarregado` DECIMAL(6,2) NOT NULL,
   `dataCredito` DATE NOT NULL,
   `utilizado` TINYINT(1) NOT NULL DEFAULT '0',
-  `idCartao` INT(10) UNSIGNED NOT NULL,
+  `idCartao` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Recarga_Cartao1_idx` (`idCartao` ASC),
   CONSTRAINT `fk_Recarga_Cartao1`
@@ -149,7 +167,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`ticket`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `valor` DECIMAL(6,2) NOT NULL,
   `dataCriado` DATETIME NOT NULL,
   `dataUtilizado` DATETIME NULL DEFAULT NULL,
@@ -162,7 +180,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`valoralmoco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `valorAlmoco` DECIMAL(6,2) NOT NULL,
   `dataValor` DATETIME NOT NULL,
   PRIMARY KEY (`id`))
@@ -175,12 +193,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataVenda` DATETIME NOT NULL,
-  `idCaixaRU` INT(10) UNSIGNED NOT NULL,
-  `idValorAlmoco` INT(10) UNSIGNED NOT NULL,
-  `idCartao` INT(10) UNSIGNED NULL DEFAULT NULL,
-  `idTicket` INT(10) UNSIGNED NULL DEFAULT NULL,
+  `idCaixaRU` INT UNSIGNED NOT NULL,
+  `idValorAlmoco` INT UNSIGNED NOT NULL,
+  `idCartao` INT UNSIGNED NULL,
+  `idTicket` INT UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_VendaAlmoco_Cartao1_idx` (`idCartao` ASC),
   INDEX `fk_VendaAlmoco_ValorAlmoco1_idx` (`idValorAlmoco` ASC),
