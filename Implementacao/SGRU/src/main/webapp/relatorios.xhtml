@@ -59,7 +59,7 @@
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataFinal}" update="dataInicial"/>
                     </p:calendar>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Emitir Relatório"/>
+                <p:commandButton ajax="false" value="Emitir Relatório" action="#{relatorioBean.EmitirRelatorio}"/>
             </h:form>
         </ui:define>
     </ui:composition>
