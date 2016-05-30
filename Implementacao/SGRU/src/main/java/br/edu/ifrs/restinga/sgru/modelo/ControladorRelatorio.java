@@ -5,8 +5,13 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.bean.RelatorioBean;
+import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,10 +22,16 @@ import java.util.List;
 public class ControladorRelatorio {
     private int tipoRelatorio;
     private int formaPgto;
-    private Cliente cliente;
+    private String tipoCliente;
+    private int idCliente;
     private Date dataInicial;
     private Date dataFinal;
 
+    public ControladorRelatorio() {
+        // Todos os tipos de clientes
+        this.tipoCliente = "-1";
+    }
+    
     /**
      * @return the tipoRelatorio
      */
@@ -50,17 +61,31 @@ public class ControladorRelatorio {
     }
 
     /**
-     * @return the cliente
+     * @return the tipoCliente
      */
-    public Cliente getCliente() {
-        return cliente;
+    public String getTipoCliente() {
+        return tipoCliente;
     }
 
     /**
-     * @param cliente the cliente to set
+     * @param tipoCliente the tipoCliente to set
      */
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setTipoCliente(String tipoCliente) {
+        this.tipoCliente = tipoCliente;
+    }    
+    
+    /**
+     * @return the idCliente
+     */
+    public int getCliente() {
+        return idCliente;
+    }
+
+    /**
+     * @param cliente the idCliente to set
+     */
+    public void setCliente(int cliente) {
+        this.idCliente = cliente;
     }
 
     /**
@@ -102,12 +127,45 @@ public class ControladorRelatorio {
     }
     
     /**
-     * Retorna uma lista de cliente do tipo desejado
-     * @param idTipoCliente O id do tipo de cliente
+     * Retorna uma lista de idCliente do tipo desejado     
      * @return Uma lista de objetos Cliente
      */
-    public List<Cliente> getLstClientes(int idTipoCliente) {
+    public List<Cliente> getLstClientes() {
         ClienteDAO dao = new ClienteDAO();
-        return dao.carregarClientesPorTipo(idTipoCliente);
+        return dao.carregarClientesPorTipo(this.tipoCliente);
     }        
+    
+    public List<VendaAlmoco> emitirRelatorioCompras() 
+            throws DataRelatorioInvalidaException, RelatorioException {        
+        // Verifica se periodo informado eh valido
+        if (dataInicial.after(dataFinal)) {
+            throw new DataRelatorioInvalidaException("Período inválido!");
+        }
+                
+        // Lista com o retorno da pesquisa
+        List<VendaAlmoco> lstVendaAlmoco = new ArrayList();
+        RelatoriosDAO daoRelatorios = new RelatoriosDAO();
+                
+        if (this.formaPgto == RelatorioBean.FORMA_PGTO_CARTAO) {            
+            if (this.tipoCliente.equals("-1")) {
+                // todos os tipos de clientes
+                lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(this.dataInicial, this.dataFinal);
+            } else {
+                // Relatorio de um tipo especifico de idCliente
+                lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(this.dataInicial, this.dataFinal, this.tipoCliente);
+            }
+        } else if (this.formaPgto == RelatorioBean.FORMA_PGTO_TICKET) {
+            lstVendaAlmoco = daoRelatorios.relatorioComprasTicket(this.dataInicial, this.dataFinal);
+        } else {
+            // todas as forma de pagamento
+            if (this.tipoCliente.equals(Cliente.ALUNO)) {
+                
+            } else if (this.tipoCliente.equals(Cliente.PROFESSOR)) {
+                
+            } else {
+                // todos os tipos de clientes
+            }
+        }
+        return lstVendaAlmoco;
+    }    
 }

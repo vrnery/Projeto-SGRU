@@ -58,7 +58,7 @@ public class ControladorAutenticacao {
 
         if (pessoa instanceof Funcionario) {
             this.funcionario = (Funcionario)pessoa;
-            switch (funcionario.getTipoFuncionario().getId()) {
+            switch (funcionario.getTipoFuncionario().getCodigo()) {
                 case Funcionario.OPERADOR_CAIXA:
                     retorno = "abrirCaixa";
                     break;

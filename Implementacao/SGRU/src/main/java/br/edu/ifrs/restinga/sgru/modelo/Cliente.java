@@ -24,9 +24,9 @@ import javax.persistence.Transient;
 public class Cliente extends Pessoa {            
     // Tipos de cliente, segundo tabela tipoCliente
     @Transient
-    public final static int ALUNO = 1;
+    public final static String ALUNO = "001";
     @Transient
-    public final static int PROFESSOR = 2;    
+    public final static String PROFESSOR = "002";    
     private String caminhoFoto;                        
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "idCartao")

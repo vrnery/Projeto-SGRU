@@ -19,9 +19,9 @@ import javax.persistence.Transient;
 @PrimaryKeyJoinColumn(name="id")
 public class Funcionario extends Pessoa {
     @Transient
-    public static final int GERENTE = 1;
+    public static final String GERENTE = "001";
     @Transient
-    public static final int OPERADOR_CAIXA = 2;
+    public static final String OPERADOR_CAIXA = "002";
     
     @ManyToOne
     @JoinColumn(name = "idTipoFuncionario")

@@ -20,6 +20,7 @@ public class TipoFuncionario implements Serializable {
     @Id
     private int id;
     private String descricao;
+    private String codigo;
 
     /**
      * @return the id
@@ -47,5 +48,19 @@ public class TipoFuncionario implements Serializable {
      */
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    /**
+     * @return the codigo
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 }

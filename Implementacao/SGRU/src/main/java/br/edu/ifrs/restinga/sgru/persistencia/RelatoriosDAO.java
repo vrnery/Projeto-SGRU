@@ -5,8 +5,9 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
-import br.edu.ifrs.restinga.sgru.modelo.Cliente;
-import br.edu.ifrs.restinga.sgru.modelo.Recarga;
+import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
+import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Session;
 
@@ -20,41 +21,74 @@ public class RelatoriosDAO {
     public RelatoriosDAO() {
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();        
     }
-    public List<Recarga> relatorio(boolean relatorioCompras) {
-        if (relatorioCompras == true){
+    
+    /**
+     * Lista as compras realizadas com cartão em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado
+     * @return Uma lista de objetos VendaAlmoco
+     * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
+     */
+    public List<VendaAlmoco> relatorioComprasCartao(Date dataInicial, Date dataFinal) 
+            throws RelatorioException {
+        List<VendaAlmoco> lstVendaAlmoco = sessao.createQuery("FROM VendaAlmoco WHERE idCartao IS NOT NULL AND dataVenda BETWEEN :dataInicial AND :dataFinal")
+                .setDate("dataInicial", dataInicial)
+                .setDate("dataFinal", dataFinal)
+                .list();
+        
+        if (lstVendaAlmoco == null) {
+            throw new RelatorioException("Não foram encontrados compras no período informado");
         }
-        else{
-            String sql;
-            sql = "FROM Recarga rec";
-            /*
-            if (pessoa instanceof Cliente) {
-                return false;
-            }else{
-               sql = "FROM Recarga 
-                      inner join cartao crt on rec.idCartao = crt.id
-                      inner join cliente c on crt.id = c.idCartao"
-                if (idCodTipoCliente <> null){
-                    sql = sql+"where c.idCodTipoCliente = ?"
-                }
-                if (){
-                }
-            }
-                
-                    
-            }
-               
-            }
-            
-            return sessao.createQuery("FROM Recarga WHERE idCodTipoCliente=:codTipoCliente ORDER BY nome")
-                .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();   */
-        }        
-        /*
-        if (codTipoCliente == -1) {
-            return sessao.createQuery("FROM Cliente ORDER BY nome").list();
-        } else {
-            return sessao.createQuery("FROM Cliente WHERE idCodTipoCliente=:codTipoCliente ORDER BY nome")
-                .setString("codTipoCliente", String.valueOf(codTipoCliente)).list();   
-        } */       
-        return null;
+        return lstVendaAlmoco;
     }
+    
+    /**
+     * Lista as compras realizadas com cartão por um determinado tipo de cliente em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado
+     * @param codCliente O código do tipo de cliente pesquisado (Cliente.ALUNO e Cliente.PROFESSOR)
+     * @return Uma lista de objetos VendaAlmoco
+     * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
+     */
+    public List<VendaAlmoco> relatorioComprasCartao(Date dataInicial, Date dataFinal, String codCliente) 
+            throws RelatorioException {
+        
+        List<VendaAlmoco> lstVendaAlmoco = sessao.createQuery("FROM VendaAlmoco "
+                + "INNER JOIN Cartao ON VendaAlmoco.idCartao = Cartao.id "
+                + "INNER JOIN Cliente ON Cliente.idCartao = Cartao.id "
+                + "INNER JOIN TipoCliente ON TipoCliente.id = Cliente.idTipoCliente "
+                + "WHERE idCartao IS NOT NULL "
+                + "AND dataVenda BETWEEN :dataInicial AND :dataFinal "
+                + "AND TipoCliente.codigo = :codCliente")
+                .setString("codCliente", codCliente)
+                .setDate("dataInicial", dataInicial)
+                .setDate("dataFinal", dataFinal)
+                .list();
+        
+        if (lstVendaAlmoco == null) {
+            throw new RelatorioException("Não foram encontrados compras no período informado");
+        }
+        return lstVendaAlmoco;
+    }
+    
+    /**
+     * Lista as compras realizadas com ticket em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado
+     * @return Uma lista de objetos VendaAlmoco
+     * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
+     */
+    public List<VendaAlmoco> relatorioComprasTicket(Date dataInicial, Date dataFinal) 
+            throws RelatorioException {
+                
+        List<VendaAlmoco> lstVendaAlmoco =  sessao.createQuery("FROM VendaAlmoco WHERE idTicket IS NOT NULL AND dataVenda BETWEEN :dataInicial AND :dataFinal")
+                .setDate("dataInicial", dataInicial)
+                .setDate("dataFinal", dataFinal)
+                .list();
+        
+        if (lstVendaAlmoco == null) {
+            throw new RelatorioException("Não foram encontrados compras no período informado");
+        }
+        return lstVendaAlmoco;
+    }    
 }

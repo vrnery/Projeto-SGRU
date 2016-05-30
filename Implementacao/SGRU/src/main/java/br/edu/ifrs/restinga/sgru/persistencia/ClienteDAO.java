@@ -48,8 +48,8 @@ public class ClienteDAO {
      * @param tipoCliente O código que identifica o tipo do cliente
      * @return Uma lista de objetos Cliente
      */
-    public List<Cliente> carregarClientesPorTipo(int tipoCliente) {
-        if (tipoCliente == -1) {
+    public List<Cliente> carregarClientesPorTipo(String tipoCliente) {
+        if (tipoCliente.equals("-1")) {
             return sessao.createQuery("FROM Cliente ORDER BY nome").list();
         } else {
             return sessao.createQuery("FROM Cliente WHERE idTipoCliente=:tipoCliente ORDER BY nome")
