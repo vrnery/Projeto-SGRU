@@ -8,8 +8,8 @@ insert into Pessoa values(5,'147','Calvin','calvin@email.com','5100000000','calv
 insert into Pessoa values(6,'258','Gerente','gerente@email.com','5500000000','gerente','258');
 insert into Pessoa values(7,'123456','Operador','oper1@email.com','5155555555','oper1','oper');
 
-insert into TipoFuncionario values(1,'Gerente');
-insert into TipoFuncionario values(2,'Operador de Caixa');
+insert into TipoFuncionario values(1,'Gerente','001');
+insert into TipoFuncionario values(2,'Operador de Caixa','002');
 
 insert into Funcionario values(6,1);
 insert into Funcionario values(7,2);
@@ -20,8 +20,8 @@ insert into Cartao values(3,'2016-04-29',0);
 insert into Cartao values(4,'2016-04-29',0);
 insert into Cartao values(5,'2016-04-29',0);
 
-insert into TipoCliente values(1,'Aluno');
-insert into TipoCliente values(2,'Professor');
+insert into TipoCliente values(1,'Aluno','001');
+insert into TipoCliente values(2,'Professor','002');
 
 insert into Cliente values(1, 'C:\\imagens\\123.jpg',1,1);
 insert into Cliente values(2, 'C:\\imagens\\456.jpg',2,1);
