@@ -9,12 +9,13 @@
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">       
             <h:form>
+                <p:messages/>
                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                     <p:outputLabel for="somTipoRelatorio" value="Tipo de Relatório:"/>
                     <p:selectOneRadio id="somTipoRelatorio" value="#{relatorioBean.controlador.tipoRelatorio}" style="width: 250px"> 
                         <f:selectItem itemLabel="Compras" itemValue="#{relatorioBean.RELATORIO_COMPRAS}"/>                           
                         <f:selectItem itemLabel="Recargas" itemValue="#{relatorioBean.RELATORIO_RECARGAS}"/>
-                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusFormaPgto()}" update="somFormaPagamento"/>
+                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCompras()}" update="somFormaPagamento"/>
                     </p:selectOneRadio>
                     <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
@@ -24,13 +25,15 @@
                                       disabled="#{!relatorioBean.relatorioCompras}">
                         <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.FORMA_PGTO_CARTAO}"/>                        
                         <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.FORMA_PGTO_TICKET}"/>                        
+                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCartao()}" update="somTipoUsuario,somCliente"/>
                     </p:selectOneRadio>                                        
                     <p:outputLabel for="somTipoUsuario" value="Tipo de Usuário:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
                     <p:selectOneMenu id="somTipoUsuario"
                                      style="width: 190px"
                                      rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"
-                                     value="#{relatorioBean.controlador.tipoCliente}">
+                                     value="#{relatorioBean.controlador.tipoCliente}"
+                                     disabled="#{!relatorioBean.relatorioCartao}">
                         <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
                         <f:selectItems var="tipoUsuario" value="#{relatorioBean.lstTipoCliente}" 
                                        itemLabel="#{tipoUsuario.descricao}" itemValue="#{tipoUsuario.codigo}"/>
@@ -40,8 +43,9 @@
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"/>
                     <p:selectOneMenu id="somCliente"                                       
                                      style="width: 190px"
-                                     value="#{relatorioBean.controlador.tipoCliente}"
-                                     rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
+                                     value="#{relatorioBean.controlador.idCliente}"
+                                     rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}"
+                                     disabled="#{!relatorioBean.relatorioCartao}">
                         <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
                         <f:selectItems var="usuario" value="#{relatorioBean.lstClientes}" 
                                        itemLabel="#{usuario.nome}" itemValue="#{usuario.id}"/>
@@ -51,7 +55,8 @@
                                 value="#{relatorioBean.controlador.dataInicial}"
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataInicialMax}" 
-                                mindate="#{relatorioBean.dataInicialMin}">                                
+                                mindate="#{relatorioBean.dataInicialMin}"
+                                required="true">
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataInicial}" update="dataFinal"/>
                     </p:calendar>                                    
                     <p:outputLabel for="dataFinal" value="Data Final:"/>
@@ -59,11 +64,12 @@
                                 value="#{relatorioBean.controlador.dataFinal}"
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataFinalMax}" 
-                                mindate="#{relatorioBean.dataFinalMin}">
+                                mindate="#{relatorioBean.dataFinalMin}"
+                                required="true">
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataFinal}" update="dataInicial"/>
                     </p:calendar>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Emitir Relatório" action="#{relatorioBean.emitirRelatorio()}"/>
+                <p:commandButton ajax="false" value="Emitir Relatório" action="#{relatorioBean.emitirRelatorio(autenticarBean.controlador.pessoa.id)}"/>
             </h:form>
         </ui:define>
     </ui:composition>

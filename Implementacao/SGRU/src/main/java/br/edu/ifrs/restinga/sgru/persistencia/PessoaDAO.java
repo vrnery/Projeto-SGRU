@@ -36,6 +36,15 @@ public class PessoaDAO {
     }        
     
     /**
+     * Carrega uma pessoa pelo id
+     * @param id O id da pessoa pesquisada
+     * @return Um objeto Pessoa
+     */
+    public Pessoa carregar(int id) {
+        return (Pessoa) sessao.load(Pessoa.class, id);
+    }    
+    
+    /**
      * Verifica se existem usuário e senha informados
      * @param login O login do usuário
      * @param senha A senha do usuário

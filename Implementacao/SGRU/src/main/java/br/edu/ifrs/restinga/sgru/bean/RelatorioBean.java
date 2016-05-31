@@ -6,11 +6,13 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -31,12 +33,13 @@ public class RelatorioBean {
     public static final int FORMA_PGTO_CARTAO = 1;
     public static final int FORMA_PGTO_TICKET = 2;
     
-    private ControladorRelatorio controlador;
+    private final ControladorRelatorio controlador;
     private Date dataInicialMin;
     private Date dataInicialMax;
     private Date dataFinalMin;
     private Date dataFinalMax;
     private boolean relatorioCompras;    
+    private boolean relatorioCartao;
     
     public RelatorioBean() {
         this. controlador = new ControladorRelatorio();
@@ -44,12 +47,14 @@ public class RelatorioBean {
         this.dataInicialMax = new Date();
         // A data final minima eh a data atual
         this.dataFinalMin = new Date();
-        // O tipo de relatorio default eh cartao
+        // O tipo de relatorio default eh compras
         controlador.setTipoRelatorio(RELATORIO_COMPRAS);
         // A forma de pagamento default eh cartao
         controlador.setFormaPgto(FORMA_PGTO_CARTAO);        
         // Flag para controlar a ativacao do campo forma de pagamento
         this.relatorioCompras = true;
+        // Flag para controlar a ativacao dos campos tipo de usuario e cliente
+        this.relatorioCartao = true;
     }
 
     /**
@@ -88,13 +93,6 @@ public class RelatorioBean {
     }
 
     /**
-     * @param controlador the controlador to set
-     */
-    public void setControlador(ControladorRelatorio controlador) {
-        this.controlador = controlador;
-    }    
-    
-    /**
      * @return the dataInicialMin
      */
     public Date getDataInicialMin() {
@@ -128,7 +126,7 @@ public class RelatorioBean {
     public boolean isRelatorioCompras() {
         return relatorioCompras;
     }
-
+        
     /**
      * @param relatorioCompras the relatorioCompras to set
      */
@@ -136,6 +134,20 @@ public class RelatorioBean {
         this.relatorioCompras = relatorioCompras;
     }    
 
+    /**
+     * @return the relatorioCartao
+     */
+    public boolean isRelatorioCartao() {
+        return relatorioCartao;
+    }
+
+    /**
+     * @param relatorioCartao the relatorioCartao to set
+     */
+    public void setRelatorioCartao(boolean relatorioCartao) {
+        this.relatorioCartao = relatorioCartao;
+    }    
+    
     /**
      * Adapta o componente calendar dataFinal da view
      * @param evento 
@@ -183,19 +195,29 @@ public class RelatorioBean {
     /**
      * Altera o status do atributo relatorioCompras     
      */
-    public void alterarStatusFormaPgto() {
+    public void alterarStatusRelatorioCompras() {
         this.relatorioCompras = !this.relatorioCompras;
     }
     
-    public String emitirRelatorio() {
-        String retorno = "resultado";
-        try {
+    /**
+     * Altera o status do atributo relatorioCartao
+     */
+    public void alterarStatusRelatorioCartao() {
+        this.relatorioCartao = !this.relatorioCartao;
+    }    
+    
+    public String emitirRelatorio(int idUsuarioLogado) {
+        String retorno;
+        try {            
             if (relatorioCompras) {
-                this.controlador.emitirRelatorioCompras();
-            } else {
-                
+                this.controlador.buscarDadosRelatorioCompras(idUsuarioLogado);
+                retorno = "relatorioCompras";
+            } else {                
+                this.controlador.buscarDadosRelatorioRecargas(idUsuarioLogado);
+                retorno = "relatorioRecargas";
             }
-        } catch (DataRelatorioInvalidaException | RelatorioException e) {
+        } catch (DataRelatorioInvalidaException | RelatorioException | 
+                RecargaNaoEncontradaException e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
             return null;
         }

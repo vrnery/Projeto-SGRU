@@ -7,12 +7,16 @@ package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.bean.RelatorioBean;
 import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
+import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -30,6 +34,8 @@ public class ControladorRelatorio {
     public ControladorRelatorio() {
         // Todos os tipos de clientes
         this.tipoCliente = "-1";
+        // Todos os clientes
+        this.idCliente = -1;
     }
     
     /**
@@ -77,15 +83,15 @@ public class ControladorRelatorio {
     /**
      * @return the idCliente
      */
-    public int getCliente() {
+    public int getIdCliente() {
         return idCliente;
     }
 
     /**
-     * @param cliente the idCliente to set
+     * @param idCliente the idCliente to set
      */
-    public void setCliente(int cliente) {
-        this.idCliente = cliente;
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
     /**
@@ -121,8 +127,8 @@ public class ControladorRelatorio {
      * @return Uma lista TipoCliente
      */
     public List<TipoCliente> getLstTipoCliente() {
-        TipoClienteDAO dao = new TipoClienteDAO();
-        return dao.getLstTipoClientes();
+        TipoClienteDAO daoTipoCliente = new TipoClienteDAO();
+        return daoTipoCliente.getLstTipoClientes();
         
     }
     
@@ -131,41 +137,105 @@ public class ControladorRelatorio {
      * @return Uma lista de objetos Cliente
      */
     public List<Cliente> getLstClientes() {
-        ClienteDAO dao = new ClienteDAO();
-        return dao.carregarClientesPorTipo(this.tipoCliente);
+        ClienteDAO daoCliente = new ClienteDAO();
+        return daoCliente.carregarClientesPorTipo(this.tipoCliente);
     }        
     
-    public List<VendaAlmoco> emitirRelatorioCompras() 
+    /**
+     * Verifica se o usuário é um cliente
+     * @param idUsuario O id do usuário a ser verificado
+     * @return True, se for cliente e false, caso contrário
+     */
+    public boolean isCliente(int idUsuario) {
+        PessoaDAO daoPessoa = new PessoaDAO();
+        return daoPessoa.carregar(idUsuario) instanceof Cliente;
+    }
+    
+    /**
+     * Busca os dados do relatório solicitado
+     * @param idUsuarioLogado O id do usuário logado no sistema
+     * @return Uma lista de objetos VendaAlmoco
+     * @throws DataRelatorioInvalidaException Caso o período informado seja inválido
+     * @throws RelatorioException Caso não sejam encontradas compras com os parâmetros solicitados
+     */
+    public List<VendaAlmoco> buscarDadosRelatorioCompras(int idUsuarioLogado) 
             throws DataRelatorioInvalidaException, RelatorioException {        
         // Verifica se periodo informado eh valido
         if (dataInicial.after(dataFinal)) {
             throw new DataRelatorioInvalidaException("Período inválido!");
         }
+        
+        Calendar cDataInicial = Calendar.getInstance();
+        Calendar cDataFinal = Calendar.getInstance();
+        
+        cDataInicial.setTime(this.dataInicial);
+        cDataFinal.setTime(this.dataFinal);
                 
         // Lista com o retorno da pesquisa
         List<VendaAlmoco> lstVendaAlmoco = new ArrayList();
         RelatoriosDAO daoRelatorios = new RelatoriosDAO();
                 
-        if (this.formaPgto == RelatorioBean.FORMA_PGTO_CARTAO) {            
-            if (this.tipoCliente.equals("-1")) {
-                // todos os tipos de clientes
-                lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(this.dataInicial, this.dataFinal);
-            } else {
-                // Relatorio de um tipo especifico de idCliente
-                lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(this.dataInicial, this.dataFinal, this.tipoCliente);
-            }
-        } else if (this.formaPgto == RelatorioBean.FORMA_PGTO_TICKET) {
-            lstVendaAlmoco = daoRelatorios.relatorioComprasTicket(this.dataInicial, this.dataFinal);
+        if (isCliente(idUsuarioLogado) || (this.idCliente != -1)) {
+            // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
+            // ou o gerente solicitou o relatório
+            lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal, 
+                    this.idCliente!=-1?this.idCliente:idUsuarioLogado);
         } else {
-            // todas as forma de pagamento
-            if (this.tipoCliente.equals(Cliente.ALUNO)) {
-                
-            } else if (this.tipoCliente.equals(Cliente.PROFESSOR)) {
-                
-            } else {
-                // todos os tipos de clientes
+            // Relatorios solicitados pelo gerente
+            if (this.formaPgto == RelatorioBean.FORMA_PGTO_CARTAO) {            
+                if (this.tipoCliente.equals("-1")) {
+                    // todos os tipos de clientes
+                    lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal);                
+                } else {
+                    // Relatorio de um tipo especifico de cliente
+                    lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal, this.tipoCliente);
+                }
+            } else if (this.formaPgto == RelatorioBean.FORMA_PGTO_TICKET) {
+                lstVendaAlmoco = daoRelatorios.relatorioComprasTicket(cDataInicial, cDataFinal);
             }
         }
         return lstVendaAlmoco;
     }    
+    
+    /**
+     * Busca os dados do relatório solicitado
+     * @param idUsuarioLogado O id do usuário logado no sistema
+     * @return Uma lista de objetos Recarga
+     * @throws DataRelatorioInvalidaException Caso o período informado seja inválido
+     * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas com os parâmetros solicitados
+     */
+    public List<Recarga> buscarDadosRelatorioRecargas(int idUsuarioLogado) 
+            throws DataRelatorioInvalidaException, RecargaNaoEncontradaException {        
+        // Verifica se periodo informado eh valido
+        if (dataInicial.after(dataFinal)) {
+            throw new DataRelatorioInvalidaException("Período inválido!");
+        }
+        
+        Calendar cDataInicial = Calendar.getInstance();
+        Calendar cDataFinal = Calendar.getInstance();
+        
+        cDataInicial.setTime(this.dataInicial);
+        cDataFinal.setTime(this.dataFinal);
+                
+        // Lista com o retorno da pesquisa
+        List<Recarga> lstRecarga;
+        RelatoriosDAO daoRelatorios = new RelatoriosDAO();
+                
+        if (isCliente(idUsuarioLogado) || (this.idCliente != -1)) {
+            // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
+            // ou o gerente solicitou o relatório
+            lstRecarga = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, 
+                    this.idCliente!=-1?this.idCliente:idUsuarioLogado);
+        } else {
+            // Relatorios solicitados pelo gerente
+            if (this.tipoCliente.equals("-1")) {
+                // todos os tipos de clientes
+                lstRecarga = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal);                
+            } else {
+                // Relatorio de um tipo especifico de cliente
+                lstRecarga = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, this.tipoCliente);
+            }
+        }
+        return lstRecarga;
+    }        
 }

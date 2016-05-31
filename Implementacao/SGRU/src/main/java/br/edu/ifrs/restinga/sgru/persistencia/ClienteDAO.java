@@ -33,7 +33,7 @@ public class ClienteDAO {
             throw new MatriculaInvalidaException("Matrícula não encontrada!");
         }                
         return tmpCliente;
-    }    
+    }   
     
     /**
      * Persiste um objeto Cliente no banco de dados
@@ -55,5 +55,5 @@ public class ClienteDAO {
             return sessao.createQuery("FROM Cliente WHERE idTipoCliente=:tipoCliente ORDER BY nome")
                 .setString("tipoCliente", String.valueOf(tipoCliente)).list();   
         }        
-    }
+    }        
 }

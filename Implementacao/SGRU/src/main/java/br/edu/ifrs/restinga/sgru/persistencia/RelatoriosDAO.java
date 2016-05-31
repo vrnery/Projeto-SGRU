@@ -5,11 +5,14 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
+import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
+import br.edu.ifrs.restinga.sgru.modelo.Recarga;
 import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -29,14 +32,15 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasCartao(Date dataInicial, Date dataFinal) 
+    public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal) 
             throws RelatorioException {
-        List<VendaAlmoco> lstVendaAlmoco = sessao.createQuery("FROM VendaAlmoco WHERE idCartao IS NOT NULL AND dataVenda BETWEEN :dataInicial AND :dataFinal")
-                .setDate("dataInicial", dataInicial)
-                .setDate("dataFinal", dataFinal)
+
+        List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class)
+                .add(Restrictions.isNotNull("cartao"))
+                .add(Restrictions.between("dataVenda", dataInicial, dataFinal))
                 .list();
-        
-        if (lstVendaAlmoco == null) {
+                
+        if (lstVendaAlmoco.isEmpty()) {
             throw new RelatorioException("Não foram encontrados compras no período informado");
         }
         return lstVendaAlmoco;
@@ -46,30 +50,52 @@ public class RelatoriosDAO {
      * Lista as compras realizadas com cartão por um determinado tipo de cliente em um determinado período
      * @param dataInicial A data inicial do período desejado
      * @param dataFinal A data final do período desejado
-     * @param codCliente O código do tipo de cliente pesquisado (Cliente.ALUNO e Cliente.PROFESSOR)
+     * @param codTipoCliente O código do tipo de cliente pesquisado (Cliente.ALUNO e Cliente.PROFESSOR)
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasCartao(Date dataInicial, Date dataFinal, String codCliente) 
+    public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
             throws RelatorioException {
         
-        List<VendaAlmoco> lstVendaAlmoco = sessao.createQuery("FROM VendaAlmoco "
-                + "INNER JOIN Cartao ON VendaAlmoco.idCartao = Cartao.id "
-                + "INNER JOIN Cliente ON Cliente.idCartao = Cartao.id "
-                + "INNER JOIN TipoCliente ON TipoCliente.id = Cliente.idTipoCliente "
-                + "WHERE idCartao IS NOT NULL "
-                + "AND dataVenda BETWEEN :dataInicial AND :dataFinal "
-                + "AND TipoCliente.codigo = :codCliente")
-                .setString("codCliente", codCliente)
-                .setDate("dataInicial", dataInicial)
-                .setDate("dataFinal", dataFinal)
+        List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class, "venda")
+                .add(Restrictions.isNotNull("venda.cartao"))
+                .add(Restrictions.between("venda.dataVenda", dataInicial, dataFinal))
+                .createAlias("cartao", "cartao")
+                .createAlias("cartao.cliente", "cliente")
+                .createAlias("cliente.tipoCliente", "tipocliente")                                
+                .add(Restrictions.eq("tipocliente.codigo", codTipoCliente))                
                 .list();
         
-        if (lstVendaAlmoco == null) {
+        if (lstVendaAlmoco.isEmpty()) {
             throw new RelatorioException("Não foram encontrados compras no período informado");
         }
         return lstVendaAlmoco;
     }
+    
+    /**
+     * Lista as compras realizadas com cartão por um determinado cliente em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado     
+     * @param idCliente O id do cliente a ser pesquisado    
+     * @return Uma lista de objetos VendaAlmoco
+     * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
+     */
+    public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal, int idCliente) 
+            throws RelatorioException {
+        
+        List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class, "venda")
+                .add(Restrictions.isNotNull("venda.cartao"))
+                .add(Restrictions.between("venda.dataVenda", dataInicial, dataFinal))
+                .createAlias("cartao", "cartao")
+                .createAlias("cartao.cliente", "cliente")                
+                .add(Restrictions.eq("cliente.id", idCliente))                
+                .list();
+        
+        if (lstVendaAlmoco.isEmpty()) {
+            throw new RelatorioException("Não foram encontrados compras no período informado");
+        }
+        return lstVendaAlmoco;
+    }    
     
     /**
      * Lista as compras realizadas com ticket em um determinado período
@@ -78,17 +104,86 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasTicket(Date dataInicial, Date dataFinal) 
+    public List<VendaAlmoco> relatorioComprasTicket(Calendar dataInicial, Calendar dataFinal) 
             throws RelatorioException {
                 
-        List<VendaAlmoco> lstVendaAlmoco =  sessao.createQuery("FROM VendaAlmoco WHERE idTicket IS NOT NULL AND dataVenda BETWEEN :dataInicial AND :dataFinal")
-                .setDate("dataInicial", dataInicial)
-                .setDate("dataFinal", dataFinal)
-                .list();
-        
-        if (lstVendaAlmoco == null) {
+        List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class)
+                .add(Restrictions.isNotNull("ticket"))
+                .add(Restrictions.between("dataVenda", dataInicial, dataFinal))
+                .list();        
+
+        if (lstVendaAlmoco.isEmpty()) {
             throw new RelatorioException("Não foram encontrados compras no período informado");
         }
         return lstVendaAlmoco;
     }    
+    
+    /**
+     * Lista as recargas realizadas em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado
+     * @return Uma lista de objetos Recarga
+     * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
+     */
+    public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal) 
+            throws RecargaNaoEncontradaException {
+        List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
+                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
+                .add(Restrictions.eq("utilizado", false))
+                .list();
+        
+        if (lstRecargas.isEmpty()) {
+            throw new RecargaNaoEncontradaException("Não foram encontradas recargas para o período informado");
+        }
+        return lstRecargas;
+    }
+    
+    /**
+     * Lista as recargas realizadas em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado
+     * @param codTipoCliente O código do tipo de cliente a ser pesquisado
+     * @return Uma lista de objetos Recarga
+     * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
+     */
+    public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
+            throws RecargaNaoEncontradaException {
+        List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
+                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
+                .add(Restrictions.eq("utilizado", false))
+                .createAlias("cartao", "cartao")
+                .createAlias("cartao.cliente", "cliente")
+                .createAlias("cliente.tipoCliente", "tipocliente")
+                .add(Restrictions.eq("tipocliente.codigo", codTipoCliente))
+                .list();
+        
+        if (lstRecargas.isEmpty()) {
+            throw new RecargaNaoEncontradaException("Não foram encontradas recargas para o período informado");
+        }
+        return lstRecargas;
+    }    
+    
+    /**
+     * Lista as recargas realizadas em um determinado período
+     * @param dataInicial A data inicial do período desejado
+     * @param dataFinal A data final do período desejado
+     * @param idCliente O código do cliente a ser pesquisado
+     * @return Uma lista de objetos Recarga
+     * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
+     */
+    public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal, int idCliente) 
+            throws RecargaNaoEncontradaException {
+        List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
+                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
+                .add(Restrictions.eq("utilizado", false))
+                .createAlias("cartao", "cartao")
+                .createAlias("cartao.cliente", "cliente")                
+                .add(Restrictions.eq("cliente.id", idCliente))
+                .list();
+        
+        if (lstRecargas.isEmpty()) {
+            throw new RecargaNaoEncontradaException("Não foram encontradas recargas para o período informado");
+        }
+        return lstRecargas;
+    }        
 }
