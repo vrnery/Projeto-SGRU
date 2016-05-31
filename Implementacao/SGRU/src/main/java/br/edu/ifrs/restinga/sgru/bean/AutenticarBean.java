@@ -6,10 +6,7 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
-import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorAutenticacao;
-import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
-import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
