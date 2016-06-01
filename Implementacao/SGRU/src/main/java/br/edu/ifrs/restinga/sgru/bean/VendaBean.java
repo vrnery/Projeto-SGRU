@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.faces.context.FacesContext;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
@@ -38,7 +39,7 @@ import org.primefaces.model.StreamedContent;
  */
 @ManagedBean
 @SessionScoped
-public class VendaBean {
+public class VendaBean implements Serializable {
     // Caso nao consiga carregar foto do cliente
     private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";
     private final ControladorVenda controlador;    

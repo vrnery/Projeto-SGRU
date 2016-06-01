@@ -13,10 +13,8 @@ import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -30,12 +28,17 @@ public class ControladorRelatorio {
     private int idCliente;
     private Date dataInicial;
     private Date dataFinal;
+    private List<VendaAlmoco> lstVendaAlmoco;
+    private List<Recarga> lstRecargas;
 
     public ControladorRelatorio() {
         // Todos os tipos de clientes
         this.tipoCliente = "-1";
         // Todos os clientes
         this.idCliente = -1;
+        // Inicialmentes as listas sao nulas
+        this.lstVendaAlmoco = null;
+        this.lstRecargas = null;
     }
     
     /**
@@ -121,7 +124,21 @@ public class ControladorRelatorio {
     public void setDataFinal(Date dataFinal) {
         this.dataFinal = dataFinal;
     }
-    
+
+/**
+     * @return the lstVendaAlmoco
+     */
+    public List<VendaAlmoco> getLstVendaAlmoco() {
+        return lstVendaAlmoco;
+    }
+
+    /**
+     * @return the lstRecargas
+     */
+    public List<Recarga> getLstRecargas() {
+        return lstRecargas;
+    }
+
     /**
      * Retorna uma lista de Tipo de Tipos de Clientes cadastrados no sistema
      * @return Uma lista TipoCliente
@@ -171,10 +188,7 @@ public class ControladorRelatorio {
         cDataInicial.setTime(this.dataInicial);
         cDataFinal.setTime(this.dataFinal);
                 
-        // Lista com o retorno da pesquisa
-        List<VendaAlmoco> lstVendaAlmoco = new ArrayList();
-        RelatoriosDAO daoRelatorios = new RelatoriosDAO();
-                
+        RelatoriosDAO daoRelatorios = new RelatoriosDAO();                
         if (isCliente(idUsuarioLogado) || (this.idCliente != -1)) {
             // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
             // ou o gerente solicitou o relatório
@@ -217,25 +231,22 @@ public class ControladorRelatorio {
         cDataInicial.setTime(this.dataInicial);
         cDataFinal.setTime(this.dataFinal);
                 
-        // Lista com o retorno da pesquisa
-        List<Recarga> lstRecarga;
-        RelatoriosDAO daoRelatorios = new RelatoriosDAO();
-                
+        RelatoriosDAO daoRelatorios = new RelatoriosDAO();                
         if (isCliente(idUsuarioLogado) || (this.idCliente != -1)) {
             // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
             // ou o gerente solicitou o relatório
-            lstRecarga = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, 
+            lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, 
                     this.idCliente!=-1?this.idCliente:idUsuarioLogado);
         } else {
             // Relatorios solicitados pelo gerente
             if (this.tipoCliente.equals("-1")) {
                 // todos os tipos de clientes
-                lstRecarga = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal);                
+                lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal);                
             } else {
                 // Relatorio de um tipo especifico de cliente
-                lstRecarga = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, this.tipoCliente);
+                lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, this.tipoCliente);
             }
         }
-        return lstRecarga;
-    }        
+        return lstRecargas;
+    }           
 }
