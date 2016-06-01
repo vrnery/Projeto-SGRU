@@ -7,6 +7,7 @@ package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorAutenticacao;
+import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,7 +19,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @SessionScoped
-public class AutenticarBean {            
+public class AutenticarBean implements Serializable {            
     private final ControladorAutenticacao controlador;
 
     public AutenticarBean() {

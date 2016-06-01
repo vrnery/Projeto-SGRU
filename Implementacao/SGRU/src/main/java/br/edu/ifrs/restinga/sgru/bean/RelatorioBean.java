@@ -12,12 +12,22 @@ import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
 
@@ -26,8 +36,9 @@ import org.primefaces.event.SelectEvent;
  * @author marcelo.lima
  */
 @ManagedBean
-@ViewScoped
-public class RelatorioBean {
+@SessionScoped
+public class RelatorioBean implements Serializable {
+    private static Font catFont = new Font(Font.TIMES_ROMAN, 18,Font.BOLD);
     public static final int RELATORIO_COMPRAS = 1;
     public static final int RELATORIO_RECARGAS = 2;
     public static final int FORMA_PGTO_CARTAO = 1;
@@ -192,6 +203,16 @@ public class RelatorioBean {
         return controlador.getLstClientes();
     }    
     
+    public String getDataInicialFormatada() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(controlador.getDataInicial().getTime());
+    }
+    
+    public String getDataFinalFormatada() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(controlador.getDataFinal().getTime());
+    }    
+    
     /**
      * Altera o status do atributo relatorioCompras     
      */
@@ -223,6 +244,53 @@ public class RelatorioBean {
         }
         return retorno;
     }
+    
+    public boolean isRelatorioComprasSet() {
+        return !(this.controlador.getLstVendaAlmoco() == null);
+    }
+    
+    public boolean isRelatorioRecargasSet() {
+        return !(this.controlador.getLstRecargas() == null);
+    }
+    
+    /**
+     * Cria um cabeçalho para o documento PDF
+     * @param document
+     * @throws IOException
+     * @throws BadElementException
+     * @throws DocumentException 
+     */
+    public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
+        Document pdf = (Document) document;
+        pdf.open();
+        pdf.setPageSize(PageSize.A4); 
+        
+        // Cabecalho do PDF
+        String cabecalho;
+        if (this.isRelatorioComprasSet()) {
+            cabecalho = "Compras realizadas no período de " + this.getDataInicialFormatada() +
+                    " a " + this.getDataFinalFormatada();
+        } else {
+            cabecalho = "Recargas realizadas no período de " + this.getDataInicialFormatada() +
+                    " a " + this.getDataFinalFormatada();
+        }
+        //pdf.addTitle(cabecalho);        
+        Paragraph preface = new Paragraph();
+        preface.setAlignment(Element.ALIGN_CENTER);
+        // We add one empty line
+        addEmptyLine(preface, 1);
+        // Lets write a big header
+        preface.add(new Paragraph(cabecalho, catFont));
+        addEmptyLine(preface, 1);
+        
+        pdf.add(preface);
+    }
+    
+    private static void addEmptyLine(Paragraph paragraph, int number) {
+        for (int i = 0; i < number; i++) {
+            paragraph.add(new Paragraph(" "));
+        }
+    }    
     
     /**
      * Envia à viewer uma mensagem com o status da operação

@@ -2,11 +2,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInternoGerencial.xhtml">
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">  
-            <p:messages/>
+            <h:form>
+                <p:messages/>
+                <p:panel id="pnRecargas" header="Recargas Realizadas no Período de #{relatorioBean.dataInicialFormatada} e #{relatorioBean.dataFinalFormatada}.">
+                    <p:dataTable id="tblRecargas" value="#{relatorioBean.controlador.lstRecargas}" var="recarga"                                
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">                        
+                        <f:facet name="{Exporters}">
+                            <h:commandLink>
+                                <p:graphicImage name="../imagens/pdf.png" width="24"/>
+                                <p:dataExporter type="pdf" target="tblRecargas" fileName="recargas"
+                                                preProcessor="#{relatorioBean.preProcessPDF}"/>
+                            </h:commandLink>
+                        </f:facet>                        
+                        <p:column headerText="Id Cliente" width="60"
+                                  style="text-align: center"
+                                  rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
+                            <h:outputText value="#{recarga.cartao.cliente.id}"/>
+                        </p:column>
+                        <p:column headerText="Nome Cliente" 
+                                  style="text-align: center"
+                                  rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
+                            <h:outputText value="#{recarga.cartao.cliente.nome}"/>
+                        </p:column>
+                        <p:column headerText="Data da Recarga" style="text-align: center">
+                            <h:outputText value="#{recarga.dataCredito.time}">
+                                <f:convertDateTime type="date"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Valor Recarregado" >                            
+                            <h:outputText value="#{recarga.valorRecarregado}" style="text-align: right; display: block">
+                                <f:convertNumber type="currency"/>
+                            </h:outputText>                            
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>
