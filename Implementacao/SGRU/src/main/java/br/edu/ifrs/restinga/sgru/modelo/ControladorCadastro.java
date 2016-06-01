@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
 import java.util.List;
@@ -16,7 +17,8 @@ import org.primefaces.model.UploadedFile;
  */
 public class ControladorCadastro {
     private Cliente cliente;
-    private List<TipoCliente> tipoCliente;
+    private List<TipoCliente> tiposCliente;
+    private TipoCliente tipoCliente;
     private UploadedFile file;
 
     public Cliente getCliente() {
@@ -27,22 +29,37 @@ public class ControladorCadastro {
         this.cliente = cliente;
     }
 
-    public List<TipoCliente> getTipoCliente() {
+    public List<TipoCliente> getTiposCliente() {
         TipoClienteDAO dao = new TipoClienteDAO();
-        tipoCliente = dao.getLstTipoClientes();
+        tiposCliente = dao.getLstTipoClientes();
+        return tiposCliente;
+    }
+
+    public TipoCliente getTipoCliente() {
         return tipoCliente;
     }
 
+    public void setTipoCliente(int codTipoCliente) {
+        TipoClienteDAO dao = new TipoClienteDAO();
+        this.tipoCliente = dao.buscarCodigo(codTipoCliente);
+    }
+    
     public UploadedFile getFile() {
         return file;
     }
 
-    public void setFile(UploadedFile file) {
-        this.file = file;
+    public void setFile(UploadedFile file) throws FotoNaoEncontradaException {
+        if(file != null){
+            this.file = file;
+            throw new FotoNaoEncontradaException("verificada!");
+        } else{
+            throw new FotoNaoEncontradaException("Não foi possivel verificar!");
+        }
     }
 
     public ControladorCadastro() {
         this.cliente = new Cliente();
+        this.cliente.setCartao(new Cartao());
     }
     
     public void salvar(){

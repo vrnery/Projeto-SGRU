@@ -23,4 +23,8 @@ public class TipoClienteDAO {
     public List<TipoCliente> getLstTipoClientes() {
         return sessao.createQuery("FROM TipoCliente").list();
     }
+    
+    public TipoCliente buscarCodigo(int codigo){
+        return (TipoCliente) sessao.createQuery("FROM TipoCliente WHERE id=:codigo").setInteger("codigo", codigo);
+    }
 }
