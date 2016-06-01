@@ -17,11 +17,16 @@
                         
                         <f:facet name="{Exporters}">
                             <h:commandLink>
-                                <p:graphicImage name="../imagens/pdf.png" width="24"/>                                
-                                <p:dataExporter type="pdf" target="tblCompras" fileName="compras" 
+                                <p:graphicImage value="../imagens/pdf.png" width="24" style="float: right;margin-right: 5px"/>
+                                <p:dataExporter type="pdf" target="tblCompras" fileName="#{relatorioBean.ARQ_PDF_COMPRAS}" 
                                                 preProcessor="#{relatorioBean.preProcessPDF}"/>
                             </h:commandLink>
                         </f:facet>
+                        <p:column headerText="Nome Cliente" 
+                                  style="text-align: center"                                  
+                                  rendered="#{relatorioBean.habilitarNomeCliente()}">
+                            <h:outputText value="#{compra.cartao.cliente.nome}"/>
+                        </p:column>
                         <p:column headerText="Data da Compra" style="text-align: center">
                             <h:outputText value="#{compra.dataVenda.time}">
                                 <f:convertDateTime type="date"/>

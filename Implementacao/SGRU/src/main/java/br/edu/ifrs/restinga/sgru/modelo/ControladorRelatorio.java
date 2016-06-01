@@ -9,6 +9,7 @@ import br.edu.ifrs.restinga.sgru.bean.RelatorioBean;
 import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
+import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
@@ -30,6 +31,8 @@ public class ControladorRelatorio {
     private Date dataFinal;
     private List<VendaAlmoco> lstVendaAlmoco;
     private List<Recarga> lstRecargas;
+    private final List<TipoCliente> lstTipoCliente;
+    private Pessoa usuarioLogado;
 
     public ControladorRelatorio() {
         // Todos os tipos de clientes
@@ -39,6 +42,9 @@ public class ControladorRelatorio {
         // Inicialmentes as listas sao nulas
         this.lstVendaAlmoco = null;
         this.lstRecargas = null;
+        // Lista dos tipos de clientes cadastrados no sistema
+        TipoClienteDAO daoTipoCliente = new TipoClienteDAO();
+        this.lstTipoCliente = daoTipoCliente.getLstTipoClientes();
     }
     
     /**
@@ -140,22 +146,63 @@ public class ControladorRelatorio {
     }
 
     /**
+     * @return the usuarioLogado
+     */
+    public Pessoa getUsuarioLogado() {
+        return usuarioLogado;
+    }
+
+    /**
+     * @param usuarioLogado the usuarioLogado to set
+     */
+    public void setUsuarioLogado(Pessoa usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
+    }
+    
+    public boolean isUsuarioLogadoGerente() {
+        boolean retorno = false;
+        if (this.usuarioLogado instanceof Funcionario) {
+            if (((Funcionario)this.usuarioLogado).getTipoFuncionario().getCodigo().equals(Funcionario.GERENTE)) {
+                retorno = true;
+            }
+        }
+        return retorno;
+    }
+    /**
      * Retorna uma lista de Tipo de Tipos de Clientes cadastrados no sistema
      * @return Uma lista TipoCliente
      */
-    public List<TipoCliente> getLstTipoCliente() {
-        TipoClienteDAO daoTipoCliente = new TipoClienteDAO();
-        return daoTipoCliente.getLstTipoClientes();
+    public List<TipoCliente> getLstTipoCliente() {        
+        return this.lstTipoCliente;
         
     }
     
     /**
-     * Retorna uma lista de idCliente do tipo desejado     
+     * Retorna uma lista de clientes do tipo desejado     
      * @return Uma lista de objetos Cliente
      */
     public List<Cliente> getLstClientes() {
         ClienteDAO daoCliente = new ClienteDAO();
         return daoCliente.carregarClientesPorTipo(this.tipoCliente);
+    }        
+    
+    /**
+     * Retorna o nome do cliente
+     * @return O nome do cliente
+     * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException Se o id do usuário não corresponder a um cliente
+     */
+    public String getNomeCliente() throws UsuarioInvalidoException {
+        if (this.idCliente != -1) {
+            PessoaDAO daoPessoa = new PessoaDAO();
+            Pessoa pessoa = daoPessoa.carregar(this.idCliente);
+            if ((pessoa == null) || !(pessoa instanceof Cliente)) {
+                throw new UsuarioInvalidoException("Id de usuário inválido");
+            }
+            
+            return ((Cliente)pessoa).getNome();
+        } else {
+            return "Todos";
+        }
     }        
     
     /**

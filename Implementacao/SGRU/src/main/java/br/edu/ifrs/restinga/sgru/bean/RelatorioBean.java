@@ -8,26 +8,25 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
+import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
 
@@ -38,11 +37,16 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @SessionScoped
 public class RelatorioBean implements Serializable {
-    private static Font catFont = new Font(Font.TIMES_ROMAN, 18,Font.BOLD);
+    private static final Font CAT_FONT = new Font(Font.TIMES_ROMAN,
+            18,Font.BOLD);
+    private static final Font SMALL_BOLD = new Font(Font.TIMES_ROMAN,
+            12,Font.BOLD);
     public static final int RELATORIO_COMPRAS = 1;
     public static final int RELATORIO_RECARGAS = 2;
     public static final int FORMA_PGTO_CARTAO = 1;
     public static final int FORMA_PGTO_TICKET = 2;
+    public static final String ARQ_PDF_COMPRAS = "compras";
+    public static final String ARQ_PDF_RECARGAS = "recargas";
     
     private final ControladorRelatorio controlador;
     private Date dataInicialMin;
@@ -95,6 +99,20 @@ public class RelatorioBean implements Serializable {
     public int getFORMA_PGTO_TICKET() {
         return FORMA_PGTO_TICKET;
     }    
+
+    /**
+     * @return the ARQ_PDF_COMPRAS
+     */
+    public String getARQ_PDF_COMPRAS() {
+        return ARQ_PDF_COMPRAS;
+    }
+
+    /**
+     * @return the ARQ_PDF_RECARGAS
+     */
+    public String getARQ_PDF_RECARGAS() {
+        return ARQ_PDF_RECARGAS;
+    }        
     
    /**
      * @return the controlador
@@ -130,34 +148,51 @@ public class RelatorioBean implements Serializable {
     public Date getDataFinalMax() {
         return dataFinalMax;
     }
-    
+        
+    /**
+     * Retorna uma lista de Tipo de Clientes cadastrados no sistema
+     * @return 
+     */
+    public List<TipoCliente> getLstTipoCliente() {        
+        return controlador.getLstTipoCliente();
+        
+    }
+
     /**
      * @return the relatorioCompras
      */
     public boolean isRelatorioCompras() {
         return relatorioCompras;
     }
-        
-    /**
-     * @param relatorioCompras the relatorioCompras to set
-     */
-    public void setRelatorioCompras(boolean relatorioCompras) {
-        this.relatorioCompras = relatorioCompras;
-    }    
 
     /**
      * @return the relatorioCartao
      */
     public boolean isRelatorioCartao() {
         return relatorioCartao;
-    }
-
+    }        
+    
     /**
-     * @param relatorioCartao the relatorioCartao to set
+     * Retorna uma lista de cliente do tipo desejado
+     * @return Uma lista de objetos Cliente
      */
-    public void setRelatorioCartao(boolean relatorioCartao) {
-        this.relatorioCartao = relatorioCartao;
+    public List<Cliente> getLstClientes() {        
+        return controlador.getLstClientes();
     }    
+    
+    public String getDataInicialFormatada() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(controlador.getDataInicial().getTime());
+    }
+    
+    public String getDataFinalFormatada() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        return fmt.format(controlador.getDataFinal().getTime());
+    }    
+
+    public void setUsuarioLogado(Pessoa usuarioLogado) {
+        this.controlador.setUsuarioLogado(usuarioLogado);
+    }
     
     /**
      * Adapta o componente calendar dataFinal da view
@@ -178,53 +213,38 @@ public class RelatorioBean implements Serializable {
     }
     
     /**
-     * Habilita ou não um componente na view conforme o tipo de usuário
-     * @param pessoa O usuário logado no sistema
+     * Habilita ou não um componente na view conforme o tipo de usuário     
      * @return True, se for necessário habilitar o componente e false, caso contrário
      */
-    public boolean habilitarComponentesGerenciais(Pessoa pessoa) {        
-        return !(pessoa instanceof Cliente);
-    }    
+    public boolean habilitarComponentesGerenciais() {
+        return !(this.controlador.getUsuarioLogado() instanceof Cliente);
+    }        
     
-    /**
-     * Retorna uma lista de Tipo de Clientes cadastrados no sistema
-     * @return 
-     */
-    public List<TipoCliente> getLstTipoCliente() {        
-        return controlador.getLstTipoCliente();
-        
+    public boolean habilitarNomeCliente() {
+        return !(this.controlador.getFormaPgto() == FORMA_PGTO_TICKET);
     }
     
     /**
-     * Retorna uma lista de cliente do tipo desejado
-     * @return Uma lista de objetos Cliente
-     */
-    public List<Cliente> getLstClientes() {        
-        return controlador.getLstClientes();
-    }    
-    
-    public String getDataInicialFormatada() {
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-        return fmt.format(controlador.getDataInicial().getTime());
-    }
-    
-    public String getDataFinalFormatada() {
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-        return fmt.format(controlador.getDataFinal().getTime());
-    }    
-    
-    /**
-     * Altera o status do atributo relatorioCompras     
+     * Altera o status do atributo relatorioCompras, relatorioCartao, tipo de usuário e cliente 
      */
     public void alterarStatusRelatorioCompras() {
-        this.relatorioCompras = !this.relatorioCompras;
+        this.relatorioCompras = this.controlador.getTipoRelatorio() == RELATORIO_COMPRAS;
+        
+        // Se recarga, altera os campos do cliente e tipo cliente para todos        
+        this.relatorioCartao = true;                
+        this.controlador.setIdCliente(-1);
+        this.controlador.setTipoCliente("-1");
+        this.controlador.setFormaPgto(FORMA_PGTO_CARTAO);
     }
     
     /**
-     * Altera o status do atributo relatorioCartao
+     * Altera o status do atributo relatorioCartao, tipo de usuário e cliente
      */
     public void alterarStatusRelatorioCartao() {
-        this.relatorioCartao = !this.relatorioCartao;
+        this.relatorioCartao = this.controlador.getFormaPgto() == FORMA_PGTO_CARTAO;
+        
+        this.controlador.setIdCliente(-1);
+        this.controlador.setTipoCliente("-1");            
     }    
     
     public String emitirRelatorio(int idUsuarioLogado) {
@@ -256,34 +276,79 @@ public class RelatorioBean implements Serializable {
     /**
      * Cria um cabeçalho para o documento PDF
      * @param document
-     * @throws IOException
-     * @throws BadElementException
-     * @throws DocumentException 
      */
-    public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
-        Document pdf = (Document) document;
-        pdf.open();
-        pdf.setPageSize(PageSize.A4); 
-        
-        // Cabecalho do PDF
-        String cabecalho;
-        if (this.isRelatorioComprasSet()) {
-            cabecalho = "Compras realizadas no período de " + this.getDataInicialFormatada() +
-                    " a " + this.getDataFinalFormatada();
-        } else {
-            cabecalho = "Recargas realizadas no período de " + this.getDataInicialFormatada() +
-                    " a " + this.getDataFinalFormatada();
+    public void preProcessPDF(Object document) {
+        try {                                    
+            Document pdf = (Document) document;    
+            pdf.setPageSize(PageSize.A4);                         
+            pdf.open();                        
+
+            Paragraph preface = new Paragraph();
+            
+            // Titulo
+            String titulo;
+            if (this.relatorioCompras) {
+                titulo = "Compras realizadas no período de " + this.getDataInicialFormatada() +
+                        " a " + this.getDataFinalFormatada();
+            } else {
+                titulo = "Recargas realizadas no período de " + this.getDataInicialFormatada() +
+                        " a " + this.getDataFinalFormatada();
+            }                                    
+            // Titulo centralizado
+            preface.setAlignment(Element.ALIGN_CENTER);            
+            // We add one empty line
+            addEmptyLine(preface, 1);                        
+            // Lets write a big header
+            preface.add(new Paragraph(titulo, CAT_FONT));            
+            addEmptyLine(preface, 1);                                    
+            
+            // O restante serah alinhado a a esquerda
+            preface.setAlignment(Element.ALIGN_LEFT);
+            // Nome de quem requisitou o relatorio
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy 'às' HH'h'mm");
+            String dataSolicitacao = fmt.format(Calendar.getInstance().getTime());
+            preface.add(new Paragraph("Relatório gerado por " + this.controlador.getUsuarioLogado().getNome() 
+                    + " em " + dataSolicitacao, SMALL_BOLD));                        
+            
+            // Forma de pagamento, Tipo de Cliente e Nome do Cliente            
+            if (this.controlador.isUsuarioLogadoGerente()) {                
+                // Opcao para relatorio de compras apenas
+                if (this.relatorioCompras) {
+                    String formaPgto;
+                    if (this.controlador.getFormaPgto() == FORMA_PGTO_CARTAO) {
+                        formaPgto = "Cartão";
+                    } else {
+                        formaPgto = "Ticket";
+                    }                
+                    preface.add(new Paragraph("Forma de Pagamento: " + formaPgto, SMALL_BOLD));                
+                }
+                
+                // Tipo de cliente
+                String tipoUsuario = "Todos";
+                if (!this.controlador.getTipoCliente().equals("-1")) {                                    
+                    for (TipoCliente tipoCliente : this.controlador.getLstTipoCliente()) {
+                        if (tipoCliente.getCodigo().equals(this.controlador.getTipoCliente())) {
+                            tipoUsuario = tipoCliente.getDescricao();
+                            break;
+                        }
+                    }
+                }    
+                
+                // Tipo de usuario e cliente nao serah impresso para ticket
+                if ((this.controlador.getFormaPgto() != FORMA_PGTO_TICKET)) {
+                    // Tipo de usuario
+                    preface.add(new Paragraph("Tipo de Usuário: " + tipoUsuario, SMALL_BOLD));                
+
+                    // Cliente           
+                    preface.add(new Paragraph("Nome do Cliente: " + this.controlador.getNomeCliente(), SMALL_BOLD));
+                }
+            }                        
+            
+            addEmptyLine(preface, 1);
+            pdf.add(preface);
+        } catch(DocumentException | UsuarioInvalidoException e) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
         }
-        //pdf.addTitle(cabecalho);        
-        Paragraph preface = new Paragraph();
-        preface.setAlignment(Element.ALIGN_CENTER);
-        // We add one empty line
-        addEmptyLine(preface, 1);
-        // Lets write a big header
-        preface.add(new Paragraph(cabecalho, catFont));
-        addEmptyLine(preface, 1);
-        
-        pdf.add(preface);
     }
     
     private static void addEmptyLine(Paragraph paragraph, int number) {
@@ -291,7 +356,7 @@ public class RelatorioBean implements Serializable {
             paragraph.add(new Paragraph(" "));
         }
     }    
-    
+        
     /**
      * Envia à viewer uma mensagem com o status da operação
      * @param sev A severidade da mensagem

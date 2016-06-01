@@ -16,19 +16,14 @@
                                  paginator="true" rows="10" style="margin-bottom:20px">                        
                         <f:facet name="{Exporters}">
                             <h:commandLink>
-                                <p:graphicImage name="../imagens/pdf.png" width="24"/>
-                                <p:dataExporter type="pdf" target="tblRecargas" fileName="recargas"
+                                <p:graphicImage value="../imagens/pdf.png" width="24" style="float: right;margin-right: 5px"/>
+                                <p:dataExporter type="pdf" target="tblRecargas" fileName="#{relatorioBean.ARQ_PDF_RECARGAS}"
                                                 preProcessor="#{relatorioBean.preProcessPDF}"/>
                             </h:commandLink>
-                        </f:facet>                        
-                        <p:column headerText="Id Cliente" width="60"
-                                  style="text-align: center"
-                                  rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
-                            <h:outputText value="#{recarga.cartao.cliente.id}"/>
-                        </p:column>
+                        </f:facet> 
                         <p:column headerText="Nome Cliente" 
-                                  style="text-align: center"
-                                  rendered="#{relatorioBean.habilitarComponentesGerenciais(autenticarBean.controlador.pessoa)}">
+                                  style="text-align: center"                                  
+                                  rendered="#{relatorioBean.habilitarNomeCliente()}">
                             <h:outputText value="#{recarga.cartao.cliente.nome}"/>
                         </p:column>
                         <p:column headerText="Data da Recarga" style="text-align: center">
