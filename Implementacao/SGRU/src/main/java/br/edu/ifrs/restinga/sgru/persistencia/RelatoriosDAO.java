@@ -33,7 +33,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal) 
+    public List<VendaAlmoco> gerarRelatorioComprasCartao(Calendar dataInicial, Calendar dataFinal) 
             throws RelatorioException {
         
         List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class)
@@ -56,7 +56,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
+    public List<VendaAlmoco> gerarRelatorioComprasCartao(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
             throws RelatorioException {
         
         List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class, "venda")
@@ -83,7 +83,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal, int idCliente) 
+    public List<VendaAlmoco> gerarRelatorioComprasCartao(Calendar dataInicial, Calendar dataFinal, int idCliente) 
             throws RelatorioException {
         
         List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class, "venda")
@@ -108,7 +108,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos VendaAlmoco
      * @throws br.edu.ifrs.restinga.sgru.excessao.RelatorioException Caso não sejam encontrados dados para o relatório
      */
-    public List<VendaAlmoco> relatorioComprasTicket(Calendar dataInicial, Calendar dataFinal) 
+    public List<VendaAlmoco> gerarRelatorioComprasTicket(Calendar dataInicial, Calendar dataFinal) 
             throws RelatorioException {
                 
         List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class)
@@ -130,7 +130,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos Recarga
      * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
      */
-    public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal) 
+    public List<Recarga> gerarRelatorioRecargas(Calendar dataInicial, Calendar dataFinal) 
             throws RecargaNaoEncontradaException {
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
                 .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
@@ -152,7 +152,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos Recarga
      * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
      */
-    public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
+    public List<Recarga> gerarRelatorioRecargas(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
             throws RecargaNaoEncontradaException {        
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
                 .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
@@ -178,7 +178,7 @@ public class RelatoriosDAO {
      * @return Uma lista de objetos Recarga
      * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
      */
-    public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal, int idCliente) 
+    public List<Recarga> gerarRelatorioRecargas(Calendar dataInicial, Calendar dataFinal, int idCliente) 
             throws RecargaNaoEncontradaException {
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
                 .add(Restrictions.between("dataCredito", dataInicial, dataFinal))

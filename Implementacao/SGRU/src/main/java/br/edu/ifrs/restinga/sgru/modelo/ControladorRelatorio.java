@@ -265,20 +265,20 @@ public class ControladorRelatorio {
         if (isCliente(this.usuarioLogado.getId()) || (this.idCliente != -1)) {
             // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
             // ou o gerente solicitou o relatório
-            lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal, 
+            lstVendaAlmoco = daoRelatorios.gerarRelatorioComprasCartao(cDataInicial, cDataFinal, 
                     this.idCliente!=-1?this.idCliente:this.usuarioLogado.getId());
         } else {
             // Relatorios solicitados pelo gerente
             if (this.formaPgto == RelatorioBean.FORMA_PGTO_CARTAO) {            
                 if (this.tipoCliente.equals("-1")) {
                     // todos os tipos de clientes
-                    lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal);                
+                    lstVendaAlmoco = daoRelatorios.gerarRelatorioComprasCartao(cDataInicial, cDataFinal);                
                 } else {
                     // Relatorio de um tipo especifico de cliente
-                    lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal, this.tipoCliente);
+                    lstVendaAlmoco = daoRelatorios.gerarRelatorioComprasCartao(cDataInicial, cDataFinal, this.tipoCliente);
                 }
             } else if (this.formaPgto == RelatorioBean.FORMA_PGTO_TICKET) {
-                lstVendaAlmoco = daoRelatorios.relatorioComprasTicket(cDataInicial, cDataFinal);
+                lstVendaAlmoco = daoRelatorios.gerarRelatorioComprasTicket(cDataInicial, cDataFinal);
             }
         }
         return lstVendaAlmoco;
@@ -312,16 +312,16 @@ public class ControladorRelatorio {
         if (isCliente(this.usuarioLogado.getId()) || (this.idCliente != -1)) {
             // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
             // ou o gerente solicitou o relatório para um determinado cliente
-            lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, 
+            lstRecargas = daoRelatorios.gerarRelatorioRecargas(cDataInicial, cDataFinal, 
                     this.idCliente!=-1?this.idCliente:this.usuarioLogado.getId());
         } else {
             // Relatorios solicitados pelo gerente
             if (this.tipoCliente.equals("-1")) {
                 // todos os tipos de clientes
-                lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal);                
+                lstRecargas = daoRelatorios.gerarRelatorioRecargas(cDataInicial, cDataFinal);                
             } else {
                 // Relatorio de um tipo especifico de cliente
-                lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, this.tipoCliente);
+                lstRecargas = daoRelatorios.gerarRelatorioRecargas(cDataInicial, cDataFinal, this.tipoCliente);
             }
         }
         return lstRecargas;
