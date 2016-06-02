@@ -8,7 +8,7 @@
     <ui:composition template="padraoInternoGerencial.xhtml">
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">       
-            <f:event listener="#{relatorioBean.setUsuarioLogado(autenticarBean.controlador.pessoa)}" type="preRenderView" />
+            <f:event listener="#{relatorioBean.controlador.setUsuarioLogado(autenticarBean.controlador.pessoa)}" type="preRenderView" />
             <h:form>
                 <p:messages/>
                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
@@ -36,7 +36,7 @@
                                      value="#{relatorioBean.controlador.tipoCliente}"
                                      disabled="#{!relatorioBean.relatorioCartao}">
                         <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
-                        <f:selectItems var="tipoUsuario" value="#{relatorioBean.lstTipoCliente}" 
+                        <f:selectItems var="tipoUsuario" value="#{relatorioBean.controlador.lstTipoCliente}" 
                                        itemLabel="#{tipoUsuario.descricao}" itemValue="#{tipoUsuario.codigo}"/>
                         <p:ajax event="change" update="somCliente"/>
                     </p:selectOneMenu>                                                            
@@ -48,7 +48,7 @@
                                      rendered="#{relatorioBean.habilitarComponentesGerenciais()}"
                                      disabled="#{!relatorioBean.relatorioCartao}">
                         <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
-                        <f:selectItems var="usuario" value="#{relatorioBean.lstClientes}" 
+                        <f:selectItems var="usuario" value="#{relatorioBean.controlador.lstClientes}" 
                                        itemLabel="#{usuario.nome}" itemValue="#{usuario.id}"/>
                     </p:selectOneMenu>                                                                                                                                           
                     <p:outputLabel for="dataInicial" value="Data Inicial:"/>

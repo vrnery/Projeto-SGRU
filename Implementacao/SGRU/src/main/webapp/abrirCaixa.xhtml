@@ -9,13 +9,15 @@
         Essa execucao eh realizada automaticamente no load da pagina
     -->
     <ui:composition template="padraoInternoSemMenu.xhtml">                
-        <ui:define name="conteudo">
+        <ui:define name="conteudo">            
+            <!-- Seta o operador logado -->
+            <f:event listener="#{vendaBean.controlador.setOperador(autenticarBean.controlador.funcionario)}" type="preRenderView" />
             <!-- 
                 Verifica se existe caixa aberto para o operador no dia corrente
                 Caso exista, redireciona o operador para a tela do caixa
                 Caso não exista, continua nesta pagina
             -->            
-            <f:event listener="#{vendaBean.carregarCaixaAberto(autenticarBean.controlador.funcionario)}" type="preRenderView" />
+            <f:event listener="#{vendaBean.carregarCaixaAberto()}" type="preRenderView" />
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtValorAbertura" value="Informe o valor para abertura do caixa: "/>
@@ -23,8 +25,7 @@
                         <f:convertNumber type="currency"/>
                     </p:inputText>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Abrir" action="#{vendaBean.realizarAberturaCaixa(autenticarBean.controlador.funcionario, 
-                                                                      vendaBean.controlador.caixaRU.valorAbertura)}"/>
+                <p:commandButton ajax="false" value="Abrir" action="#{vendaBean.realizarAberturaCaixa(vendaBean.controlador.caixaRU.valorAbertura)}"/>
             </h:form>
         </ui:define>
     </ui:composition>

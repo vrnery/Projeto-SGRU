@@ -9,10 +9,7 @@ import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
-import br.edu.ifrs.restinga.sgru.modelo.Cliente;
-import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
-import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -23,7 +20,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -165,23 +161,7 @@ public class RelatorioBean implements Serializable {
     public boolean isRelatorioCartao() {
         return relatorioCartao;
     }
-    
-    /**
-     * Retorna uma lista de Tipo de Clientes cadastrados no sistema
-     * @return Uma lista de tipo de cliente
-     */
-    public List<TipoCliente> getLstTipoCliente() {        
-        return controlador.getLstTipoCliente();        
-    }    
-    
-    /**
-     * Retorna uma lista de cliente de um determinado tipo (this.controlador.tipoCliente)
-     * @return Uma lista de objetos Cliente
-     */
-    public List<Cliente> getLstClientes() {        
-        return controlador.getLstClientes();
-    }    
-    
+        
     /**
      * Formata a a data inicial (this.controlador.dataInicial) para o formato dd/mm/aaaa
      * @return Um string com a data formatada
@@ -200,14 +180,6 @@ public class RelatorioBean implements Serializable {
         return fmt.format(controlador.getDataFinal().getTime());
     }    
 
-    /**
-     * Seta o atributos this.controlador.usuarioLogado
-     * @param usuarioLogado O usuario logado no sistema
-     */
-    public void setUsuarioLogado(Pessoa usuarioLogado) {
-        this.controlador.setUsuarioLogado(usuarioLogado);
-    }
-    
     /**
      * Verifica se a lista this.controlador.lstVendaAlmoco está preenchida. 
      * Caso não esteja, redireciona o usuário para a página gerencial.
@@ -370,17 +342,6 @@ public class RelatorioBean implements Serializable {
                 
                 // Tipo de cliente
                 String tipoUsuario = this.controlador.getDescricaoCodigoCliente();
-                /*
-                String tipoUsuario = "Todos";
-                if (!this.controlador.getTipoCliente().equals("-1")) {                                    
-                    for (TipoCliente tipoCliente : this.controlador.getLstTipoCliente()) {
-                        if (tipoCliente.getCodigo().equals(this.controlador.getTipoCliente())) {
-                            tipoUsuario = tipoCliente.getDescricao();
-                            break;
-                        }
-                    }
-                }
-                */
                 
                 // Tipo de usuario e cliente nao serah impresso para ticket
                 if ((this.controlador.getFormaPgto() != FORMA_PGTO_TICKET)) {
@@ -399,6 +360,11 @@ public class RelatorioBean implements Serializable {
         }
     }
     
+    /**
+     * Adiciona uma linha no arquivo PDF
+     * @param paragraph
+     * @param number 
+     */
     private void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));
