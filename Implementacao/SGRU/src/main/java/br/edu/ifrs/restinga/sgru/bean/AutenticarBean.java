@@ -19,7 +19,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @SessionScoped
-public class AutenticarBean implements Serializable {            
+public class AutenticarBean {            
     private final ControladorAutenticacao controlador;
 
     public AutenticarBean() {

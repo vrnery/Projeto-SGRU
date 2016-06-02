@@ -39,7 +39,7 @@ import org.primefaces.model.StreamedContent;
  */
 @ManagedBean
 @SessionScoped
-public class VendaBean implements Serializable {
+public class VendaBean {
     // Caso nao consiga carregar foto do cliente
     private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";
     private final ControladorVenda controlador;    

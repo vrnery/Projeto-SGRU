@@ -23,7 +23,7 @@
                     <p:selectOneRadio id="somFormaPagamento" value="#{relatorioBean.controlador.formaPgto}"
                                       style="width: 235px"
                                       rendered="#{relatorioBean.habilitarComponentesGerenciais()}"
-                                      disabled="#{!relatorioBean.relatorioCompras}">
+                                      disabled="#{!relatorioBean.relatorioCompras}">                                  
                         <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.FORMA_PGTO_CARTAO}"/>                        
                         <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.FORMA_PGTO_TICKET}"/>                        
                         <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCartao()}" update="somTipoUsuario,somCliente"/>
@@ -65,12 +65,12 @@
                                 value="#{relatorioBean.controlador.dataFinal}"
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataFinalMax}" 
-                                mindate="#{relatorioBean.dataFinalMin}"
+                                mindate="#{relatorioBean.dataFinalMin}"                                
                                 required="true">
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataFinal}" update="dataInicial"/>
                     </p:calendar>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Emitir Relatório" action="#{relatorioBean.emitirRelatorio(autenticarBean.controlador.pessoa.id)}"/>
+                <p:commandButton ajax="false" value="Emitir Relatório" action="#{relatorioBean.emitirRelatorio()}"/>
             </h:form>
         </ui:define>
     </ui:composition>

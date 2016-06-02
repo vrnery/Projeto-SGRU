@@ -8,9 +8,10 @@
     <ui:composition template="padraoInternoGerencial.xhtml">
         <ui:define name="titulo">SGRU</ui:define>
         <ui:define name="conteudo">  
+            <f:event listener="#{relatorioBean.isRelatorioComprasSet()}" type="preRenderView" />
             <h:form>
                 <p:messages/>
-                <p:panel id="pnCompras" header="Compras Realizadas no Período de #{relatorioBean.dataInicialFormatada} e #{relatorioBean.dataFinalFormatada}.">
+                <p:panel id="pnCompras" header="Compras Realizadas no Período de #{relatorioBean.dataInicialFormatada} a #{relatorioBean.dataFinalFormatada}.">
                     <p:dataTable id="tblCompras" value="#{relatorioBean.controlador.lstVendaAlmoco}" var="compra" 
                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                  paginator="true" rows="10" style="margin-bottom:20px">

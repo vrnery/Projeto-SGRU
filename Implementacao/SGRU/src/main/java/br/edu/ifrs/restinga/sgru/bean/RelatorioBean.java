@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -62,10 +63,12 @@ public class RelatorioBean implements Serializable {
         this.dataInicialMax = new Date();
         // A data final minima eh a data atual
         this.dataFinalMin = new Date();
+        // A data final maxima sempre sera a data atual
+        this.dataFinalMax = new Date();
         // O tipo de relatorio default eh compras
-        controlador.setTipoRelatorio(RELATORIO_COMPRAS);
+        this.controlador.setTipoRelatorio(RELATORIO_COMPRAS);
         // A forma de pagamento default eh cartao
-        controlador.setFormaPgto(FORMA_PGTO_CARTAO);        
+        this.controlador.setFormaPgto(FORMA_PGTO_CARTAO);        
         // Flag para controlar a ativacao do campo forma de pagamento
         this.relatorioCompras = true;
         // Flag para controlar a ativacao dos campos tipo de usuario e cliente
@@ -147,16 +150,7 @@ public class RelatorioBean implements Serializable {
      */
     public Date getDataFinalMax() {
         return dataFinalMax;
-    }
-        
-    /**
-     * Retorna uma lista de Tipo de Clientes cadastrados no sistema
-     * @return 
-     */
-    public List<TipoCliente> getLstTipoCliente() {        
-        return controlador.getLstTipoCliente();
-        
-    }
+    }        
 
     /**
      * @return the relatorioCompras
@@ -170,29 +164,77 @@ public class RelatorioBean implements Serializable {
      */
     public boolean isRelatorioCartao() {
         return relatorioCartao;
-    }        
+    }
     
     /**
-     * Retorna uma lista de cliente do tipo desejado
+     * Retorna uma lista de Tipo de Clientes cadastrados no sistema
+     * @return Uma lista de tipo de cliente
+     */
+    public List<TipoCliente> getLstTipoCliente() {        
+        return controlador.getLstTipoCliente();        
+    }    
+    
+    /**
+     * Retorna uma lista de cliente de um determinado tipo (this.controlador.tipoCliente)
      * @return Uma lista de objetos Cliente
      */
     public List<Cliente> getLstClientes() {        
         return controlador.getLstClientes();
     }    
     
+    /**
+     * Formata a a data inicial (this.controlador.dataInicial) para o formato dd/mm/aaaa
+     * @return Um string com a data formatada
+     */
     public String getDataInicialFormatada() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         return fmt.format(controlador.getDataInicial().getTime());
     }
     
+    /**
+     * Formata a a data final (this.controlador.dataFinal) para o formato dd/mm/aaaa
+     * @return Um string com a data formatada
+     */
     public String getDataFinalFormatada() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
         return fmt.format(controlador.getDataFinal().getTime());
     }    
 
+    /**
+     * Seta o atributos this.controlador.usuarioLogado
+     * @param usuarioLogado O usuario logado no sistema
+     */
     public void setUsuarioLogado(Pessoa usuarioLogado) {
         this.controlador.setUsuarioLogado(usuarioLogado);
     }
+    
+    /**
+     * Verifica se a lista this.controlador.lstVendaAlmoco está preenchida. 
+     * Caso não esteja, redireciona o usuário para a página gerencial.
+     */
+    public void isRelatorioComprasSet() {        
+        // Caso nao haja lista de venda setada, entao retorna para a pagina gerencial
+        if (this.controlador.getLstVendaAlmoco() == null) {
+            // O caixa ainda nao esta aberto
+            ConfigurableNavigationHandler nav  = 
+                    (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();            
+            nav.performNavigation("paginaGerencial.xhtml?faces-redirect=true");     
+        }
+    }
+    
+    /**
+     * Verifica se a lista this.controlador.lstRecargas está preenchida.
+     * Caso não esteja, redireciona o usuário para a página gerencial.
+     */
+    public void isRelatorioRecargasSet() {        
+        // Caso nao haja lista de venda setada, entao retorna para a pagina gerencial
+        if (this.controlador.getLstRecargas() == null) {
+            // O caixa ainda nao esta aberto
+            ConfigurableNavigationHandler nav  = 
+                    (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();            
+            nav.performNavigation("paginaGerencial.xhtml?faces-redirect=true");     
+        }
+    }    
     
     /**
      * Adapta o componente calendar dataFinal da view
@@ -209,7 +251,7 @@ public class RelatorioBean implements Serializable {
      */
     public void tratarDataFinal(SelectEvent evento) {
         Date data = (Date) evento.getObject();
-        this.dataInicialMax = data;
+        this.dataInicialMax = data;        
     }
     
     /**
@@ -217,15 +259,22 @@ public class RelatorioBean implements Serializable {
      * @return True, se for necessário habilitar o componente e false, caso contrário
      */
     public boolean habilitarComponentesGerenciais() {
-        return !(this.controlador.getUsuarioLogado() instanceof Cliente);
+        return this.controlador.isUsuarioLogadoGerente();
     }        
     
     public boolean habilitarNomeCliente() {
+        // Nao ha necessidade de mostrar a coluna nome cliente quando a solicitacao
+        // parte de um cliente
+        if (!this.habilitarComponentesGerenciais()) {
+            return false;
+        }
+        // Ticket nao tem cliente associado
         return !(this.controlador.getFormaPgto() == FORMA_PGTO_TICKET);
     }
     
     /**
-     * Altera o status do atributo relatorioCompras, relatorioCartao, tipo de usuário e cliente 
+     * Altera o status dos atributos relatorioCompras, relatorioCartao, 
+     * tipo de usuário, cliente e forma de pagamento
      */
     public void alterarStatusRelatorioCompras() {
         this.relatorioCompras = this.controlador.getTipoRelatorio() == RELATORIO_COMPRAS;
@@ -247,14 +296,19 @@ public class RelatorioBean implements Serializable {
         this.controlador.setTipoCliente("-1");            
     }    
     
-    public String emitirRelatorio(int idUsuarioLogado) {
+    /**
+     * 
+     * @param idUsuarioLogado
+     * @return 
+     */
+    public String emitirRelatorio() {
         String retorno;
         try {            
             if (relatorioCompras) {
-                this.controlador.buscarDadosRelatorioCompras(idUsuarioLogado);
+                this.controlador.buscarDadosRelatorioCompras();
                 retorno = "relatorioCompras";
             } else {                
-                this.controlador.buscarDadosRelatorioRecargas(idUsuarioLogado);
+                this.controlador.buscarDadosRelatorioRecargas();
                 retorno = "relatorioRecargas";
             }
         } catch (DataRelatorioInvalidaException | RelatorioException | 
@@ -263,15 +317,7 @@ public class RelatorioBean implements Serializable {
             return null;
         }
         return retorno;
-    }
-    
-    public boolean isRelatorioComprasSet() {
-        return !(this.controlador.getLstVendaAlmoco() == null);
-    }
-    
-    public boolean isRelatorioRecargasSet() {
-        return !(this.controlador.getLstRecargas() == null);
-    }
+    }    
     
     /**
      * Cria um cabeçalho para o documento PDF
@@ -324,6 +370,8 @@ public class RelatorioBean implements Serializable {
                 }
                 
                 // Tipo de cliente
+                String tipoUsuario = this.controlador.getDescricaoCodigoCliente();
+                /*
                 String tipoUsuario = "Todos";
                 if (!this.controlador.getTipoCliente().equals("-1")) {                                    
                     for (TipoCliente tipoCliente : this.controlador.getLstTipoCliente()) {
@@ -332,7 +380,8 @@ public class RelatorioBean implements Serializable {
                             break;
                         }
                     }
-                }    
+                }
+                */
                 
                 // Tipo de usuario e cliente nao serah impresso para ticket
                 if ((this.controlador.getFormaPgto() != FORMA_PGTO_TICKET)) {

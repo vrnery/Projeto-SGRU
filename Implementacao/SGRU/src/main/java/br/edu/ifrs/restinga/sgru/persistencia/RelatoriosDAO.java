@@ -12,6 +12,7 @@ import br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco;
 import java.util.Calendar;
 import java.util.List;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -34,14 +35,15 @@ public class RelatoriosDAO {
      */
     public List<VendaAlmoco> relatorioComprasCartao(Calendar dataInicial, Calendar dataFinal) 
             throws RelatorioException {
-
+        
         List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class)
                 .add(Restrictions.isNotNull("cartao"))
                 .add(Restrictions.between("dataVenda", dataInicial, dataFinal))
-                .list();
+                .addOrder(Order.asc("dataVenda"))
+                .list();        
                 
         if (lstVendaAlmoco.isEmpty()) {
-            throw new RelatorioException("Não foram encontrados compras no período informado");
+            throw new RelatorioException("Não foram encontradas compras no período informado");
         }
         return lstVendaAlmoco;
     }
@@ -63,11 +65,12 @@ public class RelatoriosDAO {
                 .createAlias("cartao", "cartao")
                 .createAlias("cartao.cliente", "cliente")
                 .createAlias("cliente.tipoCliente", "tipocliente")                                
-                .add(Restrictions.eq("tipocliente.codigo", codTipoCliente))                
+                .add(Restrictions.eq("tipocliente.codigo", codTipoCliente))
+                .addOrder(Order.asc("venda.dataVenda"))
                 .list();
         
         if (lstVendaAlmoco.isEmpty()) {
-            throw new RelatorioException("Não foram encontrados compras no período informado");
+            throw new RelatorioException("Não foram encontradas compras no período informado");
         }
         return lstVendaAlmoco;
     }
@@ -88,11 +91,12 @@ public class RelatoriosDAO {
                 .add(Restrictions.between("venda.dataVenda", dataInicial, dataFinal))
                 .createAlias("cartao", "cartao")
                 .createAlias("cartao.cliente", "cliente")                
-                .add(Restrictions.eq("cliente.id", idCliente))                
+                .add(Restrictions.eq("cliente.id", idCliente))
+                .addOrder(Order.asc("venda.dataVenda"))
                 .list();
         
         if (lstVendaAlmoco.isEmpty()) {
-            throw new RelatorioException("Não foram encontrados compras no período informado");
+            throw new RelatorioException("Não foram encontradas compras no período informado");
         }
         return lstVendaAlmoco;
     }    
@@ -110,10 +114,11 @@ public class RelatoriosDAO {
         List<VendaAlmoco> lstVendaAlmoco = sessao.createCriteria(VendaAlmoco.class)
                 .add(Restrictions.isNotNull("ticket"))
                 .add(Restrictions.between("dataVenda", dataInicial, dataFinal))
+                .addOrder(Order.asc("dataVenda"))
                 .list();        
 
         if (lstVendaAlmoco.isEmpty()) {
-            throw new RelatorioException("Não foram encontrados compras no período informado");
+            throw new RelatorioException("Não foram encontradas compras no período informado");
         }
         return lstVendaAlmoco;
     }    
@@ -130,6 +135,7 @@ public class RelatoriosDAO {
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
                 .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
                 .add(Restrictions.eq("utilizado", false))
+                .addOrder(Order.asc("dataCredito"))
                 .list();
         
         if (lstRecargas.isEmpty()) {
@@ -147,7 +153,7 @@ public class RelatoriosDAO {
      * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas
      */
     public List<Recarga> relatorioRecargas(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
-            throws RecargaNaoEncontradaException {
+            throws RecargaNaoEncontradaException {        
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
                 .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
                 .add(Restrictions.eq("utilizado", false))
@@ -155,6 +161,7 @@ public class RelatoriosDAO {
                 .createAlias("cartao.cliente", "cliente")
                 .createAlias("cliente.tipoCliente", "tipocliente")
                 .add(Restrictions.eq("tipocliente.codigo", codTipoCliente))
+                .addOrder(Order.asc("dataCredito"))
                 .list();
         
         if (lstRecargas.isEmpty()) {
@@ -179,6 +186,7 @@ public class RelatoriosDAO {
                 .createAlias("cartao", "cartao")
                 .createAlias("cartao.cliente", "cliente")                
                 .add(Restrictions.eq("cliente.id", idCliente))
+                .addOrder(Order.asc("dataCredito"))
                 .list();
         
         if (lstRecargas.isEmpty()) {

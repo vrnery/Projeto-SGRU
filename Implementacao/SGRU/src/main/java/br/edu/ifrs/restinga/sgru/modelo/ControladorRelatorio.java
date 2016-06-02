@@ -159,6 +159,10 @@ public class ControladorRelatorio {
         this.usuarioLogado = usuarioLogado;
     }
     
+    /**
+     * Verifica se o usuário logado no sistema é um gerente
+     * @return True, se o usuário for gerente e false, caso contrário
+     */
     public boolean isUsuarioLogadoGerente() {
         boolean retorno = false;
         if (this.usuarioLogado instanceof Funcionario) {
@@ -185,6 +189,23 @@ public class ControladorRelatorio {
         ClienteDAO daoCliente = new ClienteDAO();
         return daoCliente.carregarClientesPorTipo(this.tipoCliente);
     }        
+    
+    /**
+     * Busca a descrição do cliente correspondente ao código do atributo tipoCliente
+     * @return Uma string com a descrição do código do cliente
+     */
+    public String getDescricaoCodigoCliente() {
+        String tipoUsuario = "Todos";
+        if (!this.tipoCliente.equals("-1")) {                                    
+            for (TipoCliente tpCliente : this.lstTipoCliente) {
+                if (tpCliente.getCodigo().equals(this.tipoCliente)) {
+                    tipoUsuario = tpCliente.getDescricao();
+                    break;
+                }
+            }
+        }
+        return tipoUsuario;
+    }
     
     /**
      * Retorna o nome do cliente
@@ -216,31 +237,36 @@ public class ControladorRelatorio {
     }
     
     /**
-     * Busca os dados do relatório solicitado
-     * @param idUsuarioLogado O id do usuário logado no sistema
+     * Busca os dados do relatório solicitado     
      * @return Uma lista de objetos VendaAlmoco
      * @throws DataRelatorioInvalidaException Caso o período informado seja inválido
      * @throws RelatorioException Caso não sejam encontradas compras com os parâmetros solicitados
      */
-    public List<VendaAlmoco> buscarDadosRelatorioCompras(int idUsuarioLogado) 
+    public List<VendaAlmoco> buscarDadosRelatorioCompras() 
             throws DataRelatorioInvalidaException, RelatorioException {        
         // Verifica se periodo informado eh valido
         if (dataInicial.after(dataFinal)) {
             throw new DataRelatorioInvalidaException("Período inválido!");
         }
         
+        
         Calendar cDataInicial = Calendar.getInstance();
         Calendar cDataFinal = Calendar.getInstance();
-        
         cDataInicial.setTime(this.dataInicial);
         cDataFinal.setTime(this.dataFinal);
-                
+        
+        // Aqui setamos a hora, minuto e segundo da data final para que todos os 
+        // resgistros da data final sejam buscados
+        cDataFinal.set(Calendar.HOUR_OF_DAY, 23);
+        cDataFinal.set(Calendar.MINUTE, 59);
+        cDataFinal.set(Calendar.SECOND, 59);
+        
         RelatoriosDAO daoRelatorios = new RelatoriosDAO();                
-        if (isCliente(idUsuarioLogado) || (this.idCliente != -1)) {
+        if (isCliente(this.usuarioLogado.getId()) || (this.idCliente != -1)) {
             // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
             // ou o gerente solicitou o relatório
             lstVendaAlmoco = daoRelatorios.relatorioComprasCartao(cDataInicial, cDataFinal, 
-                    this.idCliente!=-1?this.idCliente:idUsuarioLogado);
+                    this.idCliente!=-1?this.idCliente:this.usuarioLogado.getId());
         } else {
             // Relatorios solicitados pelo gerente
             if (this.formaPgto == RelatorioBean.FORMA_PGTO_CARTAO) {            
@@ -259,13 +285,12 @@ public class ControladorRelatorio {
     }    
     
     /**
-     * Busca os dados do relatório solicitado
-     * @param idUsuarioLogado O id do usuário logado no sistema
+     * Busca os dados do relatório solicitado     
      * @return Uma lista de objetos Recarga
      * @throws DataRelatorioInvalidaException Caso o período informado seja inválido
      * @throws RecargaNaoEncontradaException Caso não sejam encontradas recargas com os parâmetros solicitados
      */
-    public List<Recarga> buscarDadosRelatorioRecargas(int idUsuarioLogado) 
+    public List<Recarga> buscarDadosRelatorioRecargas() 
             throws DataRelatorioInvalidaException, RecargaNaoEncontradaException {        
         // Verifica se periodo informado eh valido
         if (dataInicial.after(dataFinal)) {
@@ -273,17 +298,22 @@ public class ControladorRelatorio {
         }
         
         Calendar cDataInicial = Calendar.getInstance();
-        Calendar cDataFinal = Calendar.getInstance();
-        
+        Calendar cDataFinal = Calendar.getInstance();        
         cDataInicial.setTime(this.dataInicial);
         cDataFinal.setTime(this.dataFinal);
+        
+        // Aqui setamos a hora, minuto e segundo da data final para que todos os 
+        // resgistros da data final sejam buscados
+        cDataFinal.set(Calendar.HOUR_OF_DAY, 23);
+        cDataFinal.set(Calendar.MINUTE, 59);
+        cDataFinal.set(Calendar.SECOND, 59);
                 
         RelatoriosDAO daoRelatorios = new RelatoriosDAO();                
-        if (isCliente(idUsuarioLogado) || (this.idCliente != -1)) {
+        if (isCliente(this.usuarioLogado.getId()) || (this.idCliente != -1)) {
             // O cliente solicitou um relatorio, logo trata-se de um relatório para um usuario especifico,
-            // ou o gerente solicitou o relatório
+            // ou o gerente solicitou o relatório para um determinado cliente
             lstRecargas = daoRelatorios.relatorioRecargas(cDataInicial, cDataFinal, 
-                    this.idCliente!=-1?this.idCliente:idUsuarioLogado);
+                    this.idCliente!=-1?this.idCliente:this.usuarioLogado.getId());
         } else {
             // Relatorios solicitados pelo gerente
             if (this.tipoCliente.equals("-1")) {
