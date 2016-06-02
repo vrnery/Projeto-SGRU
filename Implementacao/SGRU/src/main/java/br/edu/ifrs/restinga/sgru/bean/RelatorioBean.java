@@ -297,9 +297,8 @@ public class RelatorioBean implements Serializable {
     }    
     
     /**
-     * 
-     * @param idUsuarioLogado
-     * @return 
+     * Solicita a emissão de um relatório     
+     * @return A próxima página a ser visitada pelo usuário
      */
     public String emitirRelatorio() {
         String retorno;
@@ -400,7 +399,7 @@ public class RelatorioBean implements Serializable {
         }
     }
     
-    private static void addEmptyLine(Paragraph paragraph, int number) {
+    private void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));
         }
