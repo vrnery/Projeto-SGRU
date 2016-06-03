@@ -11,26 +11,30 @@
             <h:form>
                 <p:dataTable value="#{cadastroBean.controladorCadastro.lstClientes}" var="cliente" rows="8" paginator="true">
                     <p:column style="display: none">
-                        <h:outputText value="#{cliente.id}" binding="#{id}"/>
+                        <h:outputText value="#{cliente.id}"/>
                     </p:column>
                     <p:column style="display: none">
-                        <h:outputText value="#{cliente.senha}" binding="#{senha}"/>
+                        <h:outputText value="#{cliente.senha}"/>
                     </p:column>
                     <p:column headerText="Matrícula" filterBy="#{cliente.matricula}" width="120">
-                        <h:outputText value="#{cliente.matricula}" binding="#{matricula}"/>
+                        <h:outputText value="#{cliente.matricula}"/>
                     </p:column>
                     <p:column headerText="Nome" filterBy="#{cliente.nome}">
-                        <h:outputText value="#{cliente.nome}" binding="#{nome}"/>
+                        <h:outputText value="#{cliente.nome}"/>
                     </p:column>
                     <p:column headerText="E-mail" filterBy="#{cliente.email}">
-                        <h:outputText value="#{cliente.email}" binding="#{email}"/>
+                        <h:outputText value="#{cliente.email}"/>
                     </p:column>
                     <p:column headerText="Telefone" filterBy="#{cliente.telefone}">
-                        <h:outputText value="#{cliente.telefone}" binding="#{telefone}"/>
+                        <h:outputText value="#{cliente.telefone}"/>
                     </p:column>                    
                     <p:column width="90">
-                        <p:commandButton ajax="false" title="Editar" icon="fa-edit" onclick="PF('dlgEditarUsuario').show();"/>
-                        <p:commandButton ajax="false" title="Excluit" icon="fa-remove" action="#{cadastroBean.excluirUsuario(id.value)}"/>
+                        <p:commandButton title="Editar" 
+                                         icon="fa-edit" 
+                                         actionListener="#{cadastroBean.controladorCadastro.setCliente(cliente)}" 
+                                         update=":dlgEditarUsuario"
+                                         oncomplete="dlgEditarUsuario.show()"/>
+                        <p:commandButton ajax="false" title="Excluit" icon="fa-remove" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
                     </p:column>
                 </p:dataTable>                
             </h:form>
@@ -40,15 +44,15 @@
                 <h:form enctype="multipart/form-data">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                        <p:outputLabel id="txtMatricula" value="#{matricula.value}"/>
+                        <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}"/>
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <p:inputText id="txtNome" value="#{nome.value}"/>
+                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}"/>
                         <p:outputLabel for="txtEmail" value="Email: "/>
-                        <p:inputText id="txtEmail" value="#{email.value}"/>
+                        <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
-                        <p:inputText id="txtTelefone" value="#{telefone.value}"/>
+                        <p:inputText id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:inputText id="txtSenha" value="#{senha.value}"/>
+                        <p:inputText id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}"/>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtTipo" value="Tipo: "/>
@@ -57,7 +61,7 @@
                         </p:selectOneRadio>
                     </h:panelGrid>
                     <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto"/>
-                    <p:commandButton ajax="false" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(id.value)}"/>
+                    <p:commandButton ajax="false" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(cadastroBean.controladorCadastro.cliente.id)}"/>
                 </h:form>
             </p:dialog>
         </ui:define>
