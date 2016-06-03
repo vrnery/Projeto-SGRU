@@ -55,7 +55,7 @@ public class VendaBean {
         try {
             controlador.getValorPagoAlmoco();
         } catch (ArrayIndexOutOfBoundsException | ValorAlmocoInvalidoException ex) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, ex.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
     }
     
@@ -117,7 +117,7 @@ public class VendaBean {
         try {
             controlador.realizarAberturaCaixa(valorAbertura);
         } catch (ValorAberturaCaixaInvalido e) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, "Valor inválido!");
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Valor inválido!");
             return null;
         }
         return "caixa";
@@ -134,7 +134,7 @@ public class VendaBean {
         } catch(MatriculaInvalidaException | UsuarioInvalidoException |
                 SaldoInsuficienteException | ValorAlmocoInvalidoException |
                 PeriodoEntreAlmocosInvalidoException e) {            
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             return "caixa";
         }
         
@@ -142,7 +142,7 @@ public class VendaBean {
         try {
             controlador.verificarExistenciaFoto();
         } catch (FotoNaoEncontradaException e) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
         }
         return "confirmarVendaCartao";
     }    
@@ -157,7 +157,7 @@ public class VendaBean {
         try {
             controlador.realizarVendaAlmocoTicket(codigo);
         } catch(TicketInvalidoException e) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             retorno = "caixa";
         }
         return retorno;
@@ -172,7 +172,7 @@ public class VendaBean {
         try {
             controlador.finalizarAlmoco(confirmar);
         } catch (ValorAlmocoInvalidoException e) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             return "venda";
         }
         return "caixa";
@@ -187,7 +187,7 @@ public class VendaBean {
         try {            
             controlador.getCaixaRU().realizarFechamentoCaixa();
         } catch (ValorAlmocoInvalidoException e) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             return null;
         }              
         return "index";

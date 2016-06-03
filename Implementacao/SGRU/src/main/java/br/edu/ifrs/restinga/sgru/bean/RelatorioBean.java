@@ -284,7 +284,7 @@ public class RelatorioBean implements Serializable {
             }
         } catch (DataRelatorioInvalidaException | RelatorioException | 
                 RecargaNaoEncontradaException e) {
-            enviarMensagem(FacesMessage.SEVERITY_INFO, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             return null;
         }
         return retorno;

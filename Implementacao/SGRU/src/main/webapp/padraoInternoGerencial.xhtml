@@ -34,7 +34,9 @@
             <p:layoutUnit position="west">
                 <h:form>
                     <p:menu>
-                        <p:menuitem ajax="false" value="Relatórios" action="relatorios"/>                        
+                        <p:menuitem ajax="false" value="Relatórios" action="relatorios"/>
+                        <p:menuitem ajax="false" value="Editar Conta" action="editarConta" rendered="#{!autenticarBean.usuarioLogadoGerente}"/>
+                        <p:menuitem ajax="false" value="Manter Contas" action="manterConta" rendered="#{autenticarBean.usuarioLogadoGerente}"/>
                     </p:menu>
                 </h:form>
             </p:layoutUnit>            

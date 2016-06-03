@@ -43,6 +43,19 @@ public class ControladorAutenticacao {
         this.funcionario = funcionario;
     }
     
+    /**
+     * Verifica se o usuário logado no sistema é um gerente
+     * @return True, se o usuário for gerente e false, caso contrário
+     */
+    public boolean isUsuarioLogadoGerente() {
+        boolean retorno = false;
+        if (this.pessoa instanceof Funcionario) {
+            if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.GERENTE)) {
+                retorno = true;
+            }
+        }
+        return retorno;
+    }    
     
     /**
      * Autentica um usuário no sistema

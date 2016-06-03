@@ -33,6 +33,14 @@ public class AutenticarBean {
     }
 
     /**
+     * Verifica se o usuário logado no sistema é um gerente
+     * @return True, se o usuário for gerente e false, caso contrário
+     */
+    public boolean isUsuarioLogadoGerente() {
+        return this.controlador.isUsuarioLogadoGerente();
+    }
+    
+    /**
      * Autentica um usuário no sistema
      * @param login O login do usuário
      * @param senha A senha do usuário

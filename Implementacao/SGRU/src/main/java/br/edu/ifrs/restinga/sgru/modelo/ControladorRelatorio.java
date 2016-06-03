@@ -172,6 +172,7 @@ public class ControladorRelatorio {
         }
         return retorno;
     }
+    
     /**
      * Retorna uma lista de Tipo de Tipos de Clientes cadastrados no sistema
      * @return Uma lista TipoCliente
