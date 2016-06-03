@@ -8,6 +8,7 @@ package br.edu.ifrs.restinga.sgru.modelo;
 import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
+import java.util.Calendar;
 import java.util.List;
 import org.primefaces.model.UploadedFile;
 
@@ -18,7 +19,7 @@ import org.primefaces.model.UploadedFile;
 public class ControladorCadastro {
     private Cliente cliente;
     private List<TipoCliente> tiposCliente;
-    private TipoCliente tipoCliente;
+    private int tipoCliente;
     private UploadedFile file;
 
     public Cliente getCliente() {
@@ -35,13 +36,13 @@ public class ControladorCadastro {
         return tiposCliente;
     }
 
-    public TipoCliente getTipoCliente() {
+    public int getTipoCliente() {
         return tipoCliente;
     }
 
     public void setTipoCliente(int codTipoCliente) {
-        TipoClienteDAO dao = new TipoClienteDAO();
-        this.tipoCliente = dao.buscarCodigo(codTipoCliente);
+        this.tipoCliente = codTipoCliente;
+        cliente.setTipoCliente(new TipoClienteDAO().buscarCodigo(this.tipoCliente));
     }
     
     public UploadedFile getFile() {
@@ -63,6 +64,12 @@ public class ControladorCadastro {
     }
     
     public void salvar(){
+        if(file != null) {
+            cliente.setCaminhoFoto(file.getFileName());
+        }
+        cliente.setCartao(new Cartao());
+        cliente.getCartao().setDataCredito(Calendar.getInstance());
+        cliente.getCartao().setSaldo(0);
         ClienteDAO dao = new ClienteDAO();
         dao.salvar(cliente);
     }

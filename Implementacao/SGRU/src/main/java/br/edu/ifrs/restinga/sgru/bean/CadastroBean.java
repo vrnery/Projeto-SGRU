@@ -6,15 +6,17 @@
 package br.edu.ifrs.restinga.sgru.bean;
 
 import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
  * @author marcelo.lima
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class CadastroBean {    
     private final ControladorCadastro controladorCadastro;
 
@@ -32,5 +34,10 @@ public class CadastroBean {
     
     public void salvar(){
         controladorCadastro.salvar();
+    }
+    
+    private void enviarMensagem(FacesMessage.Severity sev, String msg) {
+        FacesContext context = FacesContext.getCurrentInstance();        
+        context.addMessage(null, new FacesMessage(sev, msg, ""));
     }
 }

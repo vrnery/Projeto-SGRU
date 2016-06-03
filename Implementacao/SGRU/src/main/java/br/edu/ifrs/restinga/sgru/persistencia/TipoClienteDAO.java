@@ -25,6 +25,6 @@ public class TipoClienteDAO {
     }
     
     public TipoCliente buscarCodigo(int codigo){
-        return (TipoCliente) sessao.createQuery("FROM TipoCliente WHERE id=:codigo").setInteger("codigo", codigo);
+        return (TipoCliente) sessao.createQuery("FROM TipoCliente WHERE id=:codigo").setInteger("codigo", codigo).uniqueResult();
     }
 }
