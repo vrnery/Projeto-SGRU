@@ -13,16 +13,12 @@ import br.edu.ifrs.restinga.sgru.excessao.SaldoInsuficienteException;
 import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
-import br.edu.ifrs.restinga.sgru.modelo.CaixaRU;
-import br.edu.ifrs.restinga.sgru.modelo.Cliente;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorVenda;
-import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import javax.faces.context.FacesContext;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
@@ -96,11 +92,10 @@ public class VendaBean {
     }
             
     /**
-     * Verifica se já existe um caixa aberto, que ainda não foi fechado, para o operador naquele dia
-     * @param oper O operador de caixa
+     * Verifica se já existe um caixa aberto, que ainda não foi fechado, para o operador naquele dia     
      */
-    public void carregarCaixaAberto(Funcionario oper) {
-        if (controlador.carregarCaixaAberto(oper)) {                                   
+    public void carregarCaixaAberto() {
+        if (controlador.carregarCaixaAberto()) {                                   
             // Caixa jah aberto, redireciona para a pagina do caixa
             ConfigurableNavigationHandler nav  = 
                     (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
@@ -109,19 +104,18 @@ public class VendaBean {
         } else {
             // garante que haverah um caixaRU para setar as propriedades
             // na abertura de caixa
-            controlador.setCaixaRU(new CaixaRU());
+            //controlador.setCaixaRU(new CaixaRU());
         }
     }     
     
     /**
-     * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa
-     * @param oper O operador que vai operar o caixa
+     * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa     
      * @param valorAbertura O valor de abertura do caixa
      * @return A próxima página a ser exibida pelo usuário
      */
-    public String realizarAberturaCaixa(Funcionario oper, double valorAbertura) {
+    public String realizarAberturaCaixa(double valorAbertura) {
         try {
-            controlador.realizarAberturaCaixa(oper, valorAbertura);
+            controlador.realizarAberturaCaixa(valorAbertura);
         } catch (ValorAberturaCaixaInvalido e) {
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Valor inválido!");
             return null;
@@ -244,13 +238,8 @@ public class VendaBean {
      * @return Um objeto StreamedContent
      */
     public StreamedContent converterFoto() {        
-        // Carrega o cliente da sessao
-        FacesContext context = FacesContext.getCurrentInstance();
-        Cliente cliente = (Cliente) ((VendaBean) context.getExternalContext().getSessionMap().get("vendaBean"))
-                .getControlador().getCaixaRU().ultimoAlmocoVendido().getCartao().getCliente();        
-       
         // Cria um objeto File com a foto do cliente        
-        File imgFile = new File(cliente.getCaminhoFoto());
+        File imgFile = new File(this.controlador.getCliente().getCaminhoFoto());
         if (!imgFile.exists()) {
             // Nao localizou a foto para a matricula informada, entao carrega a imagem default                                        
             imgFile = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath(CAMINHO_FOTO_DEFAULT));            

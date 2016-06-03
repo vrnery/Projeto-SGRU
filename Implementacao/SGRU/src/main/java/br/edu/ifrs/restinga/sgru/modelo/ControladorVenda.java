@@ -24,10 +24,13 @@ import java.util.Calendar;
 public class ControladorVenda {      
     private CaixaRU caixaRU;      
     private Cliente cliente;
+    private Funcionario operador;
 
+    /*
     public ControladorVenda() {
         this.caixaRU = new CaixaRU();
-    }        
+    } 
+    */
     
     /**
      * @return the caixaRU
@@ -58,6 +61,20 @@ public class ControladorVenda {
     }    
 
     /**
+     * @return the operador
+     */
+    public Funcionario getOperador() {
+        return operador;
+    }
+
+    /**
+     * @param operador the operador to set
+     */
+    public void setOperador(Funcionario operador) {
+        this.operador = operador;
+    }    
+    
+    /**
      * Retorna o valor a pagar pelo almoço
      * @return O valor a pagar pelo almoço
      * @throws ArrayIndexOutOfBoundsException Caso não exista almoço realizado
@@ -68,13 +85,12 @@ public class ControladorVenda {
     }       
     
     /**
-     * Verifica se o caixa está aberto
-     * @param oper O operador de caixa
+     * Verifica se o caixa está aberto     
      * @return True, caso o caixa esteja aberto e false, caso contrário
      */
-    public boolean carregarCaixaAberto(Funcionario oper) {
+    public boolean carregarCaixaAberto() {
         CaixaRUDAO dao = new CaixaRUDAO();
-        this.caixaRU = dao.carregarCaixaAberto(oper, Calendar.getInstance());
+        this.caixaRU = dao.carregarCaixaAberto(this.operador, Calendar.getInstance());
         if (this.caixaRU != null) {
             // Carrega o valor atual do almoco
             this.caixaRU.carregarValorAtualAlmoco();
@@ -83,19 +99,19 @@ public class ControladorVenda {
             return true;
         } else {
             // Se nao encontrar o caixa, retorna false
+            this.caixaRU = new CaixaRU();
             return false;
         }
     }
     
     /**
-     * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa
-     * @param oper O operador que vai operar o caixa
+     * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa     
      * @param valorAbertura O valor de abertura do caixa     
      * @throws br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido Caso o valor de abertura informado seja zero ou negativo     
      */
-    public void realizarAberturaCaixa(Funcionario oper, double valorAbertura) throws
+    public void realizarAberturaCaixa(double valorAbertura) throws
             ValorAberturaCaixaInvalido {
-        this.getCaixaRU().realizarAberturaCaixa(oper, valorAbertura);
+        this.getCaixaRU().realizarAberturaCaixa(this.operador, valorAbertura);
     }
     
     /**
