@@ -91,7 +91,7 @@ public class CadastroBean {
     }                
     
     public void editarUsuario(int idUsuario) {
-        
+        int teste = idUsuario;
     }
     
     public void excluirUsuario(int idUsuario) {
