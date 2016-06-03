@@ -5,7 +5,6 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
-import br.edu.ifrs.restinga.sgru.excessao.CadastroInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +69,9 @@ public class CadastroBean {
         controladorCadastro.salvar();
     }
     
+    /**
+     * Edita um usuário
+     */
     public void editarUsuario() {         
         try {
             // Trata a foto, caso o usuario tenha alterado            
@@ -83,19 +85,17 @@ public class CadastroBean {
             }
             this.controladorCadastro.editarUsuario(inputStream, extArquivo);
         } catch(IOException e) {            
-            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Probelmas ao carregar a foto!");
-        } catch (CadastroInvalidoException e) {
-            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Probelmas ao carregar a foto!");        
         }
                 
     }                
-    
-    public void editarUsuario(int idUsuario) {
-        int teste = idUsuario;
-    }
-    
+        
+    /**
+     * Exclui um usuário do sistema
+     * @param idUsuario O id do usuário a ser excluído
+     */
     public void excluirUsuario(int idUsuario) {
-        int teste = idUsuario;
+        this.controladorCadastro.excluirUsuario(idUsuario);
     }
     
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {

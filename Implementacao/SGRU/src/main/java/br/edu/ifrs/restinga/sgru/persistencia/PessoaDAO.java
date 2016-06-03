@@ -66,4 +66,12 @@ public class PessoaDAO {
     public void salvar(Pessoa pessoa) {
         sessao.saveOrUpdate(pessoa);        
     }          
+    
+    /**
+     * Remove uma pessoa da base de dados
+     * @param pessoa A pessoa a ser removida
+     */
+    public void excluir(Pessoa pessoa) {
+        sessao.delete(pessoa);
+    }          
 }

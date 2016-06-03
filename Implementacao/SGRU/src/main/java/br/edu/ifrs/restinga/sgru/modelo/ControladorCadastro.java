@@ -5,9 +5,9 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
-import br.edu.ifrs.restinga.sgru.excessao.CadastroInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,8 +100,13 @@ public class ControladorCadastro {
         dao.salvar(cliente);
     }
     
-    public void editarUsuario(InputStream inputStream, String extArquivo) throws CadastroInvalidoException,
-            IOException {        
+    /**
+     * Edita um usuário
+     * @param inputStream Objeto enviado pelo componente p:fileUpload
+     * @param extArquivo A extensão do arquivo     
+     * @throws IOException Caso não consiga copiar o arquivo
+     */
+    public void editarUsuario(InputStream inputStream, String extArquivo) throws IOException {        
         // Cliente alterou a foto
         if (inputStream != null) {
             String caminhoFoto = "c:\\imagens\\" + this.cliente.getMatricula() + "." + extArquivo;
@@ -114,6 +119,16 @@ public class ControladorCadastro {
         
         ClienteDAO daoCliente = new ClienteDAO();
         daoCliente.salvar(cliente);
+    }
+    
+    /**
+     * Remove uma pessoa da base de dados
+     * @param id O id do usuário a ser removido
+     */
+    public void excluirUsuario(int id) {
+        PessoaDAO daoPessoa = new PessoaDAO();
+        Pessoa pessoa = daoPessoa.carregar(id);
+        daoPessoa.excluir(pessoa);
     }
     
     public void upload() {
