@@ -27,6 +27,7 @@ public class ControladorCadastro {
     private Cliente cliente;
     private Pessoa pessoa;
     private final List<TipoCliente> tiposCliente;
+    private List<Cliente> lstClientes;
     private int tipoCliente;    
     private String codTipoCliente;
     private UploadedFile file;        
@@ -38,6 +39,11 @@ public class ControladorCadastro {
         // Carrega lista de clientes
         TipoClienteDAO dao = new TipoClienteDAO();
         tiposCliente = dao.getLstTipoClientes();
+        
+        // Carrega lista de clientes
+        ClienteDAO daoCliente = new ClienteDAO();
+        // -1 carrega todos os tipos de clientes
+        this.lstClientes = daoCliente.carregarClientesPorTipo("-1");
     }
 
     public Cliente getCliente() {
@@ -93,10 +99,15 @@ public class ControladorCadastro {
         this.codTipoCliente = codTipoCliente;
     }    
     
-    public List<Cliente> getLstClientes() {
-        ClienteDAO daoCliente = new ClienteDAO();
-        // -1 carrega todos os tipos de clientes
-        return daoCliente.carregarClientesPorTipo("-1");
+    /**
+     * @param lstClientes the lstClientes to set
+     */
+    public void setLstClientes(List<Cliente> lstClientes) {
+        this.lstClientes = lstClientes;
+    }
+    
+    public List<Cliente> getLstClientes() {        
+        return this.lstClientes;
     }
     
     public void setFile(UploadedFile file) throws FotoNaoEncontradaException {
@@ -155,6 +166,14 @@ public class ControladorCadastro {
         PessoaDAO daoPessoa = new PessoaDAO();
         Pessoa exPessoa = daoPessoa.carregar(id);
         daoPessoa.excluir(exPessoa); 
+        
+        // Atualiza a lista de clientes
+        for (Cliente cli : this.lstClientes) {
+            if (cli.getId() == id) {
+                this.lstClientes.remove(cli);
+                break;
+            }
+        }        
     }
     
     public void upload() {
@@ -162,5 +181,5 @@ public class ControladorCadastro {
             //FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
             //FacesContext.getCurrentInstance().addMessage(null, message);
         }
-    }
+    }   
 }

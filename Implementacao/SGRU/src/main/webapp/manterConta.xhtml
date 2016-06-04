@@ -20,7 +20,9 @@
                         <h:outputText value="#{cliente.email}"/>
                     </p:column>
                     <p:column headerText="Telefone" filterBy="#{cliente.telefone}">
-                        <h:outputText value="#{cliente.telefone}"/>
+                        <h:outputFormat value="#{cliente.telefone}">
+                            <f:converter converterId="conversorTelefone" />
+                        </h:outputFormat>
                     </p:column>                    
                     <p:column width="90">
                         <p:commandButton title="Editar" 
