@@ -5,10 +5,10 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <ui:composition template="padraoInternoSemMenu.xhtml">
+    <ui:composition template="padraoInternoGerencial.xhtml">
         <ui:define name="conteudo">
             <p:messages/>
-            <h:form>
+            <h:form id="fmrPrincipal">
                 <p:dataTable id="dtbClientes" value="#{cadastroBean.controladorCadastro.lstClientes}" var="cliente" rows="8" paginator="true">
                     <p:column headerText="Matrícula" filterBy="#{cliente.matricula}" width="120">
                         <h:outputText value="#{cliente.matricula}"/>
@@ -25,11 +25,11 @@
                     <p:column width="90">
                         <p:commandButton title="Editar" 
                                          ajax="true"                                         
-                                         icon="fa-edit" 
+                                         icon="ui-icon-edit" 
                                          action="#{cadastroBean.controladorCadastro.setCliente(cliente)}" 
                                          update="dlgEditarUsuario"
                                          oncomplete="PF('dlgEditarUsuario').show()"/>
-                        <p:commandButton ajax="false" title="Excluit" icon="fa-remove" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
+                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel-2" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
                     </p:column>
                 </p:dataTable>                
             </h:form>
@@ -52,12 +52,12 @@
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtTipo" value="Tipo: "/>
-                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.codTipoCliente}" layout="grid" columns="3">
+                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.codTipoCliente}" layout="grid" columns="3" required="true">
                             <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.codigo}"/>
                         </p:selectOneRadio>
                     </h:panelGrid>
                     <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto"/>
-                    <p:commandButton ajax="false" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario()}"/>
+                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario()}" update=":fmrPrincipal:dtbClientes"/>
                 </h:form>
             </p:dialog>
         </ui:define>

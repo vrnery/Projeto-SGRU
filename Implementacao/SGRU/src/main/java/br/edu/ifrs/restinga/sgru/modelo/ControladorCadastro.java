@@ -25,6 +25,7 @@ import org.primefaces.model.UploadedFile;
  */
 public class ControladorCadastro {
     private Cliente cliente;
+    private Pessoa pessoa;
     private final List<TipoCliente> tiposCliente;
     private int tipoCliente;    
     private String codTipoCliente;
@@ -45,6 +46,24 @@ public class ControladorCadastro {
 
     public void setCliente(Cliente cliente) {        
         this.cliente = cliente;        
+    }
+    
+    /**
+     * @return the pessoa
+     */
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    /**
+     * @param pessoa the pessoa to set
+     */
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+        
+        if (pessoa instanceof Cliente) {
+            this.cliente = (Cliente)pessoa;
+        }
     }
 
     public List<TipoCliente> getTiposCliente() {        
@@ -109,16 +128,23 @@ public class ControladorCadastro {
     public void editarUsuario(InputStream inputStream, String extArquivo) throws IOException {        
         // Cliente alterou a foto
         if (inputStream != null) {
-            String caminhoFoto = "c:\\imagens\\" + this.cliente.getMatricula() + "." + extArquivo;
+            String caminhoFoto = "c:\\imagens\\" + this.pessoa.getMatricula() + "." + extArquivo;
             Path target = Paths.get(caminhoFoto);
             // Copia a foto para o diretorio de fotos
             Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
             // atualiza o caminho foto do cliente
-            this.cliente.setCaminhoFoto(caminhoFoto);
+            if (this.pessoa instanceof Cliente) {
+                this.cliente.setCaminhoFoto(caminhoFoto);
+            }
         }
         
-        ClienteDAO daoCliente = new ClienteDAO();
-        daoCliente.salvar(cliente);
+        if (this.pessoa instanceof Cliente) {
+            ClienteDAO daoCliente = new ClienteDAO();
+            daoCliente.salvar(cliente);
+        } else {
+            PessoaDAO daoPessoa = new PessoaDAO();
+            daoPessoa.salvar(pessoa);
+        }
     }
     
     /**
@@ -127,8 +153,8 @@ public class ControladorCadastro {
      */
     public void excluirUsuario(int id) {
         PessoaDAO daoPessoa = new PessoaDAO();
-        Pessoa pessoa = daoPessoa.carregar(id);
-        daoPessoa.excluir(pessoa);
+        Pessoa exPessoa = daoPessoa.carregar(id);
+        daoPessoa.excluir(exPessoa); 
     }
     
     public void upload() {
