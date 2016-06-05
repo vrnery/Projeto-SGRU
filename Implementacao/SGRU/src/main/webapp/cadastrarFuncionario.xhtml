@@ -8,7 +8,7 @@
     <ui:composition template="padraoInternoGerencial.xhtml">
         <ui:define name="conteudo">
             <p:messages/>
-            <h:form enctype="multipart/form-data">
+            <h:form>
                 <h:panelGrid columns="2">                        
                     <p:outputLabel for="txtMatricula" value="Matricula: "/>
                     <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.funcionario.matricula}" rendered="true"/>

@@ -89,15 +89,14 @@ public class CadastroBean {
      * Edita um usuário
      */
     public void editarUsuario() {         
+        InputStream inputStream = null;
+        String extArquivo = null;
         try {
             // Trata a foto, caso o usuario tenha alterado            
-            InputStream inputStream = null;
-            String extArquivo = null;
             if (this.file != null) {
                 inputStream = this.file.getInputstream();
-                
                 String fileName = this.file.getFileName();
-                extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);                                                        
+                extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);
             }
             this.controladorCadastro.editarUsuario(inputStream, extArquivo);
         } catch(IOException e) {            

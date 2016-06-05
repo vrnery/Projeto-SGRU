@@ -139,7 +139,7 @@ public class ControladorCadastro {
 
     public void setTipoCliente(int codTipoCliente) {
         this.tipoCliente = codTipoCliente;
-        cliente.setTipoCliente(new TipoClienteDAO().buscarCodigo(this.tipoCliente));
+        this.cliente.setTipoCliente(new TipoClienteDAO().buscarCodigo(this.tipoCliente));
     }
 
     public int getTipoFuncionario() {

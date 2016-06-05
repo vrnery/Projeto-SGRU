@@ -33,12 +33,41 @@
                         <p:commandButton title="Editar" 
                                          ajax="true"                                         
                                          icon="ui-icon-edit" 
-                                         actionListener="#{autenticarBean.controlador.setManuFuncionario(funcionario)}" 
-                                         action="editarFuncionario"/>
+                                         action="#{cadastroBean.controladorCadastro.setFuncionario(funcionario)}" 
+                                         update="dlgEditarUsuario"
+                                         oncomplete="PF('dlgEditarUsuario').show()"/>
                         <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel-2" action="#{cadastroBean.excluirUsuario(funcionario.id)}"/>
                     </p:column>
                 </p:dataTable>                
             </h:form>
+        </ui:define>
+        <ui:define name="dialogos">
+            <p:dialog header="Editar Usuario" id="dlgEditarUsuario" widgetVar="dlgEditarUsuario" modal="true">
+                <p:messages/>
+                <h:form>
+                    <h:panelGrid columns="2">                        
+                        <p:outputLabel for="txtMatricula" value="Matricula: "/>
+                        <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.funcionario.matricula}"/>
+                        <p:outputLabel for="txtNome" value="Nome: "/>
+                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.funcionario.nome}" rendered="true"/>
+                        <p:outputLabel for="txtEmail" value="Email: "/>
+                        <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.funcionario.email}"/>
+                        <p:outputLabel for="txtTelefone" value="Telefone: "/>
+                        <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.funcionario.telefone}"/>
+                        <p:outputLabel for="txtLogin" value="Login: "/>
+                        <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.funcionario.login}" rendered="true"/>
+                        <p:outputLabel for="txtSenha" value="Senha: "/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.funcionario.senha}" required="true"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="txtTipo" value="Tipo: "/>
+                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoFuncionario}" layout="grid" columns="3" required="true">
+                            <f:selectItems value="#{cadastroBean.controladorCadastro.tiposFuncionario}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
+                        </p:selectOneRadio>
+                    </h:panelGrid>
+                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarFuncionario()}" onclick="dlgEditarUsuario.hide();" update=":fmrPrincipal:dtbFuncionarios"/>
+                </h:form>
+            </p:dialog>
         </ui:define>
     </ui:composition>
 </html>

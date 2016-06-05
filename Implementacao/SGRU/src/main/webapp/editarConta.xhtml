@@ -24,8 +24,8 @@
                 </h:panelGrid>
                 <h:panelGrid columns="2" rendered="#{!autenticarBean.usuarioLogadoGerente}">
                     <p:outputLabel for="txtTipo" value="Tipo: "/>
-                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.codTipoCliente}" layout="grid" columns="3" required="true">
-                        <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.codigo}"/>
+                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoCliente}" layout="grid" columns="3" required="true">
+                        <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                     </p:selectOneRadio>
                 </h:panelGrid>                                                
                 <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" rendered="#{!autenticarBean.usuarioLogadoGerente}"/>

@@ -9,7 +9,12 @@
         <ui:define name="conteudo">
             <p:messages/>
             <h:form id="fmrPrincipal">
-                <p:dataTable id="dtbClientes" value="#{cadastroBean.controladorCadastro.lstClientes}" var="cliente" rows="8" paginator="true">
+                <p:dataTable id="dtbClientes" value="#{cadastroBean.controladorCadastro.lstClientes}" var="cliente" rows="7" paginator="true">
+                    <f:facet name="header">
+                        <p:commandButton value="Novo Cliente"
+                                         ajax="false"
+                                         action="cadastrarCliente2"/>
+                    </f:facet>
                     <p:column headerText="Matrícula" filterBy="#{cliente.matricula}" width="120">
                         <h:outputText value="#{cliente.matricula}"/>
                     </p:column>
@@ -49,17 +54,19 @@
                         <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
                         <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
+                        <p:outputLabel for="txtLogin" value="Login: "/>
+                        <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.cliente.login}"/>
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}"  rendered="true"/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}" rendered="true"/>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtTipo" value="Tipo: "/>
-                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.codTipoCliente}" layout="grid" columns="3" required="true">
-                            <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.codigo}"/>
+                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoCliente}" layout="grid" columns="3" required="true">
+                            <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                         </p:selectOneRadio>
                     </h:panelGrid>
                     <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto"/>
-                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario()}" update=":fmrPrincipal:dtbClientes"/>
+                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario()}" onclick="dlgEditarUsuario.hide();" update=":fmrPrincipal:dtbClientes"/>
                 </h:form>
             </p:dialog>
         </ui:define>
