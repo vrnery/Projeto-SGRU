@@ -1,9 +1,0 @@
-{
-    "elements": {
-        "p:commandButton": {},
-        "p:growl": {},
-        "p:fileUpload": {},
-        "h:form": {}
-    },
-    "attributes": {}
-}
