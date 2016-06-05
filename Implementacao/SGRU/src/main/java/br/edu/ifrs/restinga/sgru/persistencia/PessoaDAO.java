@@ -7,7 +7,10 @@ package br.edu.ifrs.restinga.sgru.persistencia;
 
 import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
+import br.edu.ifrs.restinga.sgru.modelo.Funcionario;
 import br.edu.ifrs.restinga.sgru.modelo.Pessoa;
+import br.edu.ifrs.restinga.sgru.modelo.TipoFuncionario;
+import java.util.List;
 import org.hibernate.Session;
 
 /**
@@ -73,5 +76,30 @@ public class PessoaDAO {
      */
     public void excluir(Pessoa pessoa) {
         sessao.delete(pessoa);
-    }          
+    }
+
+    /**
+     * Buscar lista de tipo de funcionarios
+     * @return 
+     */
+    public List<TipoFuncionario> getLstTipoFuncionario() {
+        return sessao.createQuery("FROM TipoFuncionario").list();
+    }
+    
+    /**
+     * Carregar tipo de funcionario
+     * @param id
+     * @return 
+     */
+    public TipoFuncionario carregarTipoFuncionarioPorCodigo(int id) {
+        return (TipoFuncionario) sessao.createQuery("FROM TipoFuncionario WHERE id=:codigo").setInteger("codigo", id).uniqueResult();
+    }
+    
+    public List<Funcionario> carregarFuncionariosPorTipo(String tipoFuncionario) {
+        if (tipoFuncionario.equals("-1")) {
+            return sessao.createQuery("FROM Funcionario ORDER BY nome").list();
+        } else {
+            return sessao.createQuery("FROM Funcionario WHERE idTipoFuncionario=:tipoFuncionario ORDER BY nome").setString("tipoFuncionario", String.valueOf(tipoFuncionario)).list();   
+        }        
+    }
 }

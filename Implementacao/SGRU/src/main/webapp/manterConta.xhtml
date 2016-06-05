@@ -44,13 +44,13 @@
                         <p:outputLabel for="txtMatricula" value="Matricula: "/>
                         <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}"/>
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}"/>
+                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}" rendered="true"/>
                         <p:outputLabel for="txtEmail" value="Email: "/>
                         <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
                         <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}"/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}"  rendered="true"/>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtTipo" value="Tipo: "/>

@@ -11,17 +11,17 @@
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                    <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}"/>
+                    <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}" rendered="true"/>
                     <p:outputLabel for="txtNome" value="Nome: "/>
-                    <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}"/>
+                    <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}" rendered="true"/>
                     <p:outputLabel for="txtEmail" value="Email: "/>
                     <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
                     <p:outputLabel for="txtTelefone" value="Telefone: "/>
-                    <p:inputText id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
+                    <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
                     <p:outputLabel for="txtLogin" value="Login: "/>
-                    <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.cliente.login}"/>
+                    <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.cliente.login}" rendered="true"/>
                     <p:outputLabel for="txtSenha" value="Senha: "/>
-                    <p:inputText id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}"/>
+                    <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}" rendered="true"/>
                 </h:panelGrid>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtTipo" value="Tipo: "/>
@@ -29,17 +29,9 @@
                         <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                     </p:selectOneRadio>
                 </h:panelGrid>
-                <p:commandButton value="Carregar Foto" type="button" onclick="PF('dlgCarregarFoto').show();"/>
-                <p:commandButton ajax="false" value="Salvar" actionListener="#{cadastroBean.salvar()}"/>
+                <p:commandButton ajax="false" value="Voltar" action="index"/>
+                <p:commandButton ajax="false" value="Salvar" action="#{cadastroBean.salvar()}"/>
             </h:form>
-        </ui:define>
-        <ui:define name="dialogos">
-            <p:dialog header="Procurar foto" widgetVar="dlgCarregarFoto" modal="true">
-                <h:form enctype="multipart/form-data">
-                    <p:growl id="messages" showDetail="true" />
-                    <p:fileUpload value="#{cadastroBean.controladorCadastro.file}" mode="simple" skinSimple="true" label="Imagem"/>
-                </h:form>
-            </p:dialog>
         </ui:define>
     </ui:composition>
 </html>

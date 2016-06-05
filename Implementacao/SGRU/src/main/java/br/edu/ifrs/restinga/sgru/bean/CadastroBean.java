@@ -5,9 +5,12 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -27,6 +30,7 @@ public class CadastroBean {
     
     public CadastroBean() {
         this.controladorCadastro = new ControladorCadastro();
+        this.file = null;
     }        
     
     /**
@@ -63,10 +67,24 @@ public class CadastroBean {
      */
     public void setFile(UploadedFile file) {
         this.file = file;
-    }    
-        
-    public void salvar(){
-        controladorCadastro.salvar();
+    }
+    
+    public String salvar() {
+        try {
+            this.controladorCadastro.salvar();
+            return "index";
+        } catch (UsuarioInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+            return "cadastrarCliente";
+        }
+    }
+    
+    public void salvarFuncionario() {
+        try {
+            this.controladorCadastro.salvarFuncionario();
+        } catch (UsuarioInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }
     }
     
     /**
@@ -96,6 +114,14 @@ public class CadastroBean {
      */
     public void excluirUsuario(int idUsuario) {
         this.controladorCadastro.excluirUsuario(idUsuario);
+    }
+    
+    /**
+     * Exclui um funcionario do sistema
+     * @param idUsuario O id do usuário a ser excluído
+     */
+    public void excluirFuncionario(int idUsuario) {
+        this.controladorCadastro.excluirFuncionario(idUsuario);
     }
     
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
