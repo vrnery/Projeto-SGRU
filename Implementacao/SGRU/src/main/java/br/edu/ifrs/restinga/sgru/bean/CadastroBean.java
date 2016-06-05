@@ -104,7 +104,11 @@ public class CadastroBean {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, "Probelmas ao carregar a foto!");        
         }
                 
-    }                
+    }
+    
+    public void editarFuncionario() {
+        this.controladorCadastro.editarFuncionario();
+    }
         
     /**
      * Exclui um usuário do sistema
@@ -112,14 +116,6 @@ public class CadastroBean {
      */
     public void excluirUsuario(int idUsuario) {
         this.controladorCadastro.excluirUsuario(idUsuario);
-    }
-    
-    /**
-     * Exclui um funcionario do sistema
-     * @param idUsuario O id do usuário a ser excluído
-     */
-    public void excluirFuncionario(int idUsuario) {
-        this.controladorCadastro.excluirFuncionario(idUsuario);
     }
     
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {

@@ -8,8 +8,10 @@ package br.edu.ifrs.restinga.sgru.modelo;
 import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.FuncionarioDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.TipoFuncionarioDAO;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -37,12 +39,8 @@ public class ControladorCadastro {
     private String codTipoCliente;
     private UploadedFile file;
     //private String destino;
-    private PessoaDAO daoPessoa;
     
     public ControladorCadastro() {
-        // DAO para todas as conexões
-        daoPessoa = new PessoaDAO();
-        
         this.cliente = new Cliente();
         this.cliente.setCartao(new Cartao());
         this.funcionario = new Funcionario();
@@ -56,7 +54,8 @@ public class ControladorCadastro {
         tiposCliente = dao.getLstTipoClientes();
         
         // Carrega lista de funcionarios
-        tiposFuncionario = daoPessoa.getLstTipoFuncionario();
+        TipoFuncionarioDAO daoTipoFuncionario = new TipoFuncionarioDAO();
+        tiposFuncionario = daoTipoFuncionario.getLstTipoFuncionarios();
         
         // Carrega lista de clientes
         ClienteDAO daoCliente = new ClienteDAO();
@@ -64,8 +63,9 @@ public class ControladorCadastro {
         this.lstClientes = daoCliente.carregarClientesPorTipo("-1");
         
         // Carrega lista de funcionarios
+        FuncionarioDAO daoFuncionario = new FuncionarioDAO();
         // - 1 carrega todos os tipos de funcionarios
-        this.lstFuncionarios = daoPessoa.carregarFuncionariosPorTipo("-1");
+        this.lstFuncionarios = daoFuncionario.carregarFuncionariosPorTipo("-1");
     }
 
     public Cliente getCliente() {
@@ -99,6 +99,10 @@ public class ControladorCadastro {
         
         if (pessoa instanceof Cliente) {
             this.cliente = (Cliente)pessoa;
+        }
+        
+        if (pessoa instanceof Funcionario) {
+            this.funcionario = (Funcionario)pessoa;
         }
     }
 
@@ -144,7 +148,7 @@ public class ControladorCadastro {
 
     public void setTipoFuncionario(int tipoFuncionario) {
         this.tipoFuncionario = tipoFuncionario;
-        funcionario.setTipoFuncionario(daoPessoa.carregarTipoFuncionarioPorCodigo(this.tipoFuncionario));
+        funcionario.setTipoFuncionario(new TipoFuncionarioDAO().buscarCodigo(this.tipoFuncionario));
     }
     
     /**
@@ -188,6 +192,7 @@ public class ControladorCadastro {
         cliente.getCartao().setDataCredito(Calendar.getInstance());
         cliente.getCartao().setSaldo(0);
         dao.salvar(cliente);
+        this.lstClientes = dao.carregarClientesPorTipo("-1");
     }
     
     public void salvarFuncionario() throws UsuarioInvalidoException {
@@ -195,7 +200,9 @@ public class ControladorCadastro {
             if(fun.getMatricula().equals(funcionario.getMatricula()))
                 throw new UsuarioInvalidoException("Matricula já cadastrada!");
         }
-        daoPessoa.salvar((Pessoa) this.funcionario);
+        FuncionarioDAO dao = new FuncionarioDAO();
+        dao.salvar(funcionario);
+        this.lstFuncionarios = dao.carregarFuncionariosPorTipo("-1");
     }
     
     /**
@@ -221,9 +228,14 @@ public class ControladorCadastro {
             ClienteDAO daoCliente = new ClienteDAO();
             daoCliente.salvar(cliente);
         } else {
-            //PessoaDAO daoPessoa = new PessoaDAO();
+            PessoaDAO daoPessoa = new PessoaDAO();
             daoPessoa.salvar(pessoa);
         }
+    }
+    
+    public void editarFuncionario() {
+        FuncionarioDAO daoFuncionario = new FuncionarioDAO();
+        daoFuncionario.salvar(funcionario);
     }
     
     /**
@@ -231,31 +243,29 @@ public class ControladorCadastro {
      * @param id O id do usuário a ser removido
      */
     public void excluirUsuario(int id) {
-        //PessoaDAO daoPessoa = new PessoaDAO();
+        PessoaDAO daoPessoa = new PessoaDAO();
         Pessoa exPessoa = daoPessoa.carregar(id);
         daoPessoa.excluir(exPessoa); 
         
-        // Atualiza a lista de clientes
-        for (Cliente cli : this.lstClientes) {
-            if (cli.getId() == id) {
-                this.lstClientes.remove(cli);
-                break;
+        if (exPessoa instanceof Cliente) {
+            // Atualiza a lista de clientes
+            for (Cliente cli : this.lstClientes) {
+                if (cli.getId() == id) {
+                    this.lstClientes.remove(cli);
+                    break;
+                }
             }
-        }        
-    }
-    
-    public void excluirFuncionario(int id) {
-        //PessoaDAO daoPessoa = new PessoaDAO();
-        Pessoa exPessoa = daoPessoa.carregar(id);
-        daoPessoa.excluir(exPessoa); 
+        }
         
-        // Atualiza a lista de clientes
-        for (Funcionario fun : this.lstFuncionarios) {
-            if (fun.getId() == id) {
-                this.lstFuncionarios.remove(fun);
-                break;
+        if (exPessoa instanceof Funcionario) {
+            // Atualiza a lista de funcionarios
+            for (Funcionario fun : this.lstFuncionarios) {
+                if (fun.getId() == id) {
+                    this.lstFuncionarios.remove(fun);
+                    break;
+                }
             }
-        }        
+        }
     }
     
     public void upload() {

@@ -14,6 +14,7 @@ import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
 public class ControladorAutenticacao {
     private Pessoa pessoa;    
     private Funcionario funcionario;
+    private Funcionario manuFuncionario;
 
     /**
      * @return the pessoa
@@ -41,6 +42,14 @@ public class ControladorAutenticacao {
      */
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
+    }
+
+    public Funcionario getManuFuncionario() {
+        return manuFuncionario;
+    }
+
+    public void setManuFuncionario(Funcionario manuFuncionario) {
+        this.manuFuncionario = manuFuncionario;
     }
     
     /**

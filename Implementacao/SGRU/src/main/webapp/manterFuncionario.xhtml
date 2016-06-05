@@ -12,8 +12,8 @@
                 <p:dataTable id="dtbFuncionarios" value="#{cadastroBean.controladorCadastro.lstFuncionarios}" var="funcionario" rows="7" paginator="true">
                     <f:facet name="header">
                         <p:commandButton value="Novo Funcionario"
-                                         type="button"
-                                         onclick="PF('dlgCriarUsuario').show();"/>
+                                         ajax="false"
+                                         action="cadastrarFuncionario"/>
                     </f:facet>
                     <p:column headerText="Matrícula" filterBy="#{funcionario.matricula}" width="120">
                         <h:outputText value="#{funcionario.matricula}"/>
@@ -33,71 +33,12 @@
                         <p:commandButton title="Editar" 
                                          ajax="true"                                         
                                          icon="ui-icon-edit" 
-                                         action="#{cadastroBean.controladorCadastro.setFuncionario(funcionario)}" 
-                                         update=":fmrPrincipal:dtbFuncionarios"
-                                         oncomplete="PF('dlgEditarUsuario').show()"/>
-                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel-2" action="#{cadastroBean.excluirFuncionario(funcionario.id)}"/>
+                                         actionListener="#{autenticarBean.controlador.setManuFuncionario(funcionario)}" 
+                                         action="editarFuncionario"/>
+                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel-2" action="#{cadastroBean.excluirUsuario(funcionario.id)}"/>
                     </p:column>
                 </p:dataTable>                
             </h:form>
-        </ui:define>
-        <ui:define name="dialogos">
-            <p:dialog header="Editar Usuario" id="dlgEditarUsuario" widgetVar="dlgEditarUsuario" modal="true">
-                <p:messages/>
-                <h:form enctype="multipart/form-data">
-                    <h:panelGrid columns="2">                        
-                        <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                        <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.funcionario.matricula}"/>
-                        <p:outputLabel for="txtNome" value="Nome: "/>
-                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.funcionario.nome}" rendered="true"/>
-                        <p:outputLabel for="txtEmail" value="Email: "/>
-                        <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.funcionario.email}"/>
-                        <p:outputLabel for="txtTelefone" value="Telefone: "/>
-                        <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.funcionario.telefone}"/>
-                        <p:outputLabel for="txtLogin" value="Login: "/>
-                        <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.funcionario.login}" rendered="true"/>
-                        <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.funcionario.senha}" required="true"/>
-                    </h:panelGrid>
-                    <h:panelGrid columns="2">
-                        <p:outputLabel for="txtTipo" value="Tipo: "/>
-                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoFuncionario}" layout="grid" columns="3" required="true">
-                            <f:selectItems value="#{cadastroBean.controladorCadastro.tiposFuncionario}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.codigo}"/>
-                        </p:selectOneRadio>
-                    </h:panelGrid>
-                    <!--<p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto"/>-->
-                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario()}" update=":fmrPrincipal:dtbFuncionarios"/>
-                </h:form>
-            </p:dialog>
-        </ui:define>
-        <ui:define name="dialogos">
-            <p:dialog header="Criar Funcionário" id="dlgCriarUsuario" widgetVar="dlgCriarUsuario" modal="true">
-                <p:messages/>
-                <h:form enctype="multipart/form-data">
-                    <h:panelGrid columns="2">                        
-                        <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                        <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.funcionario.matricula}" rendered="true"/>
-                        <p:outputLabel for="txtNome" value="Nome: "/>
-                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.funcionario.nome}" rendered="true"/>
-                        <p:outputLabel for="txtEmail" value="Email: "/>
-                        <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.funcionario.email}"/>
-                        <p:outputLabel for="txtTelefone" value="Telefone: "/>
-                        <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.funcionario.telefone}"/>
-                        <p:outputLabel for="txtLogin" value="Login: "/>
-                        <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.funcionario.login}" rendered="true"/>
-                        <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.funcionario.senha}" rendered="true"/>
-                    </h:panelGrid>
-                    <h:panelGrid columns="2">
-                        <p:outputLabel for="txtTipo" value="Tipo: "/>
-                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoFuncionario}" layout="grid" columns="3" required="true">
-                            <f:selectItems value="#{cadastroBean.controladorCadastro.tiposFuncionario}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.codigo}"/>
-                        </p:selectOneRadio>
-                    </h:panelGrid>
-                    <!--<p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto"/>-->
-                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.salvarFuncionario()}" update=":fmrPrincipal:dtbFuncionarios"/>
-                </h:form>
-            </p:dialog>
         </ui:define>
     </ui:composition>
 </html>
