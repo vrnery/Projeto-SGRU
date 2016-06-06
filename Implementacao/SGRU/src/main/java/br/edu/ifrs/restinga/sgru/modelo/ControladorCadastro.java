@@ -38,16 +38,13 @@ public class ControladorCadastro {
     private List<Funcionario> lstFuncionarios;
     private int tipoCliente;
     private int tipoFuncionario;
-    private String codTipoCliente;
     private UploadedFile file;
-    private String destino;
     
     public ControladorCadastro() {
         this.cliente = new Cliente();
         this.cliente.setCartao(new Cartao());
         this.funcionario = new Funcionario();
         
-        this.destino = null;
         // Set data corrente para novo cartão
         //this.cliente.getCartao().setDataCredito(Calendar.getInstance());
         
@@ -153,20 +150,6 @@ public class ControladorCadastro {
         funcionario.setTipoFuncionario(new TipoFuncionarioDAO().buscarCodigo(this.tipoFuncionario));
     }
     
-    /**
-     * @return the codTipoCliente
-     */
-    public String getCodTipoCliente() {
-        return codTipoCliente;
-    }
-
-    /**
-     * @param codTipoCliente the codTipoCliente to set
-     */
-    public void setCodTipoCliente(String codTipoCliente) {
-        this.codTipoCliente = codTipoCliente;
-    }    
-    
     public void setFile(UploadedFile file) throws FotoNaoEncontradaException {
         if(file != null){
             this.file = file;
@@ -176,14 +159,6 @@ public class ControladorCadastro {
         }
     }
 
-    public String getDestino() {
-        return destino;
-    }
-
-    public void setDestino(String destino) {
-        this.destino = destino;
-    }
-    
     public void salvar() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
         // Verifica se a matricula já foi cadastrada
         if(isVerificaMatricula(cliente.getMatricula()))

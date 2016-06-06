@@ -26,7 +26,6 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class CadastroBean {    
     private final ControladorCadastro controladorCadastro;
-    private String codTipoCliente;
     private UploadedFile file;
     
     public CadastroBean() {
@@ -34,20 +33,6 @@ public class CadastroBean {
         this.file = null;
     }        
     
-    /**
-     * @return the codTipoCliente
-     */
-    public String getCodTipoCliente() {
-        return codTipoCliente;
-    }
-
-    /**
-     * @param codTipoCliente the codTipoCliente to set
-     */
-    public void setCodTipoCliente(String codTipoCliente) {
-        this.codTipoCliente = codTipoCliente;
-    }           
-            
     /**
      * retorno do controladorCadastro
      * @return controladorCadastro
@@ -70,7 +55,7 @@ public class CadastroBean {
         this.file = file;
     }
     
-    public String salvar() {
+    public String salvar(String txtPath) {
         try {
             this.controladorCadastro.salvar();
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
