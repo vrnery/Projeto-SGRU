@@ -5,10 +5,13 @@
  */
 package br.edu.ifrs.restinga.sgru.bean;
 
+import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -70,11 +73,12 @@ public class CadastroBean {
     public String salvar() {
         try {
             this.controladorCadastro.salvar();
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
             return "index";
-        } catch (UsuarioInvalidoException ex) {
+        } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-            return "cadastrarCliente";
         }
+        return "cadastrarCliente";
     }
     
     public void salvarFuncionario() {
@@ -87,8 +91,9 @@ public class CadastroBean {
     
     /**
      * Edita um usuário
+     * @param txtPath Recebe a path da aplicação
      */
-    public void editarUsuario() {         
+    public void editarUsuario(String txtPath) {         
         InputStream inputStream = null;
         String extArquivo = null;
         try {
@@ -98,15 +103,21 @@ public class CadastroBean {
                 String fileName = this.file.getFileName();
                 extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);
             }
-            this.controladorCadastro.editarUsuario(inputStream, extArquivo);
+            this.controladorCadastro.editarUsuario(inputStream, extArquivo, txtPath);
         } catch(IOException e) {            
             enviarMensagem(FacesMessage.SEVERITY_ERROR, "Probelmas ao carregar a foto!");        
+        } catch (UsuarioInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
                 
     }
     
     public void editarFuncionario() {
-        this.controladorCadastro.editarFuncionario();
+        try {
+            this.controladorCadastro.editarFuncionario();
+        } catch (UsuarioInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }
     }
         
     /**

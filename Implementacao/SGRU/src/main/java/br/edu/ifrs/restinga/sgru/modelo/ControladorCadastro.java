@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
@@ -12,6 +13,7 @@ import br.edu.ifrs.restinga.sgru.persistencia.FuncionarioDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.TipoFuncionarioDAO;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -38,14 +40,14 @@ public class ControladorCadastro {
     private int tipoFuncionario;
     private String codTipoCliente;
     private UploadedFile file;
-    //private String destino;
+    private String destino;
     
     public ControladorCadastro() {
         this.cliente = new Cliente();
         this.cliente.setCartao(new Cartao());
         this.funcionario = new Funcionario();
         
-        //this.destino = null;
+        this.destino = null;
         // Set data corrente para novo cartão
         //this.cliente.getCartao().setDataCredito(Calendar.getInstance());
         
@@ -73,7 +75,7 @@ public class ControladorCadastro {
     }
 
     public void setCliente(Cliente cliente) {        
-        this.cliente = cliente;        
+        this.cliente = cliente;
     }
 
     public Funcionario getFuncionario() {
@@ -174,19 +176,23 @@ public class ControladorCadastro {
         }
     }
 
-//    public String getDestino() {
-//        return destino;
-//    }
+    public String getDestino() {
+        return destino;
+    }
 
-//    public void setDestino(String destino) {
-//        this.destino = destino;
-//    }
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
     
-    public void salvar() throws UsuarioInvalidoException {
-        for(Cliente cli : this.lstClientes){
-            if(cli.getMatricula().equals(cliente.getMatricula()))
-                throw new UsuarioInvalidoException("Matricula já cadastrada!");
-        }
+    public void salvar() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
+        // Verifica se a matricula já foi cadastrada
+        if(isVerificaMatricula(cliente.getMatricula()))
+            throw new UsuarioInvalidoException("Matricula já cadastrada!");
+        
+        // Verifica se o login já foi cadastrado
+        if(isVerificaLogin(cliente.getMatricula(), cliente.getLogin()))
+            throw new UsuarioInvalidoException("Login já cadastrado!");
+        
         ClienteDAO dao = new ClienteDAO();
         cliente.setCartao(new Cartao());
         cliente.getCartao().setDataCredito(Calendar.getInstance());
@@ -196,10 +202,14 @@ public class ControladorCadastro {
     }
     
     public void salvarFuncionario() throws UsuarioInvalidoException {
-        for(Funcionario fun : this.lstFuncionarios){
-            if(fun.getMatricula().equals(funcionario.getMatricula()))
-                throw new UsuarioInvalidoException("Matricula já cadastrada!");
-        }
+        // Verifica se a matricula já foi cadastrada
+        if(isVerificaMatricula(funcionario.getMatricula()))
+            throw new UsuarioInvalidoException("Matricula já cadastrada!");
+        
+        // Verifica se o login já foi cadastrado
+        if(isVerificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
+            throw new UsuarioInvalidoException("Login já cadastrado!");
+        
         FuncionarioDAO dao = new FuncionarioDAO();
         dao.salvar(funcionario);
         this.lstFuncionarios = dao.carregarFuncionariosPorTipo("-1");
@@ -209,12 +219,19 @@ public class ControladorCadastro {
      * Edita um usuário
      * @param inputStream Objeto enviado pelo componente p:fileUpload
      * @param extArquivo A extensão do arquivo     
+     * @param txtPath Caminho raiz da aplicação recebido
      * @throws IOException Caso não consiga copiar o arquivo
+     * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException
      */
-    public void editarUsuario(InputStream inputStream, String extArquivo) throws IOException {        
+    public void editarUsuario(InputStream inputStream, String extArquivo, String txtPath) throws IOException, UsuarioInvalidoException {
+        // Verifica se o login já foi cadastrado
+        if(isVerificaLogin(pessoa.getMatricula(), pessoa.getLogin()) || isVerificaLogin(cliente.getMatricula(), cliente.getLogin()))
+            throw new UsuarioInvalidoException("Login já cadastrado!");
+        
         // Cliente alterou a foto
         if (inputStream != null) {
-            String caminhoFoto = "c:\\imagens\\" + this.pessoa.getMatricula() + "." + extArquivo;
+            //String caminhoFoto = "c:\\imagens\\" + this.pessoa.getMatricula() + "." + extArquivo;
+            String caminhoFoto = txtPath + "imagens"+ File.separatorChar + "fotos" + File.separatorChar + this.pessoa.getMatricula() + "." + extArquivo;
             Path target = Paths.get(caminhoFoto);
             // Copia a foto para o diretorio de fotos
             Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
@@ -233,7 +250,11 @@ public class ControladorCadastro {
         }
     }
     
-    public void editarFuncionario() {
+    public void editarFuncionario() throws UsuarioInvalidoException {
+        // Verifica se o login já foi cadastrado
+        if(isVerificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
+            throw new UsuarioInvalidoException("Login já cadastrado!");
+        
         FuncionarioDAO daoFuncionario = new FuncionarioDAO();
         daoFuncionario.salvar(funcionario);
     }
@@ -266,6 +287,42 @@ public class ControladorCadastro {
                 }
             }
         }
+    }
+    
+    // Verifica se a matricula já existe
+    public boolean isVerificaMatricula(String matricula) {
+        boolean retorno = false;
+        for(Cliente cli : this.lstClientes){
+            if(cli.getMatricula().equals(matricula)){
+                retorno = true;
+                break;
+            }
+        }
+        for(Funcionario fun : this.lstFuncionarios){
+            if(fun.getMatricula().equals(matricula)) {
+                retorno = true;
+                break;
+            }
+        }
+        return retorno;
+    }
+    
+    // Verifica se o login já existe e se não é da propria matricula
+    public boolean isVerificaLogin(String matricula, String login) {
+        boolean retorno = false;
+        for(Cliente cli : this.lstClientes){
+            if(cli.getLogin().equals(login) && (!cli.getMatricula().equals(matricula))){
+                retorno = true;
+                break;
+            }
+        }
+        for(Funcionario fun : this.lstFuncionarios){
+            if(fun.getLogin().equals(login) && (!fun.getMatricula().equals(matricula))){
+                retorno = true;
+                break;
+            }
+        }
+        return retorno;
     }
     
     public void upload() {

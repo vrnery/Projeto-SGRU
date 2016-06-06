@@ -37,7 +37,7 @@ import org.primefaces.model.StreamedContent;
 @SessionScoped
 public class VendaBean {
     // Caso nao consiga carregar foto do cliente
-    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/semFoto.png";
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/fotos/semFoto.png";
     private final ControladorVenda controlador;    
 
     public VendaBean() {        
