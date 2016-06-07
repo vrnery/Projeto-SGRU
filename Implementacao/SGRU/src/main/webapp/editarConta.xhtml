@@ -28,7 +28,7 @@
                         <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                     </p:selectOneRadio>
                 </h:panelGrid>
-                <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" rendered="#{!autenticarBean.usuarioLogadoGerente}"/>
+                <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" rendered="#{!autenticarBean.usuarioLogadoGerente}"/><br /><br />
                 <p:commandButton ajax="false" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(application.getRealPath(path))}"/>
             </h:form>
         </ui:define>

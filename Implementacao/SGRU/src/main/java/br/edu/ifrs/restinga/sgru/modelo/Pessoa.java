@@ -70,16 +70,9 @@ public abstract class Pessoa implements Serializable {
     }
 
     /**
-     * @param nome the nome to set
-     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Quando o nome enviado contém caracteres diferentes de letras e espaços
+     * @param nome the nome to set     
      */
-    public void setNome(String nome) throws DadoPessoaInvalidoException {
-        // O nome nao pode ser vazio e contem apenas letras e espacos
-        String regexNome = "^[a-zA-Z]*$";
-        if ((nome.trim().length() == 0) ||
-                !(nome.trim().matches(regexNome))) {
-            throw new DadoPessoaInvalidoException("O nome informado é inválido!");
-        }
+    public void setNome(String nome) {        
         this.nome = nome;
     }
 
@@ -91,19 +84,10 @@ public abstract class Pessoa implements Serializable {
     }
 
     /**
-     * @param telefone the telefone to set
-     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Se o telefone estiver em formato inválido
+     * @param telefone the telefone to set     
      */
-    public void setTelefone(String telefone) throws DadoPessoaInvalidoException {
-        // O telefone nao eh obrigatorio
-        if (telefone.length() > 0) {
-            String regexTelefone = "^\\([1-9][1-9]\\) [2-9][0-9]{3}-[0-9]{4}[0-9]{0,1}?$";
-            if (!telefone.matches(regexTelefone)) {
-                throw new DadoPessoaInvalidoException("O número de telefone informado é inválido!");
-            }
-        }
-        // Grava apenas numeros no banco
-        this.telefone = telefone.trim().replaceAll("[^0-9]()", "");
+    public void setTelefone(String telefone) {        
+        this.telefone = telefone;
     }
 
     /**
@@ -114,18 +98,9 @@ public abstract class Pessoa implements Serializable {
     }
 
     /**
-     * @param email the email to set
-     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Se o email informado for inválido
+     * @param email the email to set     
      */
-    public void setEmail(String email) throws DadoPessoaInvalidoException {
-        // o email nao eh obrigatorio
-        if (email.length() > 0) {
-            String regexEmail = "^\\w+([-\\.]\\w+)*@\\w+([-.]\\w+)+$";
-            if (!email.matches(regexEmail)) {
-                throw new DadoPessoaInvalidoException("O e-mail informado é inválido!");
-            }
-        }
-        
+    public void setEmail(String email) {                
         this.email = email;
     }
 
@@ -178,5 +153,36 @@ public abstract class Pessoa implements Serializable {
     public static Pessoa carregar(String matricula) throws MatriculaInvalidaException {
         PessoaDAO pessoaDAO = new PessoaDAO();
         return pessoaDAO.carregar(matricula);
+    }
+    
+    /**
+     * Consiste os dados informados
+     * @param pessoa O objeto Pessoa a ser consistido
+     * @throws DadoPessoaInvalidoException Quando um ou mais dados estiverem incorretos
+     */
+    public static void consistirDados(Pessoa pessoa) throws DadoPessoaInvalidoException {
+        // O nome nao pode ser vazio e contem apenas letras e espacos
+        String regexNome = "^[a-zA-Zà-úÀ-Ú ]*$";
+        if ((pessoa.nome.trim().length() == 0) ||
+                !(pessoa.nome.trim().matches(regexNome))) {
+            throw new DadoPessoaInvalidoException("O nome informado é inválido!");
+        }
+        
+        // O telefone nao eh obrigatorio
+        if (pessoa.telefone.length() > 0) {
+            String regexTelefone = "^\\([1-9][1-9]\\) [2-9][0-9]{3}-[0-9]{4}[0-9]{0,1}?$";
+            if (!pessoa.telefone.matches(regexTelefone)) {
+                throw new DadoPessoaInvalidoException("O número de telefone informado é inválido!");
+            }
+        }    
+        pessoa.telefone = pessoa.telefone.trim().replaceAll("[^0-9]()", "");        
+        
+        // o email nao eh obrigatorio
+        if (pessoa.email.length() > 0) {
+            String regexEmail = "^\\w+([-\\.]\\w+)*@\\w+([-.]\\w+)+$";
+            if (!pessoa.email.matches(regexEmail)) {
+                throw new DadoPessoaInvalidoException("O e-mail informado é inválido!");
+            }
+        }
     }
 }

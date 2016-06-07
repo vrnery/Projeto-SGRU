@@ -58,7 +58,7 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
                 // Coloca uma mensagem de exceção no mapa da request
                 requestMap.put("exceptionMessage", exception.getMessage());
  
-                // Avisa o usuário do erro
+                // Avisa o usuário do erro                
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage
                     (FacesMessage.SEVERITY_ERROR, "O sistema se recuperou de um erro inesperado.", ""));
  
@@ -67,7 +67,7 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
                     (FacesMessage.SEVERITY_INFO, "Você pode continuar usando o sistema normalmente!", ""));
  
                 // Seta a navegação para uma página padrão.
-                navigationHandler.handleNavigation(facesContext, null, "/restrict/home.faces");
+                navigationHandler.handleNavigation(facesContext, null, null);
  
                 // Renderiza a pagina de erro e exibe as mensagens
                 facesContext.renderResponse();

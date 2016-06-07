@@ -11,9 +11,7 @@
             <h:form id="fmrPrincipal">
                 <p:dataTable id="dtbClientes" value="#{cadastroBean.controladorCadastro.lstClientes}" var="cliente" rows="7" paginator="true">
                     <f:facet name="header">
-                        <p:commandButton value="Novo Cliente"
-                                         ajax="false"
-                                         action="cadastrarCliente2"/>
+                        <p:button value="Novo Cliente" outcome="cadastrarCliente2"/>
                     </f:facet>
                     <p:column headerText="Matrícula" filterBy="#{cliente.matricula}" width="120">
                         <h:outputText value="#{cliente.matricula}"/>
@@ -49,7 +47,7 @@
                         <p:outputLabel for="txtMatricula" value="Matricula: "/>
                         <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}"/>
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}" rendered="true"/>
+                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}" required="true"/>
                         <p:outputLabel for="txtEmail" value="Email: "/>
                         <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
@@ -57,7 +55,7 @@
                         <p:outputLabel for="txtLogin" value="Login: "/>
                         <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.cliente.login}"/>
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}" rendered="true"/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}" required="true"/>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtTipo" value="Tipo: "/>
@@ -65,7 +63,7 @@
                             <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
                         </p:selectOneRadio>
                     </h:panelGrid>
-                    <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto"/>
+                    <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>
                     <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(application.getRealPath(path))}" onclick="dlgEditarUsuario.hide();" update=":fmrPrincipal:dtbClientes"/>
                 </h:form>
             </p:dialog>

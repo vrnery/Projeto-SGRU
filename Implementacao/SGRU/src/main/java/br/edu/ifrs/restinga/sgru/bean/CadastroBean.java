@@ -10,8 +10,6 @@ import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -56,6 +54,7 @@ public class CadastroBean {
     }
     
     public String salvar(String txtPath) {
+        /*
         try {
             this.controladorCadastro.salvar();
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
@@ -64,12 +63,31 @@ public class CadastroBean {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
         return "cadastrarCliente";
+        */
+        InputStream inputStream = null;
+        String extArquivo = null;
+        try {
+            // Trata a foto, caso o usuario tenha alterado            
+            if ((this.file != null) && (!this.file.getFileName().isEmpty()))  {
+                inputStream = this.file.getInputstream();
+                String fileName = this.file.getFileName();
+                extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);
+            }
+            this.controladorCadastro.salvar(inputStream, extArquivo, txtPath);
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
+            return "index";                        
+        } catch(IOException e) {            
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Problemas ao carregar a foto!");                    
+        } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }    
+        return null;
     }
     
     public void salvarFuncionario() {
         try {
             this.controladorCadastro.salvarFuncionario();
-        } catch (UsuarioInvalidoException ex) {
+        } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
     }
@@ -83,15 +101,16 @@ public class CadastroBean {
         String extArquivo = null;
         try {
             // Trata a foto, caso o usuario tenha alterado            
-            if (this.file != null) {
+            if ((this.file != null) && (!this.file.getFileName().isEmpty())) {
                 inputStream = this.file.getInputstream();
                 String fileName = this.file.getFileName();
                 extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);
             }
             this.controladorCadastro.editarUsuario(inputStream, extArquivo, txtPath);
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário alterado com sucesso!");
         } catch(IOException e) {            
-            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Probelmas ao carregar a foto!");        
-        } catch (UsuarioInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Problemas ao carregar a foto!");                    
+        } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
                 
@@ -100,7 +119,8 @@ public class CadastroBean {
     public void editarFuncionario() {
         try {
             this.controladorCadastro.editarFuncionario();
-        } catch (UsuarioInvalidoException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário alterado com sucesso!");
+        } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
     }
@@ -111,6 +131,7 @@ public class CadastroBean {
      */
     public void excluirUsuario(int idUsuario) {
         this.controladorCadastro.excluirUsuario(idUsuario);
+        enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário excluído com sucesso!");
     }
     
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {

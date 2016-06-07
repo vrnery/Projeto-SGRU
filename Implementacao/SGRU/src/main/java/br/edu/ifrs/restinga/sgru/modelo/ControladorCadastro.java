@@ -159,10 +159,24 @@ public class ControladorCadastro {
         }
     }
 
-    public void salvar() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
+    public void salvar(InputStream inputStream, String extArquivo, String txtPath) 
+            throws UsuarioInvalidoException, DadoPessoaInvalidoException, IOException {
+        Pessoa.consistirDados((Pessoa)this.cliente);        
+        
         // Verifica se a matricula já foi cadastrada
         if(isVerificaMatricula(cliente.getMatricula()))
-            throw new UsuarioInvalidoException("Matricula já cadastrada!");
+            throw new UsuarioInvalidoException("Matricula já cadastrada!");                
+        
+        // Cliente alterou a foto
+        if (inputStream != null) {
+            //String caminhoFoto = "c:\\imagens\\" + this.cliente.getMatricula() + "." + extArquivo;
+            String caminhoFoto = txtPath + File.separatorChar + "imagens"+ File.separatorChar + "fotos" + File.separatorChar + this.cliente.getMatricula() + "." + extArquivo;
+            Path target = Paths.get(caminhoFoto);
+            // Copia a foto para o diretorio de fotos
+            Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
+            // atualiza o caminho foto do cliente
+            this.cliente.setCaminhoFoto(caminhoFoto);
+        }
         
         // Verifica se o login já foi cadastrado
         if(isVerificaLogin(cliente.getMatricula(), cliente.getLogin()))
@@ -176,7 +190,9 @@ public class ControladorCadastro {
         this.lstClientes = dao.carregarClientesPorTipo("-1");
     }
     
-    public void salvarFuncionario() throws UsuarioInvalidoException {
+    public void salvarFuncionario() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
+        Pessoa.consistirDados((Pessoa)this.funcionario);        
+        
         // Verifica se a matricula já foi cadastrada
         if(isVerificaMatricula(funcionario.getMatricula()))
             throw new UsuarioInvalidoException("Matricula já cadastrada!");
@@ -198,7 +214,9 @@ public class ControladorCadastro {
      * @throws IOException Caso não consiga copiar o arquivo
      * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException
      */
-    public void editarUsuario(InputStream inputStream, String extArquivo, String txtPath) throws IOException, UsuarioInvalidoException {
+    public void editarUsuario(InputStream inputStream, String extArquivo, String txtPath) throws IOException, UsuarioInvalidoException, DadoPessoaInvalidoException {
+        Pessoa.consistirDados((Pessoa)this.cliente);        
+        
         // Verifica se o login já foi cadastrado
         if(isVerificaLogin(pessoa.getMatricula(), pessoa.getLogin()) || isVerificaLogin(cliente.getMatricula(), cliente.getLogin()))
             throw new UsuarioInvalidoException("Login já cadastrado!");
@@ -206,7 +224,7 @@ public class ControladorCadastro {
         // Cliente alterou a foto
         if (inputStream != null) {
             //String caminhoFoto = "c:\\imagens\\" + this.pessoa.getMatricula() + "." + extArquivo;
-            String caminhoFoto = txtPath + "imagens"+ File.separatorChar + "fotos" + File.separatorChar + this.pessoa.getMatricula() + "." + extArquivo;
+            String caminhoFoto = txtPath + File.separatorChar + "imagens"+ File.separatorChar + "fotos" + File.separatorChar + this.pessoa.getMatricula() + "." + extArquivo;
             Path target = Paths.get(caminhoFoto);
             // Copia a foto para o diretorio de fotos
             Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
@@ -225,7 +243,9 @@ public class ControladorCadastro {
         }
     }
     
-    public void editarFuncionario() throws UsuarioInvalidoException {
+    public void editarFuncionario() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
+        Pessoa.consistirDados((Pessoa)this.cliente);        
+        
         // Verifica se o login já foi cadastrado
         if(isVerificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
             throw new UsuarioInvalidoException("Login já cadastrado!");
