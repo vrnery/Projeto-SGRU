@@ -9,15 +9,26 @@ import javax.faces.convert.FacesConverter;
 public class Conversor implements Converter {    
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String modelValue) {
-        String telefone = (String) modelValue;
-        StringBuilder telefoneFormatado = new StringBuilder(telefone);
+        String valor = (String) modelValue;
+        StringBuilder valorFormatado = new StringBuilder(valor);
         
-        telefoneFormatado.insert(0, '(');
-        telefoneFormatado.insert(3, ')');
-        telefoneFormatado.insert(4, ' ');
-        telefoneFormatado.insert(9, '-');
-        
-        return telefoneFormatado.toString();
+        if (modelValue instanceof String) {
+            // Telefone
+            if ((component.getId().equals("ofTelefone")) && (!valor.isEmpty())) {                
+                valorFormatado.insert(0, '(');
+                valorFormatado.insert(3, ')');
+                valorFormatado.insert(4, ' ');
+                valorFormatado.insert(9, '-');
+            }
+
+            if (!!valor.isEmpty()) {
+                return valorFormatado.toString();
+            }
+        } else if (component.getId().equals("ofUtilizado")) {
+            // Valor utilizado da recarga                        
+            return valor.equals("true")?"Sim":"Não";
+        }
+        return "";
      }    
     
     @Override
@@ -27,20 +38,23 @@ public class Conversor implements Converter {
             StringBuilder valorFormatado = new StringBuilder(valor);
 
             // Telefone
-            if (component.getId().equals("ofTelefone")) {                
+            if ((component.getId().equals("ofTelefone")) && (!valor.isEmpty())) {                
                 valorFormatado.insert(0, '(');
                 valorFormatado.insert(3, ')');
                 valorFormatado.insert(4, ' ');
-                valorFormatado.insert(9, '-');
+                valorFormatado.insert(9, '-');                
+            }            
+            
+            if (!valor.isEmpty()) {
+                return valorFormatado.toString();
             }
-
-            return valorFormatado.toString();
         } else {
-            // Valor utilizado da recarga
-            Boolean valor = (Boolean) modelValue;            
-            //if (component.getId().equals("ofUtilizado")) {
-            return valor?"Sim":"Não";
-            //}       
+            // Valor utilizado da recarga            
+            if (component.getId().equals("ofUtilizado")) {
+                Boolean valor = (Boolean) modelValue;
+                return valor?"Sim":"Não";
+            }       
         }
+        return "";
     }      
 }

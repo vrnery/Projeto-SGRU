@@ -13,16 +13,16 @@
                     <f:facet name="header">
                         <p:button value="Novo Cliente" outcome="cadastrarCliente"/>
                     </f:facet>
-                    <p:column headerText="Matrícula" filterBy="#{cliente.matricula}" width="120">
+                    <p:column headerText="Matrícula" filterBy="#{cliente.matricula}" width="120" style="text-align: center">
                         <h:outputText value="#{cliente.matricula}"/>
                     </p:column>
-                    <p:column headerText="Nome" filterBy="#{cliente.nome}">
+                    <p:column headerText="Nome" filterBy="#{cliente.nome}" style="text-align: center">
                         <h:outputText value="#{cliente.nome}"/>
                     </p:column>
-                    <p:column headerText="E-mail" filterBy="#{cliente.email}">
-                        <h:outputText value="#{cliente.email}"/>
+                    <p:column headerText="E-mail" filterBy="#{cliente.email}" style="text-align: center" >
+                        <h:outputText value="#{cliente.email}"/>                        
                     </p:column>
-                    <p:column headerText="Telefone" filterBy="#{cliente.telefone}">
+                    <p:column headerText="Telefone" filterBy="#{cliente.telefone}" style="text-align: center">
                         <h:outputFormat id="ofTelefone" value="#{cliente.telefone}">
                             <f:converter converterId="conversor" />
                         </h:outputFormat>
@@ -34,7 +34,7 @@
                                          action="#{cadastroBean.controladorCadastro.setCliente(cliente)}" 
                                          update="dlgEditarUsuario"
                                          oncomplete="PF('dlgEditarUsuario').show()"/>
-                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel-2" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
+                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
                     </p:column>
                 </p:dataTable>                
             </h:form>
