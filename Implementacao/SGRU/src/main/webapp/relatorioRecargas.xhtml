@@ -29,7 +29,7 @@
                         </p:column>
                         <p:column headerText="Data da Recarga" style="text-align: center">
                             <h:outputText value="#{recarga.dataCredito.time}">
-                                <f:convertDateTime type="date"/>
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Valor Recarregado" >                            

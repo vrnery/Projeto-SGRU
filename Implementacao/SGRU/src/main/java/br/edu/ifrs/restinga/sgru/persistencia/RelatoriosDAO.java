@@ -133,8 +133,7 @@ public class RelatoriosDAO {
     public List<Recarga> gerarRelatorioRecargas(Calendar dataInicial, Calendar dataFinal) 
             throws RecargaNaoEncontradaException {
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
-                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
-                .add(Restrictions.eq("utilizado", false))
+                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))                
                 .addOrder(Order.asc("dataCredito"))
                 .list();
         
@@ -155,8 +154,7 @@ public class RelatoriosDAO {
     public List<Recarga> gerarRelatorioRecargas(Calendar dataInicial, Calendar dataFinal, String codTipoCliente) 
             throws RecargaNaoEncontradaException {        
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
-                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
-                .add(Restrictions.eq("utilizado", false))
+                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))                
                 .createAlias("cartao", "cartao")
                 .createAlias("cartao.cliente", "cliente")
                 .createAlias("cliente.tipoCliente", "tipocliente")
@@ -181,8 +179,7 @@ public class RelatoriosDAO {
     public List<Recarga> gerarRelatorioRecargas(Calendar dataInicial, Calendar dataFinal, int idCliente) 
             throws RecargaNaoEncontradaException {
         List<Recarga> lstRecargas = sessao.createCriteria(Recarga.class)
-                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))
-                .add(Restrictions.eq("utilizado", false))
+                .add(Restrictions.between("dataCredito", dataInicial, dataFinal))                
                 .createAlias("cartao", "cartao")
                 .createAlias("cartao.cliente", "cliente")                
                 .add(Restrictions.eq("cliente.id", idCliente))

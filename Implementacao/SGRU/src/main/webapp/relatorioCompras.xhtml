@@ -30,7 +30,7 @@
                         </p:column>
                         <p:column headerText="Data da Compra" style="text-align: center">
                             <h:outputText value="#{compra.dataVenda.time}">
-                                <f:convertDateTime type="date"/>
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Valor Pago" >
