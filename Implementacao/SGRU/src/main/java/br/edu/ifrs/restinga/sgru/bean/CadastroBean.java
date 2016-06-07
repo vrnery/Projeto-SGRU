@@ -8,12 +8,20 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorCadastro;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
+import javax.imageio.ImageIO;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -23,6 +31,8 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean
 @ViewScoped
 public class CadastroBean {    
+    // Caso nao consiga carregar foto do cliente
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/fotos/semFoto.png";
     private final ControladorCadastro controladorCadastro;
     private UploadedFile file;
     
@@ -133,6 +143,50 @@ public class CadastroBean {
         this.controladorCadastro.excluirUsuario(idUsuario);
         enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário excluído com sucesso!");
     }
+    
+    /**
+     * @return the foto
+     */
+    public StreamedContent getFoto() {        
+        FacesContext context = FacesContext.getCurrentInstance();        
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        }         
+        // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+        return converterFoto();                
+    }        
+    
+    /**
+     * Converte uma imagem para apresentar em um componente p:graphicImage     
+     * @return Um objeto StreamedContent
+     */
+    public StreamedContent converterFoto() {        
+        // Cria um objeto File com a foto do cliente        
+        File imgFile = new File(this.controladorCadastro.getCliente().getCaminhoFoto());
+        if (!imgFile.exists()) {
+            // Nao localizou a foto para a matricula informada, entao carrega a imagem default                                        
+            imgFile = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath(CAMINHO_FOTO_DEFAULT));            
+        }
+        
+        // Converte o arquivo em um array de bytes
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] fotoCliente = null;
+        try {            
+            BufferedImage imagem = ImageIO.read(imgFile);
+            ImageIO.write(imagem, "PNG", bos);
+            bos.flush();  
+            fotoCliente = bos.toByteArray();                
+        } catch (IOException e) {            
+        }        
+        
+        try {
+            return new DefaultStreamedContent(new ByteArrayInputStream(fotoCliente));
+        } catch(NullPointerException e) {
+            // Nao foi possivel localizar nenhuma foto ...
+            return new DefaultStreamedContent();
+        }        
+    }    
     
     private void enviarMensagem(FacesMessage.Severity sev, String msg) {
         FacesContext context = FacesContext.getCurrentInstance();        

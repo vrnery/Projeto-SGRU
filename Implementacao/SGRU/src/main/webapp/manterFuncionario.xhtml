@@ -5,7 +5,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <ui:composition template="padraoInternoGerencial.xhtml">
+    <ui:composition template="padraoInternoComMenu.xhtml">
         <ui:define name="conteudo">
             <p:messages/>
             <h:form id="fmrPrincipal">
@@ -23,8 +23,8 @@
                         <h:outputText value="#{funcionario.email}"/>
                     </p:column>
                     <p:column headerText="Telefone" filterBy="#{funcionario.telefone}">
-                        <h:outputFormat value="#{funcionario.telefone}">
-                            <f:converter converterId="conversorTelefone" />
+                        <h:outputFormat value="#{funcionario.telefone}" id="ofTelefone">
+                            <f:converter converterId="conversor" />
                         </h:outputFormat>
                     </p:column>                    
                     <p:column width="90">

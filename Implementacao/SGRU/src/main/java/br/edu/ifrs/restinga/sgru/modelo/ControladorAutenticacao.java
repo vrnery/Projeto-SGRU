@@ -44,10 +44,18 @@ public class ControladorAutenticacao {
     }
     
     /**
+     * Verifica se existe algum usuário logado no sistema     
+     * @return True, caso exista algum usuário logado no sistema e false, caso contrário
+     */
+    public boolean isUsuarioLogado() {
+        return this.pessoa != null;
+    }
+    
+    /**
      * Verifica se o usuário logado no sistema é um gerente
      * @return True, se o usuário for gerente e false, caso contrário
      */
-    public boolean isUsuarioLogadoGerente() {
+        public boolean isUsuarioLogadoGerente() {
         boolean retorno = false;
         if (this.pessoa instanceof Funcionario) {
             if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.GERENTE)) {
@@ -55,6 +63,37 @@ public class ControladorAutenticacao {
             }
         }
         return retorno;
+    }    
+    
+    /**
+     * Verifica se o usuário logado no sistema é um operador de caixa
+     * @return True, se o usuário for um operador de caixa e false, caso contrário
+     */
+    public boolean isUsuarioOperadorCaixa() {
+        boolean retorno = false;
+        if (this.pessoa instanceof Funcionario) {
+            if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
+                retorno = true;
+            }
+        }
+        return retorno;
+    }        
+    
+    /**
+     * Verifica se o usuário pode visualizar as rotinas administrativas, tais como emissão de relatório e edição de contra
+     * @return True, caso o usuário tenha permissões para visualizar as rotinas administrativa, e false, caso contrário
+     */
+    public boolean vizualizarRotinasAdm() {        
+        if (this.pessoa instanceof Cliente) {
+            return true;
+        }
+        
+        if (this.pessoa instanceof Funcionario) {
+            if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.GERENTE)) {
+                return true;
+            }
+        }
+        return false;
     }    
     
     /**

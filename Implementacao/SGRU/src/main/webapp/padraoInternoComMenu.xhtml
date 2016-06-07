@@ -34,7 +34,11 @@
             <p:layoutUnit position="west">
                 <h:form>
                     <p:menu>
-                        <p:menuitem ajax="false" value="Fechamento de Caixa" action="#{vendaBean.realizarFechamentoCaixa()}"/>                        
+                        <p:menuitem ajax="false" value="Fechamento de Caixa" action="#{vendaBean.realizarFechamentoCaixa()}" rendered="#{autenticarBean.usuarioLogadoOperadorCaixa}"/>
+                        <p:menuitem ajax="false" value="Relatórios" action="relatorios" rendered="#{autenticarBean.vizualizarRotinasAdm()}"/>
+                        <p:menuitem ajax="false" value="Editar Conta" action="editarConta" rendered="#{autenticarBean.vizualizarRotinasAdm()}"/>
+                        <p:menuitem ajax="false" value="Editar Clientes" action="manterCliente" rendered="#{autenticarBean.usuarioLogadoGerente}"/>
+                        <p:menuitem ajax="false" value="Editar Funcionários" action="manterFuncionario" rendered="#{autenticarBean.usuarioLogadoGerente}"/>
                     </p:menu>
                 </h:form>
             </p:layoutUnit>            
@@ -42,5 +46,6 @@
                 <ui:insert name="conteudo"/>
             </p:layoutUnit>
         </p:layout>
+        <ui:insert name="dialogos"/>
     </h:body>
 </html>

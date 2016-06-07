@@ -5,8 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <ui:composition template="padraoInternoSemMenu.xhtml">
-        <ui:define name="conteudo">
+    <ui:composition template="#{autenticarBean.setarPadraoInterno()}">    
+        <ui:define name="conteudo">            
             <p:messages/>
             <h:form enctype="multipart/form-data">
                 <h:panelGrid columns="2">
@@ -30,10 +30,10 @@
                     </p:selectOneRadio>
                 </h:panelGrid>
                 <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>
-                <p:commandButton ajax="false" value="Voltar" action="index"/>
+                <p:button value="Voltar" outcome="index" rendered="#{!autenticarBean.vizualizarRotinasAdm()}"/>
                 <p:commandButton ajax="false" value="Salvar" action="#{cadastroBean.salvar(application.getRealPath(path))}"/>
             </h:form>
-        </ui:define>
+        </ui:define>    
     </ui:composition>
 </html>
 

@@ -31,6 +31,18 @@ public class AutenticarBean {
     public ControladorAutenticacao getControlador() {
         return controlador;
     }
+    
+    /**
+     * Verifica se o padrão a ser utilizado é com ou sem menu
+     * @return Padrão com menu, se existir um usuário logado e padrão sem menu, caso contrário
+     */
+    public String setarPadraoInterno() {
+        if (this.controlador.isUsuarioLogado()) {
+            return "padraoInternoComMenu.xhtml";
+        } else {
+            return "padraoInternoSemMenu.xhtml";
+        }
+    }
 
     /**
      * Verifica se o usuário logado no sistema é um gerente
@@ -38,6 +50,22 @@ public class AutenticarBean {
      */
     public boolean isUsuarioLogadoGerente() {
         return this.controlador.isUsuarioLogadoGerente();
+    }
+    
+    /**
+     * Verifica se o usuário logado no sistema é um operador de caixa
+     * @return True, caso o usuário seja um operador de caixa e false, caso contrário
+     */
+    public boolean isUsuarioLogadoOperadorCaixa() {
+        return this.controlador.isUsuarioOperadorCaixa();
+    }
+    
+    /**
+     * Verifica se o usuário pode visualizar as rotinas administrativas, tais como emissão de relatório e edição de contra
+     * @return True, caso o usuário tenha permissões para visualizar as rotinas administrativa, e false, caso contrário
+     */
+    public boolean vizualizarRotinasAdm() {
+        return this.controlador.vizualizarRotinasAdm();
     }
     
     /**
