@@ -26,9 +26,11 @@ CREATE TABLE IF NOT EXISTS `sgru`.`pessoa` (
   `nome` VARCHAR(70) NOT NULL,
   `email` VARCHAR(100) NULL DEFAULT NULL,
   `telefone` VARCHAR(11) NULL DEFAULT NULL,
-  `login` VARCHAR(30) NULL DEFAULT NULL,
+  `login` VARCHAR(30) NULL,
   `senha` VARCHAR(32) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `matricula_UNIQUE` (`matricula` ASC),
+  UNIQUE INDEX `login_UNIQUE` (`login` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -40,7 +42,8 @@ CREATE TABLE IF NOT EXISTS `sgru`.`tipofuncionario` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `descricao` VARCHAR(45) NOT NULL,
   `codigo` VARCHAR(3) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `codigo_UNIQUE` (`codigo` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -108,7 +111,8 @@ CREATE TABLE IF NOT EXISTS `sgru`.`tipocliente` (
   `id` INT(10) UNSIGNED NOT NULL,
   `descricao` VARCHAR(45) NOT NULL,
   `codigo` VARCHAR(3) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `codigo_UNIQUE` (`codigo` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -233,7 +237,6 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
 
 -- Cria usuário da aplicação:
 
