@@ -21,15 +21,19 @@
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
                         <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.pessoa.telefone}"/>
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.pessoa.senha}"/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.pessoa.senha}" required="true"/>
                     </h:panelGrid>
                     <p:graphicImage cache="false" value="#{cadastrarBean.foto}" rendered="#{!autenticarBean.usuarioLogadoGerente}"/>
                 </h:panelGrid>
                 <h:panelGrid columns="2" rendered="#{!autenticarBean.usuarioLogadoGerente}">
-                    <p:outputLabel for="txtTipo" value="Tipo: "/>
-                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoCliente}" layout="grid" columns="3" required="true">
-                        <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
-                    </p:selectOneRadio>
+                    <p:outputLabel for="somTipoCliente" value="Tipo: "/>
+                    <p:selectOneMenu id="somTipoCliente" 
+                                     value="#{cadastroBean.controladorCadastro.tipoCliente}" 
+                                     required="true"
+                                     style="width: 190px">
+                        <f:selectItems var="tipoCliente" value="#{cadastroBean.controladorCadastro.lstTipoCliente}" 
+                                       itemLabel="#{tipoCliente.descricao}" itemValue="#{tipoCliente}"/>
+                    </p:selectOneMenu>
                 </h:panelGrid>
                 <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" rendered="#{!autenticarBean.usuarioLogadoGerente}"/><br /><br />
                 <p:commandButton ajax="false" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(application.getRealPath(path))}"/>

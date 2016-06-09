@@ -5,10 +5,13 @@
  */
 package br.edu.ifrs.restinga.sgru.persistencia;
 
+import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.modelo.Cliente;
+import br.edu.ifrs.restinga.sgru.modelo.TipoCliente;
 import java.util.List;
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 
 /**
  *
@@ -38,9 +41,23 @@ public class ClienteDAO {
     /**
      * Persiste um objeto Cliente no banco de dados
      * @param cliente O cliente a ser cadastrado no sistema
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Caso a matrícula ou o login informado já esteja cadastrado no sistema
      */
-    public void salvar(Cliente cliente) {
-        sessao.saveOrUpdate(cliente);        
+    public void salvar(Cliente cliente) throws DadoPessoaInvalidoException {
+        sessao.saveOrUpdate(cliente);
+        /*
+        try {
+            sessao.saveOrUpdate(cliente);        
+        } catch (ConstraintViolationException e) {            
+            if (e.getSQLException().getMessage().contains("matricula")) {
+                throw new DadoPessoaInvalidoException("Matrícula já cadastrada!");
+            } else if (e.getSQLException().getMessage().contains("login")) {
+                throw new DadoPessoaInvalidoException("Login já cadastrado!");
+            } else {
+                
+            }
+        }
+        */
     }          
     
     /**
@@ -48,12 +65,13 @@ public class ClienteDAO {
      * @param tipoCliente O código que identifica o tipo do cliente
      * @return Uma lista de objetos Cliente
      */
-    public List<Cliente> carregarClientesPorTipo(String tipoCliente) {
-        if (tipoCliente.equals("-1")) {
+    public List<Cliente> carregarClientesPorTipo(TipoCliente tipoCliente) {
+        if (tipoCliente == null) {
+            // Todos os tipos de cliente
             return sessao.createQuery("FROM Cliente ORDER BY nome").list();
         } else {
             return sessao.createQuery("FROM Cliente WHERE idTipoCliente=:tipoCliente ORDER BY nome")
-                .setString("tipoCliente", String.valueOf(tipoCliente)).list();   
+                .setString("tipoCliente", tipoCliente.getCodigo()).list();   
         }        
     }        
 }

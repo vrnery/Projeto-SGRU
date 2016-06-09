@@ -6,13 +6,10 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -24,6 +21,7 @@ public class TipoCliente implements Serializable {
     @GeneratedValue
     private int id;
     private String descricao;
+    @Column(unique = true)
     private String codigo;
     
     /**
@@ -67,4 +65,26 @@ public class TipoCliente implements Serializable {
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
+    
+    // Utilizado para a implementação do convert
+    @Override
+    public int hashCode() {
+        final int primo = 19;
+        int resultado = 2;
+        resultado = primo * resultado + this.getId();
+        return resultado;
+    }
+
+    // Utilizado para a implementação do convert
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;        
+        if (getClass() != obj.getClass())
+            return false;
+        TipoCliente tipoCliente = (TipoCliente) obj;
+        return this.getId() == tipoCliente.getId();
+    }        
 }

@@ -10,6 +10,7 @@ import br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,10 +28,12 @@ public abstract class Pessoa implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private int id;
+    @Column(unique = true)
     private String matricula;
     private String nome;
     private String telefone;
     private String email;
+    @Column(unique = true)
     private String login;
     private String senha;
 

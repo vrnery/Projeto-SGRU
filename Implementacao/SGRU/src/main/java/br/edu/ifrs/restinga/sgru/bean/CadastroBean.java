@@ -63,17 +63,7 @@ public class CadastroBean {
         this.file = file;
     }
     
-    public String salvar(String txtPath) {
-        /*
-        try {
-            this.controladorCadastro.salvar();
-            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
-            return "index";
-        } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
-            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        }
-        return "cadastrarCliente";
-        */
+    public void salvarCliente(String txtPath) {
         InputStream inputStream = null;
         String extArquivo = null;
         try {
@@ -83,20 +73,20 @@ public class CadastroBean {
                 String fileName = this.file.getFileName();
                 extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);
             }
-            this.controladorCadastro.salvar(inputStream, extArquivo, txtPath);
+            this.controladorCadastro.salvarCliente(inputStream, extArquivo, txtPath);
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
-            return "index";                        
+            //return "index";                        
         } catch(IOException e) {            
             enviarMensagem(FacesMessage.SEVERITY_ERROR, "Problemas ao carregar a foto!");                    
         } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        }    
-        return null;
+        }            
+        //return null;
     }
     
     public void salvarFuncionario() {
         try {
-            this.controladorCadastro.salvarFuncionario();
+            this.controladorCadastro.salvarFuncionario();            
         } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
@@ -122,14 +112,15 @@ public class CadastroBean {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, "Problemas ao carregar a foto!");                    
         } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        }
-                
+        }                
     }
     
     public void editarFuncionario() {
-        try {
-            this.controladorCadastro.editarFuncionario();
+        try {            
+            this.controladorCadastro.editarUsuario();
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário alterado com sucesso!");
+        } catch(IOException e) {            
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, "Problemas ao carregar a foto!");
         } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }

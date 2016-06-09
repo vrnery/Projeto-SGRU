@@ -6,6 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,6 +21,7 @@ public class TipoFuncionario implements Serializable {
     @Id
     private int id;
     private String descricao;
+    @Column(unique = true)
     private String codigo;
 
     /**
@@ -63,4 +65,26 @@ public class TipoFuncionario implements Serializable {
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
+    
+    // Utilizado para a implementação do convert
+    @Override
+    public int hashCode() {
+        final int primo = 11;
+        int resultado = 5;
+        resultado = primo * resultado + this.getId();
+        return resultado;
+    }
+
+    // Utilizado para a implementação do convert
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;        
+        if (getClass() != obj.getClass())
+            return false;
+        TipoFuncionario tipoFuncionario = (TipoFuncionario) obj;
+        return this.getId() == tipoFuncionario.getId();
+    }    
 }

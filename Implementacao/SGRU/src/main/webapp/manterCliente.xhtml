@@ -30,11 +30,11 @@
                     <p:column width="90">
                         <p:commandButton title="Editar" 
                                          ajax="true"                                         
-                                         icon="ui-icon-edit" 
-                                         action="#{cadastroBean.controladorCadastro.setCliente(cliente)}" 
+                                         icon="ui-icon-pencil" 
+                                         action="#{cadastroBean.controladorCadastro.setPessoa(cliente)}" 
                                          update="dlgEditarUsuario"
                                          oncomplete="PF('dlgEditarUsuario').show()"/>
-                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-cancel" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
+                        <p:commandButton ajax="false" title="Excluir" icon="ui-icon-closethick" action="#{cadastroBean.excluirUsuario(cliente.id)}"/>
                     </p:column>
                 </p:dataTable>                
             </h:form>
@@ -45,23 +45,27 @@
                 <h:form enctype="multipart/form-data">
                     <h:panelGrid columns="2">                        
                         <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                        <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}"/>
+                        <p:outputLabel id="txtMatricula" value="#{cadastroBean.controladorCadastro.pessoa.matricula}"/>
                         <p:outputLabel for="txtNome" value="Nome: "/>
-                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.cliente.nome}" required="true"/>
+                        <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.pessoa.nome}" required="true"/>
                         <p:outputLabel for="txtEmail" value="Email: "/>
-                        <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.cliente.email}"/>
+                        <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.pessoa.email}"/>
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
-                        <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.cliente.telefone}"/>
+                        <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.pessoa.telefone}"/>                        
                         <p:outputLabel for="txtLogin" value="Login: "/>
-                        <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.cliente.login}"/>
+                        <p:outputLabel id="txtLogin" value="#{cadastroBean.controladorCadastro.pessoa.login}"/>                        
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}" required="true"/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.pessoa.senha}" required="true"/>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
-                        <p:outputLabel for="txtTipo" value="Tipo: "/>
-                        <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoCliente}" layout="grid" columns="3" required="true">
-                            <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
-                        </p:selectOneRadio>
+                        <p:outputLabel for="somTipoCliente" value="Tipo: "/>
+                    <p:selectOneMenu id="somTipoCliente" 
+                                     value="#{cadastroBean.controladorCadastro.tipoCliente}" 
+                                     required="true"
+                                     style="width: 190px">
+                        <f:selectItems var="tipoCliente" value="#{cadastroBean.controladorCadastro.lstTipoCliente}" 
+                                       itemLabel="#{tipoCliente.descricao}" itemValue="#{tipoCliente}"/>
+                    </p:selectOneMenu>
                     </h:panelGrid>
                     <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>
                     <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(application.getRealPath(path))}" onclick="dlgEditarUsuario.hide();" update=":fmrPrincipal:dtbClientes"/>

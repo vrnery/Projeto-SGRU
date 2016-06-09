@@ -6,7 +6,6 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
-import br.edu.ifrs.restinga.sgru.excessao.FotoNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.FuncionarioDAO;
@@ -22,7 +21,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
 import java.util.List;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -32,39 +30,34 @@ public class ControladorCadastro {
     private Cliente cliente;
     private Funcionario funcionario;
     private Pessoa pessoa;
-    private final List<TipoCliente> tiposCliente;
-    private final List<TipoFuncionario> tiposFuncionario;
+    private final List<TipoCliente> lstTipoCliente;
+    private final List<TipoFuncionario> lstTipoFuncionario;
     private List<Cliente> lstClientes;
     private List<Funcionario> lstFuncionarios;
-    private int tipoCliente;
-    private int tipoFuncionario;
-    private UploadedFile file;
+    private TipoCliente tipoCliente;
+    private TipoFuncionario tipoFuncionario;    
     
     public ControladorCadastro() {
-        this.cliente = new Cliente();
-        this.cliente.setCartao(new Cartao());
+        this.cliente = new Cliente();        
         this.funcionario = new Funcionario();
-        
-        // Set data corrente para novo cartão
-        //this.cliente.getCartao().setDataCredito(Calendar.getInstance());
         
         // Carrega lista de clientes
         TipoClienteDAO dao = new TipoClienteDAO();
-        tiposCliente = dao.getLstTipoClientes();
+        lstTipoCliente = dao.getLstTipoClientes();
         
         // Carrega lista de funcionarios
         TipoFuncionarioDAO daoTipoFuncionario = new TipoFuncionarioDAO();
-        tiposFuncionario = daoTipoFuncionario.getLstTipoFuncionarios();
+        lstTipoFuncionario = daoTipoFuncionario.getLstTipoFuncionarios();
         
         // Carrega lista de clientes
         ClienteDAO daoCliente = new ClienteDAO();
-        // -1 carrega todos os tipos de clientes
-        this.lstClientes = daoCliente.carregarClientesPorTipo("-1");
+        // null carrega todos os tipos de clientes
+        this.lstClientes = daoCliente.carregarClientesPorTipo(null);
         
         // Carrega lista de funcionarios
         FuncionarioDAO daoFuncionario = new FuncionarioDAO();
-        // - 1 carrega todos os tipos de funcionarios
-        this.lstFuncionarios = daoFuncionario.carregarFuncionariosPorTipo("-1");
+        // null carrega todos os tipos de funcionarios
+        this.lstFuncionarios = daoFuncionario.carregarFuncionariosPorTipo(null);
     }
 
     public Cliente getCliente() {
@@ -105,12 +98,12 @@ public class ControladorCadastro {
         }
     }
 
-    public List<TipoCliente> getTiposCliente() {        
-        return tiposCliente;
+    public List<TipoCliente> getLstTipoCliente() {        
+        return lstTipoCliente;
     }
 
-    public List<TipoFuncionario> getTiposFuncionario() {
-        return tiposFuncionario;
+    public List<TipoFuncionario> getLstTipoFuncionario() {
+        return lstTipoFuncionario;
     }
 
     public List<Cliente> getLstClientes() {        
@@ -132,40 +125,46 @@ public class ControladorCadastro {
         this.lstFuncionarios = lstFuncionarios;
     }
     
-    public int getTipoCliente() {
+    public TipoCliente getTipoCliente() {
         return tipoCliente;
     }
 
-    public void setTipoCliente(int codTipoCliente) {
-        this.tipoCliente = codTipoCliente;
-        this.cliente.setTipoCliente(new TipoClienteDAO().buscarCodigo(this.tipoCliente));
+    public void setTipoCliente(TipoCliente tipoCliente) {
+        this.tipoCliente = tipoCliente;
+        this.cliente.setTipoCliente(tipoCliente);
     }
 
-    public int getTipoFuncionario() {
+    public TipoFuncionario getTipoFuncionario() {
         return tipoFuncionario;
     }
 
-    public void setTipoFuncionario(int tipoFuncionario) {
+    public void setTipoFuncionario(TipoFuncionario tipoFuncionario) {
         this.tipoFuncionario = tipoFuncionario;
-        funcionario.setTipoFuncionario(new TipoFuncionarioDAO().buscarCodigo(this.tipoFuncionario));
+        funcionario.setTipoFuncionario(tipoFuncionario);
     }
     
-    public void setFile(UploadedFile file) throws FotoNaoEncontradaException {
-        if(file != null){
-            this.file = file;
-            throw new FotoNaoEncontradaException("verificada!");
-        } else{
-            throw new FotoNaoEncontradaException("Não foi possivel verificar!");
-        }
-    }
-
-    public void salvar(InputStream inputStream, String extArquivo, String txtPath) 
+    /**
+     * Persiste um cliente na base da dados
+     * @param inputStream Objeto enviado pelo componente p:fileUpload
+     * @param extArquivo A extensão do arquivo     
+     * @param txtPath Caminho raiz da aplicação recebido
+     * @throws IOException Caso não consiga copiar o arquivo
+     * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException Caso o usuário já esteja cadastrado no sistema
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Quando um ou mais dados estiverem incorretos
+     */
+    public void salvarCliente(InputStream inputStream, String extArquivo, String txtPath) 
             throws UsuarioInvalidoException, DadoPessoaInvalidoException, IOException {
         Pessoa.consistirDados((Pessoa)this.cliente);        
-        
+                
         // Verifica se a matricula já foi cadastrada
-        if(isVerificaMatricula(cliente.getMatricula()))
+        if(verificaMatricula(this.cliente.getMatricula())) {
             throw new UsuarioInvalidoException("Matricula já cadastrada!");                
+        }        
+        
+        // Verifica se o login já foi cadastrado
+        if(verificaLogin(this.cliente.getMatricula(), this.cliente.getLogin())) {
+            throw new UsuarioInvalidoException("Login já cadastrado!");
+        }        
         
         // Cliente alterou a foto
         if (inputStream != null) {
@@ -176,50 +175,60 @@ public class ControladorCadastro {
             Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
             // atualiza o caminho foto do cliente
             this.cliente.setCaminhoFoto(caminhoFoto);
-        }
-        
-        // Verifica se o login já foi cadastrado
-        if(isVerificaLogin(cliente.getMatricula(), cliente.getLogin()))
-            throw new UsuarioInvalidoException("Login já cadastrado!");
-        
+        }                
+                
         ClienteDAO dao = new ClienteDAO();
         cliente.setCartao(new Cartao());
         cliente.getCartao().setDataCredito(Calendar.getInstance());
         cliente.getCartao().setSaldo(0);
         dao.salvar(cliente);
-        this.lstClientes = dao.carregarClientesPorTipo("-1");
+        // null carrega todos os clientes
+        this.lstClientes = dao.carregarClientesPorTipo(null);    
     }
     
+    /**
+     * Persiste um funcionário no banco de dados
+     * @throws UsuarioInvalidoException Caso o usuário já esteja cadastrado no sistema
+     * @throws DadoPessoaInvalidoException Quando um ou mais dados estiverem incorretos
+     */    
     public void salvarFuncionario() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
         Pessoa.consistirDados((Pessoa)this.funcionario);        
         
         // Verifica se a matricula já foi cadastrada
-        if(isVerificaMatricula(funcionario.getMatricula()))
+        if(verificaMatricula(funcionario.getMatricula()))
             throw new UsuarioInvalidoException("Matricula já cadastrada!");
         
         // Verifica se o login já foi cadastrado
-        if(isVerificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
-            throw new UsuarioInvalidoException("Login já cadastrado!");
+        if(verificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
+            throw new UsuarioInvalidoException("Login já cadastrado!");        
         
         FuncionarioDAO dao = new FuncionarioDAO();
         dao.salvar(funcionario);
-        this.lstFuncionarios = dao.carregarFuncionariosPorTipo("-1");
-    }
+        this.lstFuncionarios = dao.carregarFuncionariosPorTipo(null);
+    }    
     
+    /**
+     * Edita um usuário
+     * @throws IOException Caso não consiga copiar o arquivo
+     * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException Caso o usuário já esteja cadastrado no sistema
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Quando um ou mais dados estiverem incorretos
+     */
+    public void editarUsuario() 
+            throws IOException, UsuarioInvalidoException, DadoPessoaInvalidoException {
+        this.editarUsuario(null, null, null);
+    }
     /**
      * Edita um usuário
      * @param inputStream Objeto enviado pelo componente p:fileUpload
      * @param extArquivo A extensão do arquivo     
      * @param txtPath Caminho raiz da aplicação recebido
      * @throws IOException Caso não consiga copiar o arquivo
-     * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException
+     * @throws br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException Caso o usuário já esteja cadastrado no sistema
+     * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Quando um ou mais dados estiverem incorretos
      */
-    public void editarUsuario(InputStream inputStream, String extArquivo, String txtPath) throws IOException, UsuarioInvalidoException, DadoPessoaInvalidoException {
-        Pessoa.consistirDados((Pessoa)this.cliente);        
-        
-        // Verifica se o login já foi cadastrado
-        if(isVerificaLogin(pessoa.getMatricula(), pessoa.getLogin()) || isVerificaLogin(cliente.getMatricula(), cliente.getLogin()))
-            throw new UsuarioInvalidoException("Login já cadastrado!");
+    public void editarUsuario(InputStream inputStream, String extArquivo, String txtPath) 
+            throws IOException, UsuarioInvalidoException, DadoPessoaInvalidoException {
+        Pessoa.consistirDados(this.pessoa);        
         
         // Cliente alterou a foto
         if (inputStream != null) {
@@ -233,25 +242,17 @@ public class ControladorCadastro {
                 this.cliente.setCaminhoFoto(caminhoFoto);
             }
         }
-        
+           
         if (this.pessoa instanceof Cliente) {
             ClienteDAO daoCliente = new ClienteDAO();
             daoCliente.salvar(cliente);
-        } else {
+        } else if (this.pessoa instanceof Funcionario) {
+            FuncionarioDAO daoFuncionario = new FuncionarioDAO();
+            daoFuncionario.salvar(funcionario);
+        } else if (this.pessoa != null ) {
             PessoaDAO daoPessoa = new PessoaDAO();
             daoPessoa.salvar(pessoa);
-        }
-    }
-    
-    public void editarFuncionario() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
-        Pessoa.consistirDados((Pessoa)this.cliente);        
-        
-        // Verifica se o login já foi cadastrado
-        if(isVerificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
-            throw new UsuarioInvalidoException("Login já cadastrado!");
-        
-        FuncionarioDAO daoFuncionario = new FuncionarioDAO();
-        daoFuncionario.salvar(funcionario);
+        }        
     }
     
     /**
@@ -283,9 +284,13 @@ public class ControladorCadastro {
             }
         }
     }
-    
-    // Verifica se a matricula já existe
-    public boolean isVerificaMatricula(String matricula) {
+        
+    /**
+     * Verifica se a matricula já existe
+     * @param matricula A matricula a ser verificada
+     * @return True, caso a matrícula já esteja cadastrada e false, caso contrário
+     */
+    public boolean verificaMatricula(String matricula) {
         boolean retorno = false;
         for(Cliente cli : this.lstClientes){
             if(cli.getMatricula().equals(matricula)){
@@ -301,9 +306,14 @@ public class ControladorCadastro {
         }
         return retorno;
     }
-    
-    // Verifica se o login já existe e se não é da propria matricula
-    public boolean isVerificaLogin(String matricula, String login) {
+        
+    /**
+     * Verifica se o login já existe e se não é da propria matricula
+     * @param matricula A matriícula do usuário
+     * @param login O login do usuário
+     * @return True, caso usuário já exista e false, caso contrário
+     */
+    public boolean verificaLogin(String matricula, String login) {
         boolean retorno = false;
         for(Cliente cli : this.lstClientes){
             if(cli.getLogin().equals(login) && (!cli.getMatricula().equals(matricula))){
@@ -318,12 +328,5 @@ public class ControladorCadastro {
             }
         }
         return retorno;
-    }
-    
-    public void upload() {
-        if(file != null) {
-            //FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-            //FacesContext.getCurrentInstance().addMessage(null, message);
-        }
-    }   
+    }    
 }

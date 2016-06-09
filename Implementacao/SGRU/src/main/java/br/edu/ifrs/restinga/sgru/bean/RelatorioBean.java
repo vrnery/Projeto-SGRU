@@ -8,7 +8,6 @@ package br.edu.ifrs.restinga.sgru.bean;
 import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
-import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorRelatorio;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -42,14 +41,12 @@ public class RelatorioBean implements Serializable {
     public static final int RELATORIO_RECARGAS = 2;
     public static final int FORMA_PGTO_CARTAO = 1;
     public static final int FORMA_PGTO_TICKET = 2;
-    public static final String ARQ_PDF_COMPRAS = "compras";
-    public static final String ARQ_PDF_RECARGAS = "recargas";
     
     private final ControladorRelatorio controlador;
     private Date dataInicialMin;
     private Date dataInicialMax;
     private Date dataFinalMin;
-    private Date dataFinalMax;
+    private final Date dataFinalMax;
     private boolean relatorioCompras;    
     private boolean relatorioCartao;
     
@@ -98,22 +95,15 @@ public class RelatorioBean implements Serializable {
     public int getFORMA_PGTO_TICKET() {
         return FORMA_PGTO_TICKET;
     }    
-
-    /**
-     * @return the ARQ_PDF_COMPRAS
-     */
-    public String getARQ_PDF_COMPRAS() {
-        return ARQ_PDF_COMPRAS;
-    }
-
-    /**
-     * @return the ARQ_PDF_RECARGAS
-     */
-    public String getARQ_PDF_RECARGAS() {
-        return ARQ_PDF_RECARGAS;
-    }        
     
-   /**
+    /**     
+     * @return O nome do arquivo para o relatorio
+     */
+    public String getNomeArquivoRelatorio() {
+        return this.controlador.getNomeArquivoRelatorio();
+    }
+    
+    /**
      * @return the controlador
      */
     public ControladorRelatorio getControlador() {
@@ -253,8 +243,8 @@ public class RelatorioBean implements Serializable {
         
         // Se recarga, altera os campos do cliente e tipo cliente para todos        
         this.relatorioCartao = true;                
-        this.controlador.setIdCliente(-1);
-        this.controlador.setTipoCliente("-1");
+        this.controlador.setCliente(null);
+        this.controlador.setTipoCliente(null);
         this.controlador.setFormaPgto(FORMA_PGTO_CARTAO);
     }
     
@@ -263,9 +253,9 @@ public class RelatorioBean implements Serializable {
      */
     public void alterarStatusRelatorioCartao() {
         this.relatorioCartao = this.controlador.getFormaPgto() == FORMA_PGTO_CARTAO;
-        
-        this.controlador.setIdCliente(-1);
-        this.controlador.setTipoCliente("-1");            
+                
+        this.controlador.setCliente(null);
+        this.controlador.setTipoCliente(null);            
     }    
     
     /**
@@ -341,21 +331,30 @@ public class RelatorioBean implements Serializable {
                 }
                 
                 // Tipo de cliente
-                String tipoUsuario = this.controlador.getDescricaoCodigoCliente();
+                //String tipoUsuario = this.controlador.getDescricaoCodigoCliente();
+                String tipoCliente = "Todos";
+                if (this.controlador.getTipoCliente() != null) {
+                    tipoCliente = this.controlador.getTipoCliente().getDescricao();
+                }
                 
                 // Tipo de usuario e cliente nao serah impresso para ticket
                 if ((this.controlador.getFormaPgto() != FORMA_PGTO_TICKET)) {
                     // Tipo de usuario
-                    preface.add(new Paragraph("Tipo de Usuário: " + tipoUsuario, SMALL_BOLD));                
+                    preface.add(new Paragraph("Tipo de Usuário: " + tipoCliente, SMALL_BOLD));                
 
                     // Cliente           
-                    preface.add(new Paragraph("Nome do Cliente: " + this.controlador.getNomeCliente(), SMALL_BOLD));
+                    String nomeCliente = "Todos";
+                    if (this.controlador.getCliente() != null) {
+                        nomeCliente = this.controlador.getCliente().getNome();
+                    }
+                    preface.add(new Paragraph("Nome do Cliente: " + nomeCliente, SMALL_BOLD));
+                        
                 }
             }                        
             
             addEmptyLine(preface, 1);
             pdf.add(preface);
-        } catch(DocumentException | UsuarioInvalidoException e) {
+        } catch(DocumentException e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
         }
     }

@@ -18,7 +18,7 @@
                         <f:facet name="{Exporters}">
                             <h:commandLink>
                                 <p:graphicImage value="../imagens/pdf.png" width="24" style="float: right;margin-right: 5px"/>
-                                <p:dataExporter type="pdf" target="tblRecargas" fileName="#{relatorioBean.ARQ_PDF_RECARGAS}"
+                                <p:dataExporter type="pdf" target="tblRecargas" fileName="#{relatorioBean.nomeArquivoRelatorio}"
                                                 preProcessor="#{relatorioBean.preProcessPDF}"/>
                             </h:commandLink>
                         </f:facet> 

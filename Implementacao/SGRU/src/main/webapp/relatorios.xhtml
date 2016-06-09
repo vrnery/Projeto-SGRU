@@ -16,7 +16,7 @@
                     <p:selectOneRadio id="somTipoRelatorio" value="#{relatorioBean.controlador.tipoRelatorio}" style="width: 250px"> 
                         <f:selectItem itemLabel="Compras" itemValue="#{relatorioBean.RELATORIO_COMPRAS}"/>                           
                         <f:selectItem itemLabel="Recargas" itemValue="#{relatorioBean.RELATORIO_RECARGAS}"/>
-                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCompras()}" update="somFormaPagamento,somTipoUsuario,somCliente"/>
+                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCompras()}" update="somFormaPagamento,somTipoCliente,somCliente"/>
                     </p:selectOneRadio>
                     <p:outputLabel for="somFormaPagamento" value="Forma de Pagamento:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais()}"/>
@@ -26,30 +26,30 @@
                                       disabled="#{!relatorioBean.relatorioCompras}">                                  
                         <f:selectItem itemLabel="Cartão" itemValue="#{relatorioBean.FORMA_PGTO_CARTAO}"/>                        
                         <f:selectItem itemLabel="Ticket" itemValue="#{relatorioBean.FORMA_PGTO_TICKET}"/>                        
-                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCartao()}" update="somTipoUsuario,somCliente"/>
+                        <p:ajax event="change" listener="#{relatorioBean.alterarStatusRelatorioCartao()}" update="somTipoCliente,somCliente"/>
                     </p:selectOneRadio>                                        
-                    <p:outputLabel for="somTipoUsuario" value="Tipo de Usuário:"
+                    <p:outputLabel for="somTipoCliente" value="Tipo de Usuário:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais()}"/>
-                    <p:selectOneMenu id="somTipoUsuario"
-                                     style="width: 190px"
-                                     rendered="#{relatorioBean.habilitarComponentesGerenciais()}"
+                    <p:selectOneMenu id="somTipoCliente"
+                                     style="width: 190px"                                     
+                                     rendered="#{relatorioBean.habilitarComponentesGerenciais()}"                                     
                                      value="#{relatorioBean.controlador.tipoCliente}"
                                      disabled="#{!relatorioBean.relatorioCartao}">
-                        <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
-                        <f:selectItems var="tipoUsuario" value="#{relatorioBean.controlador.lstTipoCliente}" 
-                                       itemLabel="#{tipoUsuario.descricao}" itemValue="#{tipoUsuario.codigo}"/>
+                        <f:selectItem itemLabel="Todos" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems var="tipoCliente" value="#{relatorioBean.controlador.lstTipoCliente}" 
+                                       itemLabel="#{tipoCliente.descricao}" itemValue="#{tipoCliente}"/>
                         <p:ajax event="change" update="somCliente"/>
                     </p:selectOneMenu>                                                            
                     <p:outputLabel for="somCliente" value="Cliente:"
                                    rendered="#{relatorioBean.habilitarComponentesGerenciais()}"/>
                     <p:selectOneMenu id="somCliente"                                       
                                      style="width: 190px"
-                                     value="#{relatorioBean.controlador.idCliente}"
-                                     rendered="#{relatorioBean.habilitarComponentesGerenciais()}"
+                                     value="#{relatorioBean.controlador.cliente}"                                     
+                                     rendered="#{relatorioBean.habilitarComponentesGerenciais()}"                                                                          
                                      disabled="#{!relatorioBean.relatorioCartao}">
-                        <f:selectItem itemLabel="Todos" itemValue="-1" noSelectionOption="true"/>
-                        <f:selectItems var="usuario" value="#{relatorioBean.controlador.lstClientes}" 
-                                       itemLabel="#{usuario.nome}" itemValue="#{usuario.id}"/>
+                        <f:selectItem itemLabel="Todos" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems var="cliente" value="#{relatorioBean.controlador.lstClientes}" 
+                                       itemLabel="#{cliente.nome}" itemValue="#{cliente}"/>                        
                     </p:selectOneMenu>                                                                                                                                           
                     <p:outputLabel for="dataInicial" value="Data Inicial:"/>
                     <p:calendar id="dataInicial"                                

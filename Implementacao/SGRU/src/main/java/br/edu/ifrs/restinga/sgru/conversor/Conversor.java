@@ -9,26 +9,10 @@ import javax.faces.convert.FacesConverter;
 public class Conversor implements Converter {    
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String modelValue) {
-        String valor = (String) modelValue;
-        StringBuilder valorFormatado = new StringBuilder(valor);
-        
-        if (modelValue instanceof String) {
-            // Telefone
-            if ((component.getId().equals("ofTelefone")) && (!valor.isEmpty())) {                
-                valorFormatado.insert(0, '(');
-                valorFormatado.insert(3, ')');
-                valorFormatado.insert(4, ' ');
-                valorFormatado.insert(9, '-');
-            }
-
-            if (!!valor.isEmpty()) {
-                return valorFormatado.toString();
-            }
-        } else if (component.getId().equals("ofUtilizado")) {
-            // Valor utilizado da recarga                        
-            return valor.equals("true")?"Sim":"Não";
+        if (modelValue != null && !modelValue.isEmpty()) {
+            return (String) component.getAttributes().get(modelValue);
         }
-        return "";
+        return null;
      }    
     
     @Override

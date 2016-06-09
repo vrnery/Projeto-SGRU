@@ -6,10 +6,10 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="#{autenticarBean.setarPadraoInterno()}">    
-        <ui:define name="conteudo">            
+        <ui:define name="conteudo">                        
             <p:messages/>
-            <h:form enctype="multipart/form-data">
-                <h:panelGrid columns="2">
+            <h:form id="form" enctype="multipart/form-data">                
+                <h:panelGrid id="pnl" columns="2">
                     <p:outputLabel for="txtMatricula" value="Matricula: "/>
                     <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.cliente.matricula}" required="true"/>
                     <p:outputLabel for="txtNome" value="Nome: "/>
@@ -24,14 +24,21 @@
                     <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.cliente.senha}" required="true"/>
                 </h:panelGrid>
                 <h:panelGrid columns="2">
-                    <p:outputLabel for="txtTipo" value="Tipo: "/>
-                    <p:selectOneRadio id="txtTipo" value="#{cadastroBean.controladorCadastro.tipoCliente}" layout="grid" columns="3" required="true">
-                        <f:selectItems value="#{cadastroBean.controladorCadastro.tiposCliente}" var="t" itemLabel="#{t.descricao}" itemValue="#{t.id}"/>
-                    </p:selectOneRadio>
+                    <p:outputLabel for="somTipoCliente" value="Tipo: "/>
+                    <p:selectOneMenu id="somTipoCliente" 
+                                     value="#{cadastroBean.controladorCadastro.tipoCliente}" 
+                                     required="true"
+                                     style="width: 190px">
+                        <f:selectItems var="tipoCliente" value="#{cadastroBean.controladorCadastro.lstTipoCliente}" 
+                                       itemLabel="#{tipoCliente.descricao}" itemValue="#{tipoCliente}"/>
+                    </p:selectOneMenu>
                 </h:panelGrid>
-                <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>
+                <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>                
                 <p:button value="Voltar" outcome="index" rendered="#{!autenticarBean.vizualizarRotinasAdm()}"/>
-                <p:commandButton ajax="false" value="Salvar" action="#{cadastroBean.salvar(application.getRealPath(path))}"/>
+                <p:commandButton ajax="false" value="Salvar" 
+                                 actionListener="#{cadastroBean.salvarCliente(application.getRealPath(path))}">
+                    <p:resetInput target="@form"/>
+                </p:commandButton>
             </h:form>
         </ui:define>    
     </ui:composition>
