@@ -74,14 +74,12 @@ public class CadastroBean {
                 extArquivo = fileName.substring(fileName.lastIndexOf(".")+1);
             }
             this.controladorCadastro.salvarCliente(inputStream, extArquivo, txtPath);
-            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");
-            //return "index";                        
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Usuário cadastrado com sucesso!");            
         } catch(IOException e) {            
             enviarMensagem(FacesMessage.SEVERITY_ERROR, "Problemas ao carregar a foto!");                    
         } catch (UsuarioInvalidoException | DadoPessoaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        }            
-        //return null;
+        }                    
     }
     
     public void salvarFuncionario() {

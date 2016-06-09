@@ -43,21 +43,20 @@ public class FuncionarioDAO {
      * @param funcionario 
      * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Caso a matrícula ou o login informado já esteja cadastrado no sistema
      */
-    public void salvar(Funcionario funcionario) throws DadoPessoaInvalidoException {
-        sessao.saveOrUpdate(funcionario);
-        /*
+    public void salvar(Funcionario funcionario) throws DadoPessoaInvalidoException {        
         try {
             sessao.saveOrUpdate(funcionario);        
         } catch (ConstraintViolationException e) {            
             if (e.getSQLException().getMessage().contains("matricula")) {
+                sessao.clear();
                 throw new DadoPessoaInvalidoException("Matrícula já cadastrada!");
             } else if (e.getSQLException().getMessage().contains("login")) {
+                sessao.clear();
                 throw new DadoPessoaInvalidoException("Login já cadastrado!");
             } else {
                 
             }
         }
-        */
     }          
     
     /**

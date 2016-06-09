@@ -154,18 +154,7 @@ public class ControladorCadastro {
      */
     public void salvarCliente(InputStream inputStream, String extArquivo, String txtPath) 
             throws UsuarioInvalidoException, DadoPessoaInvalidoException, IOException {
-        Pessoa.consistirDados((Pessoa)this.cliente);        
-                
-        // Verifica se a matricula já foi cadastrada
-        if(verificaMatricula(this.cliente.getMatricula())) {
-            throw new UsuarioInvalidoException("Matricula já cadastrada!");                
-        }        
-        
-        // Verifica se o login já foi cadastrado
-        if(verificaLogin(this.cliente.getMatricula(), this.cliente.getLogin())) {
-            throw new UsuarioInvalidoException("Login já cadastrado!");
-        }        
-        
+        Pessoa.consistirDados((Pessoa)this.cliente);                        
         // Cliente alterou a foto
         if (inputStream != null) {
             //String caminhoFoto = "c:\\imagens\\" + this.cliente.getMatricula() + "." + extArquivo;
@@ -193,14 +182,6 @@ public class ControladorCadastro {
      */    
     public void salvarFuncionario() throws UsuarioInvalidoException, DadoPessoaInvalidoException {
         Pessoa.consistirDados((Pessoa)this.funcionario);        
-        
-        // Verifica se a matricula já foi cadastrada
-        if(verificaMatricula(funcionario.getMatricula()))
-            throw new UsuarioInvalidoException("Matricula já cadastrada!");
-        
-        // Verifica se o login já foi cadastrado
-        if(verificaLogin(funcionario.getMatricula(), funcionario.getLogin()))
-            throw new UsuarioInvalidoException("Login já cadastrado!");        
         
         FuncionarioDAO dao = new FuncionarioDAO();
         dao.salvar(funcionario);
@@ -283,50 +264,5 @@ public class ControladorCadastro {
                 }
             }
         }
-    }
-        
-    /**
-     * Verifica se a matricula já existe
-     * @param matricula A matricula a ser verificada
-     * @return True, caso a matrícula já esteja cadastrada e false, caso contrário
-     */
-    public boolean verificaMatricula(String matricula) {
-        boolean retorno = false;
-        for(Cliente cli : this.lstClientes){
-            if(cli.getMatricula().equals(matricula)){
-                retorno = true;
-                break;
-            }
-        }
-        for(Funcionario fun : this.lstFuncionarios){
-            if(fun.getMatricula().equals(matricula)) {
-                retorno = true;
-                break;
-            }
-        }
-        return retorno;
-    }
-        
-    /**
-     * Verifica se o login já existe e se não é da propria matricula
-     * @param matricula A matriícula do usuário
-     * @param login O login do usuário
-     * @return True, caso usuário já exista e false, caso contrário
-     */
-    public boolean verificaLogin(String matricula, String login) {
-        boolean retorno = false;
-        for(Cliente cli : this.lstClientes){
-            if(cli.getLogin().equals(login) && (!cli.getMatricula().equals(matricula))){
-                retorno = true;
-                break;
-            }
-        }
-        for(Funcionario fun : this.lstFuncionarios){
-            if(fun.getLogin().equals(login) && (!fun.getMatricula().equals(matricula))){
-                retorno = true;
-                break;
-            }
-        }
-        return retorno;
-    }    
+    }            
 }

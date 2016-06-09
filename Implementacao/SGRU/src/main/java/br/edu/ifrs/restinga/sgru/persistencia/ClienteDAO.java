@@ -44,20 +44,19 @@ public class ClienteDAO {
      * @throws br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException Caso a matrícula ou o login informado já esteja cadastrado no sistema
      */
     public void salvar(Cliente cliente) throws DadoPessoaInvalidoException {
-        sessao.saveOrUpdate(cliente);
-        /*
         try {
             sessao.saveOrUpdate(cliente);        
         } catch (ConstraintViolationException e) {            
             if (e.getSQLException().getMessage().contains("matricula")) {
+                sessao.clear();
                 throw new DadoPessoaInvalidoException("Matrícula já cadastrada!");
             } else if (e.getSQLException().getMessage().contains("login")) {
+                sessao.clear();
                 throw new DadoPessoaInvalidoException("Login já cadastrado!");
             } else {
                 
             }
         }
-        */
     }          
     
     /**
