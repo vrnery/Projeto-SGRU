@@ -26,11 +26,7 @@ public class VendaTicketsRecargas implements Serializable {
     @Id
     private int id;
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dataAbertura;
-    private double valorAbertura;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dataFechamento;
-    private double valorFechamento;
+    private Calendar dataVenda;
     @OneToOne
     @JoinColumn(name = "idValorAlmoco")
     private ValorAlmoco valorAlmoco;
@@ -57,62 +53,20 @@ public class VendaTicketsRecargas implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-
+    
     /**
-     * @return the dataAbertura
+     * @return the dataVenda
      */
-    public Calendar getDataAbertura() {
-        return dataAbertura;
+    public Calendar getDataVenda() {
+        return dataVenda;
     }
 
     /**
-     * @param dataAbertura the dataAbertura to set
+     * @param dataVenda the dataVenda to set
      */
-    public void setDataAbertura(Calendar dataAbertura) {
-        this.dataAbertura = dataAbertura;
-    }
-
-    /**
-     * @return the valorAbertura
-     */
-    public double getValorAbertura() {
-        return valorAbertura;
-    }
-
-    /**
-     * @param valorAbertura the valorAbertura to set
-     */
-    public void setValorAbertura(double valorAbertura) {
-        this.valorAbertura = valorAbertura;
-    }
-
-    /**
-     * @return the dataFechamento
-     */
-    public Calendar getDataFechamento() {
-        return dataFechamento;
-    }
-
-    /**
-     * @param dataFechamento the dataFechamento to set
-     */
-    public void setDataFechamento(Calendar dataFechamento) {
-        this.dataFechamento = dataFechamento;
-    }
-
-    /**
-     * @return the valorFechamento
-     */
-    public double getValorFechamento() {
-        return valorFechamento;
-    }
-
-    /**
-     * @param valorFechamento the valorFechamento to set
-     */
-    public void setValorFechamento(double valorFechamento) {
-        this.valorFechamento = valorFechamento;
-    }
+    public void setDataVenda(Calendar dataVenda) {
+        this.dataVenda = dataVenda;
+    }    
 
     /**
      * @return the valorAlmoco
