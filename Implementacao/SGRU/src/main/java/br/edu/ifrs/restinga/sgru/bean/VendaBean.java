@@ -164,6 +164,14 @@ public class VendaBean {
     }        
     
     /**
+     * Realiza a venda de um ticket para um cliente
+     * @return A próxima página a ser visualizada pelo operador
+     */
+    public String realizarVendaTicket() {
+        return null;
+    }
+    
+    /**
      * Confirma ou não confirmar a a venda do almoço
      * @param confirmar True, para confirmar a venda, e false para não confirmar
      * @return A próxima página que o operador será redirecionado

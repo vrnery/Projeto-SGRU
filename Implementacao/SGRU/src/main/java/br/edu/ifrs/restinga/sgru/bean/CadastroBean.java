@@ -134,6 +134,14 @@ public class CadastroBean {
     }
     
     /**
+     * Efetua a recarga em um cartão do cliente
+     * @return A próxima página a ser visualizada pelo operador
+     */
+    public String efetuarRecarga() {
+        return null;
+    }
+    
+    /**
      * @return the foto
      */
     public StreamedContent getFoto() {        

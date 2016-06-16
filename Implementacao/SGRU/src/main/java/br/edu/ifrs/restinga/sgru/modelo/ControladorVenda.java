@@ -139,6 +139,12 @@ public class ControladorVenda {
     }    
     
     /**
+     * Realiza a venda de um ticket para um cliente     
+     */
+    public void realizarVendaTicket() {        
+    }    
+    
+    /**
      * Confirma ou não confirmar a a venda do almoço
      * @param confirmar True, para confirmar a venda, e false para não confirmar     
      * @throws br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException Caso não encontre um valor de almoço cadastrado

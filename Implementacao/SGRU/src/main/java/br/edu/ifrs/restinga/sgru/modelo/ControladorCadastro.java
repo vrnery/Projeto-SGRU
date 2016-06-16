@@ -264,5 +264,11 @@ public class ControladorCadastro {
                 }
             }
         }
-    }            
+    }
+    
+        /**
+     * Efetua a recarga em um cartão do cliente
+     */
+    public void efetuarRecarga() {        
+    }
 }
