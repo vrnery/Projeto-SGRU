@@ -63,9 +63,15 @@ public class CadastroBean {
         this.file = file;
     }
     
-    public void salvarCliente(String txtPath) {
+    public void salvarCliente() {
         InputStream inputStream = null;
         String extArquivo = null;
+        String txtPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+        
+        // O separador serah colocado no controlador
+        if ((txtPath.endsWith("\\")) || ((txtPath.endsWith("/")))) {
+            txtPath = txtPath.substring(0, txtPath.length()-1);
+        }
         try {
             // Trata a foto, caso o usuario tenha alterado            
             if ((this.file != null) && (!this.file.getFileName().isEmpty()))  {
@@ -91,12 +97,17 @@ public class CadastroBean {
     }
     
     /**
-     * Edita um usuário
-     * @param txtPath Recebe a path da aplicação
+     * Edita um usuário     
      */
-    public void editarCliente(String txtPath) {         
+    public void editarCliente() {         
         InputStream inputStream = null;
         String extArquivo = null;
+        String txtPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+        
+        // O separador serah colocado no controlador
+        if ((txtPath.endsWith("\\")) || ((txtPath.endsWith("/")))) {
+            txtPath = txtPath.substring(0, txtPath.length()-1);
+        }
         try {
             // Trata a foto, caso o usuario tenha alterado            
             if ((this.file != null) && (!this.file.getFileName().isEmpty())) {

@@ -36,7 +36,7 @@
                 <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>                
                 <p:button value="Voltar" outcome="index" rendered="#{!autenticarBean.vizualizarRotinasAdm()}"/>
                 <p:commandButton ajax="false" value="Salvar" 
-                                 actionListener="#{cadastroBean.salvarCliente(application.getRealPath(path))}">
+                                 actionListener="#{cadastroBean.salvarCliente()}">
                     <p:resetInput target="@form"/>
                 </p:commandButton>
             </h:form>

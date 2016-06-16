@@ -57,8 +57,24 @@ public class AutenticarBean {
      * @return True, caso o usuário seja um operador de caixa e false, caso contrário
      */
     public boolean isUsuarioLogadoOperadorCaixa() {
-        return this.controlador.isUsuarioOperadorCaixa();
+        return this.controlador.isUsuarioLogadoOperadorCaixa();
     }
+    
+    /**
+     * Verifica se o usuário logado no sistema é um operador de sistema
+     * @return True, caso o usuário seja um operador de sistema e false, caso contrário
+     */
+    public boolean isUsuarioLogadoOperadorSistema() {
+        return this.controlador.isUsuarioLogadoOperadorSistema();
+    }
+    
+    /**
+     * Verifica se o usuário logado no sistema é um cliente
+     * @return True, caso o usuário seja um cliente e false, caso contrário
+     */
+    public boolean isUsuarioLogadoCliente() {
+        return this.controlador.isUsuarioLogadoCliente();
+    }    
     
     /**
      * Verifica se o usuário pode visualizar as rotinas administrativas, tais como emissão de relatório e edição de contra

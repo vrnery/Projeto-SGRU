@@ -38,7 +38,10 @@
                         <p:menuitem ajax="false" value="Relatórios" action="relatorios" rendered="#{autenticarBean.vizualizarRotinasAdm()}"/>
                         <p:menuitem ajax="false" value="Editar Conta" action="editarConta" rendered="#{autenticarBean.vizualizarRotinasAdm()}"/>
                         <p:menuitem ajax="false" value="Editar Clientes" action="manterCliente" rendered="#{autenticarBean.usuarioLogadoGerente}"/>
-                        <p:menuitem ajax="false" value="Editar Funcionários" action="manterFuncionario" rendered="#{autenticarBean.usuarioLogadoGerente}"/>
+                        <p:menuitem ajax="false" value="Editar Funcionários" action="manterFuncionario" rendered="#{autenticarBean.usuarioLogadoGerente}"/>                        
+                        <p:menuitem ajax="false" value="Recarregar Cartão" action="recarregarCartao" rendered="#{autenticarBean.usuarioLogadoCliente}"/>                        
+                        <p:menuitem ajax="false" value="Recarregar Cartão" action="recarregarCartao" rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>
+                        <p:menuitem ajax="false" value="Venda Ticket" action="vendaTicket" rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>
                     </p:menu>
                 </h:form>
             </p:layoutUnit>            

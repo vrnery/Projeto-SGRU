@@ -55,29 +55,51 @@ public class ControladorAutenticacao {
      * Verifica se o usuário logado no sistema é um gerente
      * @return True, se o usuário for gerente e false, caso contrário
      */
-        public boolean isUsuarioLogadoGerente() {
-        boolean retorno = false;
+        public boolean isUsuarioLogadoGerente() {        
         if (this.pessoa instanceof Funcionario) {
             if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.GERENTE)) {
-                retorno = true;
+                return true;
             }
         }
-        return retorno;
+        return false;
     }    
     
     /**
      * Verifica se o usuário logado no sistema é um operador de caixa
      * @return True, se o usuário for um operador de caixa e false, caso contrário
      */
-    public boolean isUsuarioOperadorCaixa() {
-        boolean retorno = false;
+    public boolean isUsuarioLogadoOperadorCaixa() {        
         if (this.pessoa instanceof Funcionario) {
             if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
-                retorno = true;
+                return true;
             }
         }
-        return retorno;
+        return false;
     }        
+    
+    /**
+     * Verifica se o usuário logado no sistema é um operador de sistema
+     * @return True, se o usuário for um operador de sistema e false, caso contrário
+     */
+    public boolean isUsuarioLogadoOperadorSistema() {        
+        if (this.pessoa instanceof Funcionario) {
+            if (((Funcionario)this.pessoa).getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_SISTEMA)) {
+                return true;
+            }
+        }
+        return false;
+    }            
+    
+    /**
+     * Verifica se o usuário logado no sistema é um cliente
+     * @return True, se o usuário for um cliente e false, caso contrário
+     */
+    public boolean isUsuarioLogadoCliente() {        
+        if (this.pessoa instanceof Cliente) {            
+            return true;            
+        }
+        return false;
+    }                
     
     /**
      * Verifica se o usuário pode visualizar as rotinas administrativas, tais como emissão de relatório e edição de contra
@@ -104,8 +126,7 @@ public class ControladorAutenticacao {
      * @throws br.edu.ifrs.restinga.sgru.excessao.LoginInvalidoException Se o login for inválido         
      */
     public String autenticar(String login, String senha) throws LoginInvalidoException {        
-        String retorno = null;        
-        //this.pessoa = this.realizarLogin();
+        String retorno = null;                
         this.pessoa = Pessoa.validarLoginUsuario(login, senha);
 
         if (pessoa instanceof Funcionario) {
@@ -116,6 +137,9 @@ public class ControladorAutenticacao {
                     break;
                 case Funcionario.GERENTE:
                     retorno = "paginaGerencial";
+                    break;
+                case Funcionario.OPERADOR_SISTEMA:
+                    retorno = "recarregarCartao";
                     break;
                 default:
                     // Aqui precisa-se verificar o comportamento quando implementados os demais usuarios

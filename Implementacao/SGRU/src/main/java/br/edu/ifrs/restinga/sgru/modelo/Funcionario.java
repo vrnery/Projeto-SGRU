@@ -22,6 +22,8 @@ public class Funcionario extends Pessoa {
     public static final String GERENTE = "001";
     @Transient
     public static final String OPERADOR_CAIXA = "002";
+    @Transient
+    public static final String OPERADOR_SISTEMA = "003";
     
     @ManyToOne
     @JoinColumn(name = "idTipoFuncionario")
