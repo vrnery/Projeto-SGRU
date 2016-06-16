@@ -5,17 +5,49 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema sgru
--- -----------------------------------------------------
-
--- -----------------------------------------------------
 -- Schema sgru
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
 USE `sgru` ;
+
+-- -----------------------------------------------------
+-- Table `sgru`.`cartao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `dataCredito` DATETIME NOT NULL,
+  `saldo` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `sgru`.`valoralmoco`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `valorAlmoco` DECIMAL(6,2) NOT NULL,
+  `dataValor` DATETIME NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `sgru`.`ticket`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `valor` DECIMAL(6,2) NOT NULL,
+  `dataCriado` DATETIME NOT NULL,
+  `dataUtilizado` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 
 -- -----------------------------------------------------
 -- Table `sgru`.`pessoa`
@@ -92,17 +124,42 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `sgru`.`cartao`
+-- Table `sgru`.`VendaTicketsRecargas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `dataCredito` DATETIME NOT NULL,
-  `saldo` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 5
-DEFAULT CHARACTER SET = utf8;
+CREATE TABLE IF NOT EXISTS `sgru`.`VendaTicketsRecargas` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idCaixaRU` INT(10) UNSIGNED NOT NULL,
+  `idValorAlmoco` INT(10) UNSIGNED NULL,
+  `idCartao` INT(10) UNSIGNED NULL,
+  `idTicket` INT(10) UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_VendaTicketsRecargas_cartao_idx` (`idCartao` ASC),
+  INDEX `fk_VendaTicketsRecargas_valoralmoco1_idx` (`idValorAlmoco` ASC),
+  INDEX `fk_VendaTicketsRecargas_ticket1_idx` (`idTicket` ASC),
+  INDEX `fk_VendaTicketsRecargas_caixaru1_idx` (`idCaixaRU` ASC),
+  CONSTRAINT `fk_VendaTicketsRecargas_cartao`
+    FOREIGN KEY (`idCartao`)
+    REFERENCES `sgru`.`cartao` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_VendaTicketsRecargas_valoralmoco1`
+    FOREIGN KEY (`idValorAlmoco`)
+    REFERENCES `sgru`.`valoralmoco` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_VendaTicketsRecargas_ticket1`
+    FOREIGN KEY (`idTicket`)
+    REFERENCES `sgru`.`ticket` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_VendaTicketsRecargas_caixaru1`
+    FOREIGN KEY (`idCaixaRU`)
+    REFERENCES `sgru`.`caixaru` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
+USE `sgru` ;
 
 -- -----------------------------------------------------
 -- Table `sgru`.`tipocliente`
@@ -170,32 +227,6 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `sgru`.`ticket`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`ticket` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `valor` DECIMAL(6,2) NOT NULL,
-  `dataCriado` DATETIME NOT NULL,
-  `dataUtilizado` DATETIME NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `sgru`.`valoralmoco`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sgru`.`valoralmoco` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `valorAlmoco` DECIMAL(6,2) NOT NULL,
-  `dataValor` DATETIME NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 5
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
 -- Table `sgru`.`vendaalmoco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaalmoco` (
@@ -237,6 +268,7 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 
 -- Cria usuário da aplicação:
 
