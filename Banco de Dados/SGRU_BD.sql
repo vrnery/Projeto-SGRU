@@ -128,6 +128,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sgru`.`VendaTicketsRecargas` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `dataVenda` DATETIME NOT NULL,
   `idCaixaRU` INT(10) UNSIGNED NOT NULL,
   `idValorAlmoco` INT(10) UNSIGNED NULL,
   `idCartao` INT(10) UNSIGNED NULL,
