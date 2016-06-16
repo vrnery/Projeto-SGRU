@@ -94,7 +94,7 @@ public class CadastroBean {
      * Edita um usuário
      * @param txtPath Recebe a path da aplicação
      */
-    public void editarUsuario(String txtPath) {         
+    public void editarCliente(String txtPath) {         
         InputStream inputStream = null;
         String extArquivo = null;
         try {

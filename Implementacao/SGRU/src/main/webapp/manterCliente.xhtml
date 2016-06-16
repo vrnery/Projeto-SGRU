@@ -68,7 +68,7 @@
                     </p:selectOneMenu>
                     </h:panelGrid>
                     <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" allowTypes="/(\.|\/)(jpe?g|png)$/"/> <br/><br/>
-                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarUsuario(application.getRealPath(path))}" onclick="dlgEditarUsuario.hide();" update=":fmrPrincipal:dtbClientes"/>
+                    <p:commandButton ajax="true" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarCliente(application.getRealPath(path))}" onclick="dlgEditarUsuario.hide();" update=":fmrPrincipal:dtbClientes"/>
                 </h:form>
             </p:dialog>
         </ui:define>

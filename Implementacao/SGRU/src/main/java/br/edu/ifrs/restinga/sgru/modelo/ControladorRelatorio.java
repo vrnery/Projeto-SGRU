@@ -9,7 +9,6 @@ import br.edu.ifrs.restinga.sgru.bean.RelatorioBean;
 import br.edu.ifrs.restinga.sgru.excessao.DataRelatorioInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.RecargaNaoEncontradaException;
 import br.edu.ifrs.restinga.sgru.excessao.RelatorioException;
-import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.PessoaDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.RelatoriosDAO;
