@@ -22,7 +22,7 @@
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtValorAbertura" value="Informe o valor para abertura do caixa: "/>
                     <p:inputText id="txtValorAbertura" size="20" required="true" value="#{vendaBean.controlador.caixaRU.valorAbertura}">                    
-                        <f:convertNumber type="currency"/>
+                        <f:convertNumber type="currency" locale="pt_BR"/>
                     </p:inputText>
                 </h:panelGrid>
                 <p:commandButton ajax="false" value="Abrir" action="#{vendaBean.realizarAberturaCaixa(vendaBean.controlador.caixaRU.valorAbertura)}"/>

@@ -14,6 +14,7 @@ import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.VendaTicketsRecargasDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +48,9 @@ public class CaixaRU implements Serializable {
     private Funcionario funcionario;                  
     // Atributos nao persistidos no banco
     @Transient
-    private List<VendaAlmoco> lstVendaAlmoco = new ArrayList();        
+    private List<VendaAlmoco> lstVendaAlmoco;        
+    @Transient
+    private List<VendaTicketsRecargas> lstVendaTicketsRecargas;
     @Transient
     private ValorAlmoco valorAtualAlmoco;
     
@@ -143,6 +146,13 @@ public class CaixaRU implements Serializable {
     }
     
     /**
+     * @return the lstVendaTicketsRecargas
+     */
+    public List<VendaTicketsRecargas> getLstVendaTicketsRecargas() {
+        return lstVendaTicketsRecargas;
+    }    
+    
+    /**
      * 
      * @param lstVendaAlmoco the lstVendaAlmoco to set
      */
@@ -179,6 +189,24 @@ public class CaixaRU implements Serializable {
     }        
     
     /**
+     * Realiza um recarga em um determinado cartao
+     * @param recarga A recarga a ser realizada
+     */
+    public void realizarRecarga(Recarga recarga) {
+        VendaTicketsRecargas vendaTicketsRecargas = new VendaTicketsRecargas();
+        VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
+        
+        vendaTicketsRecargas.setCaixaRU(this);        
+        vendaTicketsRecargas.setRecarga(recarga);
+        vendaTicketsRecargas.setTicket(null);
+        vendaTicketsRecargas.setDataVenda(Calendar.getInstance());
+        vendaTicketsRecargas.setValorAlmoco(this.valorAtualAlmoco);
+        daoVendaTicketsRecargas.salvar(vendaTicketsRecargas);
+        
+        this.lstVendaTicketsRecargas.add(vendaTicketsRecargas);
+    }
+    
+    /**
      * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa
      * @param oper O operador que vai operar o caixa
      * @param valorAbertura O valor de abertura do caixa     
@@ -189,6 +217,16 @@ public class CaixaRU implements Serializable {
         if (valorAbertura < 0) {
             throw new ValorAberturaCaixaInvalido("Valor inválido!");            
         }
+
+        /*
+        // Verifica qual lista instanciar: lstVendaAlmoco, para venda de almocos;
+        // e lstVendaTicketsRecargas, para venda de recargas
+        if (oper.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
+            this.lstVendaAlmoco = new ArrayList();
+        } else if (oper.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_SISTEMA)) {
+            this.lstVendaTicketsRecargas = new ArrayList();
+        }
+        */
         
         setFuncionario(oper);
         setValorAbertura(valorAbertura);
@@ -197,7 +235,7 @@ public class CaixaRU implements Serializable {
         
         CaixaRUDAO dao = new CaixaRUDAO();
         dao.salvar(this);        
-    }    
+    }            
     
     /**
      * Realiza uma venda de almoco com cartao para o cliente
@@ -298,13 +336,26 @@ public class CaixaRU implements Serializable {
      * Realiza o fechamento de caixa
      * @throws ValorAlmocoInvalidoException Caso encontre algum valor de almoco invalido
      */
-    public void realizarFechamentoCaixa() throws ValorAlmocoInvalidoException {
-        // calcula a soma de todos os almocos vendidos no dia e
+    public void realizarFechamentoCaixa() throws ValorAlmocoInvalidoException {                
         // seta o valor do fechamento                            
-        valorFechamento = 0;
-        for (VendaAlmoco vendaAlmoco : getLstVendaAlmoco()) {
-            valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
-        }        
+        this.valorFechamento = 0;
+        
+        if (this.lstVendaAlmoco != null) {
+            // calcula a soma de todos os almocos vendidos no dia e            
+            for (VendaAlmoco vendaAlmoco : this.lstVendaAlmoco) {
+                this.valorFechamento += vendaAlmoco.getValorAlmoco().getValorAlmoco();
+            }        
+        } else if (this.lstVendaTicketsRecargas != null) {            
+            for (VendaTicketsRecargas vendaTicketsRecargas : this.lstVendaTicketsRecargas) {
+                // O valor do almoco para ticket eh sempre o valor atual
+                if (vendaTicketsRecargas.getTicket() != null) {
+                    this.valorFechamento += ValorAlmoco.carregarValorAtualAlmoco().getValorAlmoco();
+                } else {
+                    // Venda de recarga
+                    this.valorFechamento += vendaTicketsRecargas.getRecarga().getValorRecarregado();
+                }
+            }
+        }
         // Soma o valor de abertura no fechamento
         valorFechamento += valorAbertura;
         setDataFechamento(Calendar.getInstance());            
@@ -317,10 +368,21 @@ public class CaixaRU implements Serializable {
      * Carrega os almoços vendidos no dia para determinado caixa
      */
     public void preencherListaAlmoco() {
-        if (getLstVendaAlmoco().isEmpty()) {
+        if (this.lstVendaAlmoco == null) {
             // realiza a consulta para verificar se existe alguma venda para o dia            
             VendaAlmocoDAO daoVendaAlmoco = new VendaAlmocoDAO();
             this.lstVendaAlmoco = daoVendaAlmoco.carregar(id,Calendar.getInstance());            
+        }
+    }        
+    
+    /**
+     * Carrega os almoços vendidos no dia para determinado caixa
+     */
+    public void preencherListaVendaTicketsRecargas() {
+        if (this.lstVendaTicketsRecargas == null) {
+            // realiza a consulta para verificar se existe alguma venda para o dia            
+            VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
+            this.lstVendaTicketsRecargas = daoVendaTicketsRecargas.carregar(this.id,Calendar.getInstance());            
         }
     }        
     

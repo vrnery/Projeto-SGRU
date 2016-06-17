@@ -135,12 +135,12 @@ public class ControladorAutenticacao {
                 case Funcionario.OPERADOR_CAIXA:
                     retorno = "abrirCaixa";
                     break;
+                case Funcionario.OPERADOR_SISTEMA:
+                    retorno = "abrirCaixa";
+                    break;                    
                 case Funcionario.GERENTE:
                     retorno = "paginaGerencial";
-                    break;
-                case Funcionario.OPERADOR_SISTEMA:
-                    retorno = "recarregarCartao";
-                    break;
+                    break;                
                 default:
                     // Aqui precisa-se verificar o comportamento quando implementados os demais usuarios
                     retorno = "index";

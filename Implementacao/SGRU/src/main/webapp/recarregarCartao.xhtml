@@ -3,12 +3,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInternoComMenu.xhtml">
         <ui:define name="conteudo">
-            <p:messages/>
+            <p:messages/>            
+            <f:event listener="#{vendaBean.controlador.setClienteRecarga(autenticarBean.controlador.pessoa)}" type="preRenderView"/>            
+            <f:event listener="#{vendaBean.iniciarRecarga()}" type="preRenderView"/>
             <h:form id="frmPrincipal">
-                
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="txtMatricula" value="Matrícula:" 
+                                   rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>
+                    <p:inputText id="txtMatricula" value="#{vendaBean.controlador.cliente.matricula}" 
+                                 required="true"
+                                 rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>                    
+                    <h:outputLabel for="txtValor" value="Valor:"/>
+                    <p:inputText id="txtValor" 
+                                 required="true"
+                                 value="#{vendaBean.controlador.recarga.valorRecarregado}">
+                        <f:convertNumber type="currency" locale="pt_BR"/>
+                    </p:inputText>                                        
+                </h:panelGrid>
+                <p:commandButton ajax="false" value="Recarregar" style="width: 200px" action="#{vendaBean.realizarRecarga()}"/> 
             </h:form>
         </ui:define>
     </ui:composition>

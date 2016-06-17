@@ -6,6 +6,7 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
+import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.FuncionarioDAO;
@@ -29,7 +30,7 @@ import java.util.List;
 public class ControladorCadastro {
     private Cliente cliente;
     private Funcionario funcionario;
-    private Pessoa pessoa;
+    private Pessoa pessoa;    
     private final List<TipoCliente> lstTipoCliente;
     private final List<TipoFuncionario> lstTipoFuncionario;
     private List<Cliente> lstClientes;
@@ -39,7 +40,7 @@ public class ControladorCadastro {
     
     public ControladorCadastro() {
         this.cliente = new Cliente();        
-        this.funcionario = new Funcionario();
+        this.funcionario = new Funcionario();        
         
         // Carrega lista de clientes
         TipoClienteDAO dao = new TipoClienteDAO();
@@ -97,7 +98,7 @@ public class ControladorCadastro {
             this.funcionario = (Funcionario)pessoa;
         }
     }
-
+    
     public List<TipoCliente> getLstTipoCliente() {        
         return lstTipoCliente;
     }
@@ -141,7 +142,7 @@ public class ControladorCadastro {
     public void setTipoFuncionario(TipoFuncionario tipoFuncionario) {
         this.tipoFuncionario = tipoFuncionario;
         funcionario.setTipoFuncionario(tipoFuncionario);
-    }
+    }    
     
     /**
      * Persiste um cliente na base da dados

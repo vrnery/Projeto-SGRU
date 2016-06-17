@@ -57,7 +57,7 @@ public class Cartao implements Serializable {
      */
     public Calendar getDataCredito() {
         return dataCredito;
-    }
+    }   
 
     /**
      * @param dataCredito the dataCredito to set

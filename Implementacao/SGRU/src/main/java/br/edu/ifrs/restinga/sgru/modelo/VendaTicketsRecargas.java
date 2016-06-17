@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  * @author marcelo.lima
  */
 @Entity
-public class VendaTicketsRecargas implements Serializable {
+public class VendaTicketsRecargas implements Serializable {        
     @GeneratedValue
     @Id
     private int id;
@@ -34,11 +34,11 @@ public class VendaTicketsRecargas implements Serializable {
     @JoinColumn(name = "idTicket")
     private Ticket ticket;
     @OneToOne
-    @JoinColumn(name = "idCartao")
-    private Cartao cartao;    
+    @JoinColumn(name = "idRecarga")
+    private Recarga recarga;    
     @ManyToOne
     @JoinColumn(name = "idCaixaRU")
-    private CaixaRU caixaRU;
+    private CaixaRU caixaRU;        
 
     /**
      * @return the id
@@ -97,17 +97,17 @@ public class VendaTicketsRecargas implements Serializable {
     }
 
     /**
-     * @return the cartao
+     * @return the recarga
      */
-    public Cartao getCartao() {
-        return cartao;
+    public Recarga getRecarga() {
+        return recarga;
     }
 
     /**
-     * @param cartao the cartao to set
+     * @param recarga the recarga to set
      */
-    public void setCartao(Cartao cartao) {
-        this.cartao = cartao;
+    public void setRecarga(Recarga recarga) {
+        this.recarga = recarga;
     }
 
     /**
@@ -122,5 +122,5 @@ public class VendaTicketsRecargas implements Serializable {
      */
     public void setCaixaRU(CaixaRU caixaRU) {
         this.caixaRU = caixaRU;
-    }
+    }    
 }

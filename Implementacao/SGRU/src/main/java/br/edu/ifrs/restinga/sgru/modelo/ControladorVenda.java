@@ -22,15 +22,19 @@ import java.util.Calendar;
  * @author marcelo.lima
  */
 public class ControladorVenda {      
+    private static final int FORMA_PGTO_PAYPAL = 1;
+    
     private CaixaRU caixaRU;      
     private Cliente cliente;
-    private Funcionario operador;
+    private Funcionario operador;        
+    private Recarga recarga;
 
-    /*
-    public ControladorVenda() {
-        this.caixaRU = new CaixaRU();
-    } 
-    */
+    /**
+     * @return the FORMA_PGTO_PAYPAL
+     */
+    public static int getFORMA_PGTO_PAYPAL() {
+        return FORMA_PGTO_PAYPAL;
+    }    
     
     /**
      * @return the caixaRU
@@ -85,33 +89,104 @@ public class ControladorVenda {
     }       
     
     /**
-     * Verifica se o caixa está aberto     
-     * @return True, caso o caixa esteja aberto e false, caso contrário
+     * @return the recarga
      */
-    public boolean carregarCaixaAberto() {
+    public Recarga getRecarga() {
+        return recarga;
+    }
+
+    /**
+     * @param recarga the recarga to set
+     */
+    public void setRecarga(Recarga recarga) {
+        this.recarga = recarga;
+    }
+    
+    /**
+     * Seta o cliente para a recarga e, caso haja operador logado, seta o operador
+     * @param pessoa A pessoa logada no sistema
+     */
+    public void setClienteRecarga(Pessoa pessoa) {
+        if (pessoa instanceof Funcionario) {
+            this.operador = (Funcionario) pessoa;
+            // O cliente nao estah logado no sistema, mas precisa ser instanciado
+            this.cliente = new Cliente();
+        } else {
+            // Cliente logado no sistema
+            this.cliente = (Cliente) pessoa;
+        }
+    }
+
+    /**
+     * Instancia um objeto recarga com a data atual e seu valor atualizado como false
+     */
+    public void iniciarRecarga() {
+        this.recarga = new Recarga();
+        this.recarga.setDataCredito(Calendar.getInstance());
+        this.recarga.setUtilizado(false);         
+    }
+    
+    /**
+     * Realiza a recarga para o cliente
+     * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Caso a matrícula informada não esteja cadastrada
+     */
+    public void realizarRecarga() throws MatriculaInvalidaException {
+        // Recarga realizada no caixa
+        if (this.operador != null) {
+            ClienteDAO daoCliente = new ClienteDAO();
+            this.cliente = daoCliente.carregar(this.cliente.getMatricula());
+            // Seta o cartao da recarga
+            this.recarga.setCartao(this.cliente.getCartao());
+        } else {
+            // Recarga realizada na pagina do cliente
+            this.recarga.setCartao(this.cliente.getCartao());
+        }     
+        
+        this.caixaRU.realizarRecarga(this.recarga);
+    }    
+    
+    /**
+     * Verifica se o caixa está aberto     
+     * @return A próxima página a ser visualizada pelo operador e Null, caso o caixa esteja fechado
+     */
+    public String carregarCaixaAberto() {
         CaixaRUDAO dao = new CaixaRUDAO();
         this.caixaRU = dao.carregarCaixaAberto(this.operador, Calendar.getInstance());
         if (this.caixaRU != null) {
             // Carrega o valor atual do almoco
-            this.caixaRU.carregarValorAtualAlmoco();
-            // verifica se a lista de almocos estah preenchida
-            this.caixaRU.preencherListaAlmoco();
-            return true;
-        } else {
-            // Se nao encontrar o caixa, retorna false
-            this.caixaRU = new CaixaRU();
-            return false;
+            this.caixaRU.carregarValorAtualAlmoco();            
+            
+            if (this.operador.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
+                // verifica se a lista de almocos estah preenchida
+                this.caixaRU.preencherListaAlmoco();
+                return "caixa";
+            } else if (this.operador.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_SISTEMA)) {
+                // verifica se a lista de venda ticket/recargas estah preenchida
+                this.caixaRU.preencherListaVendaTicketsRecargas();
+                return "recarregarCartao";
+            }
         }
+        // Se nao encontrar o caixa, retorna null
+        this.caixaRU = new CaixaRU();
+        return null;        
     }
     
     /**
      * Carrega um caixa já aberto (com valor de fechamento zerado) ou abre um novo caixa     
      * @param valorAbertura O valor de abertura do caixa     
+     * @return A próxima página a ser visitada pelo operador     
      * @throws br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido Caso o valor de abertura informado seja zero ou negativo     
      */
-    public void realizarAberturaCaixa(double valorAbertura) throws
+    public String realizarAberturaCaixa(double valorAbertura) throws
             ValorAberturaCaixaInvalido {
         this.getCaixaRU().realizarAberturaCaixa(this.operador, valorAbertura);
+        
+        if (this.operador.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
+            return "caixa";
+        } else if (this.operador.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_SISTEMA)) {
+            return "recarregarCartao";
+        }
+        return null;
     }
     
     /**
@@ -142,7 +217,7 @@ public class ControladorVenda {
      * Realiza a venda de um ticket para um cliente     
      */
     public void realizarVendaTicket() {        
-    }    
+    }        
     
     /**
      * Confirma ou não confirmar a a venda do almoço

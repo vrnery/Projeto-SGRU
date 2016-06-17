@@ -17,6 +17,7 @@
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Ticket"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.ValorAlmoco"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaAlmoco"/>
+    <mapping class="br.edu.ifrs.restinga.sgru.modelo.VendaTicketsRecargas"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Cliente"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.TipoCliente"/>
     <mapping class="br.edu.ifrs.restinga.sgru.modelo.Funcionario"/>

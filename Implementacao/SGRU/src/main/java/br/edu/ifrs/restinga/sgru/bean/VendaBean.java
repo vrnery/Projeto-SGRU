@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
@@ -37,13 +39,13 @@ import org.primefaces.model.StreamedContent;
 @SessionScoped
 public class VendaBean {
     // Caso nao consiga carregar foto do cliente
-    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/fotos/semFoto.png";
+    private static final String CAMINHO_FOTO_DEFAULT = "/imagens/fotos/semFoto.png";            
     private final ControladorVenda controlador;    
 
     public VendaBean() {        
         this.controlador = new ControladorVenda();
-    }        
-
+    }           
+    
     /**     
      * @return the controlador
      */
@@ -57,6 +59,28 @@ public class VendaBean {
         } catch (ArrayIndexOutOfBoundsException | ValorAlmocoInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
+    }
+
+    /**
+     * Instancia um objeto recarga com a data atual e seu valor atualizado como false
+     */
+    public void iniciarRecarga() {
+        this.controlador.iniciarRecarga();
+    }
+    
+    /**
+     * Realiza uma recarga para um cartão
+     * @return A próxima página a ser exibida para o usuário
+     */
+    public String realizarRecarga() {
+        try {
+            this.controlador.realizarRecarga();
+            //enviarMensagem(FacesMessage.SEVERITY_INFO, "Recarga realizada com sucesso!");
+        } catch (MatriculaInvalidaException ex) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+            return null;
+        }
+        return null;
     }
     
     /**
@@ -95,16 +119,13 @@ public class VendaBean {
      * Verifica se já existe um caixa aberto, que ainda não foi fechado, para o operador naquele dia     
      */
     public void carregarCaixaAberto() {
-        if (controlador.carregarCaixaAberto()) {                                   
+        String proximaPagina = controlador.carregarCaixaAberto();
+        if (proximaPagina != null) {                                   
             // Caixa jah aberto, redireciona para a pagina do caixa
             ConfigurableNavigationHandler nav  = 
                     (ConfigurableNavigationHandler) FacesContext.getCurrentInstance().getApplication().getNavigationHandler();
             
-            nav.performNavigation("caixa.xhtml?faces-redirect=true");     
-        } else {
-            // garante que haverah um caixaRU para setar as propriedades
-            // na abertura de caixa
-            //controlador.setCaixaRU(new CaixaRU());
+            nav.performNavigation(proximaPagina + ".xhtml?faces-redirect=true");     
         }
     }     
     
@@ -115,12 +136,11 @@ public class VendaBean {
      */
     public String realizarAberturaCaixa(double valorAbertura) {
         try {
-            controlador.realizarAberturaCaixa(valorAbertura);
+            return controlador.realizarAberturaCaixa(valorAbertura);
         } catch (ValorAberturaCaixaInvalido e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, "Valor inválido!");
             return null;
-        }
-        return "caixa";
+        }        
     }    
     
     /**
