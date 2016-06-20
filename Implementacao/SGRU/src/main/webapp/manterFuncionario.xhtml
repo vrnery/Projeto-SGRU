@@ -16,13 +16,16 @@
                     <p:column headerText="Matrícula" filterBy="#{funcionario.matricula}" width="120" style="text-align: center">
                         <h:outputText value="#{funcionario.matricula}"/>
                     </p:column>
+                    <p:column headerText="Login" filterBy="#{funcionario.login}" style="text-align: center">
+                        <h:outputText value="#{funcionario.login}"/>
+                    </p:column>
                     <p:column headerText="Nome" filterBy="#{funcionario.nome}" style="text-align: center">
                         <h:outputText value="#{funcionario.nome}"/>
                     </p:column>
                     <p:column headerText="E-mail" filterBy="#{funcionario.email}" style="text-align: center">
                         <h:outputText value="#{funcionario.email}"/>
                     </p:column>
-                    <p:column headerText="Telefone" filterBy="#{funcionario.telefone}" style="text-align: center">
+                    <p:column headerText="Telefone" filterBy="#{funcionario.telefone}" width="145" style="text-align: center">
                         <h:outputFormat value="#{funcionario.telefone}" id="ofTelefone">
                             <f:converter converterId="conversor" />
                         </h:outputFormat>

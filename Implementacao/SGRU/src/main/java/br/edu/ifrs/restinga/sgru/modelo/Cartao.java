@@ -123,12 +123,12 @@ public class Cartao implements Serializable {
      */
     public void verificarSaldoCartao() throws SaldoInsuficienteException {
         try {
-            if (getSaldo() <= 0) {
+            if (this.saldo <= 0) {
                 // eh necessario atualizar o saldo
                 transferirRecargaParaCartao();
 
                 // Caso recarga zerada
-                if (getSaldo() <= 0) {
+                if (this.saldo <= 0) {
                     throw new SaldoInsuficienteException("Saldo insuficiente!");
                 }
             }

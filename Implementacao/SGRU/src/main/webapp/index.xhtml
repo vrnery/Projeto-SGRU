@@ -13,9 +13,12 @@
                     <p:inputText id="txtUsuario" maxlength="30" size="20" required="true" binding="#{login}"/>
                     <p:outputLabel for="txtSenha" value="Senha: "/>
                     <p:password id="txtSenha" maxlength="32" size="20" required="true" binding="#{senha}"/>                    
-                    <p:commandButton ajax="false" value="Entrar" action="#{autenticarBean.autenticar(login.value, senha.value)}" />                
-                    <p:button outcome="cadastrarCliente.xhtml" value="Novo Usuário"/>            
                 </h:panelGrid>                
+                <h:panelGrid columns="2">
+                    <p:commandButton ajax="false" value="Entrar" style="width:145px" 
+                                     action="#{autenticarBean.autenticar(login.value, senha.value)}" />                
+                    <p:button outcome="cadastrarCliente.xhtml" value="Novo Usuário" style="width:155px"/>            
+                </h:panelGrid>
             </h:form>                            
         </ui:define>
     </ui:composition>

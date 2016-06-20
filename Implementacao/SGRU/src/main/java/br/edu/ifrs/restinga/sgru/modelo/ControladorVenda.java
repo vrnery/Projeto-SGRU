@@ -13,8 +13,10 @@ import br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
+import br.edu.ifrs.restinga.sgru.excessao.ValorRecargaInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -22,17 +24,22 @@ import java.util.Calendar;
  * @author marcelo.lima
  */
 public class ControladorVenda {      
-    private static final int FORMA_PGTO_PAYPAL = 1;
+    private final int FORMA_PGTO_PAYPAL = 1;
     
     private CaixaRU caixaRU;      
     private Cliente cliente;
     private Funcionario operador;        
     private Recarga recarga;
+    private int formaPgto;
 
+    public ControladorVenda() {
+        this.formaPgto = this.FORMA_PGTO_PAYPAL;
+    }   
+    
     /**
      * @return the FORMA_PGTO_PAYPAL
      */
-    public static int getFORMA_PGTO_PAYPAL() {
+    public int getFORMA_PGTO_PAYPAL() {
         return FORMA_PGTO_PAYPAL;
     }    
     
@@ -118,6 +125,20 @@ public class ControladorVenda {
     }
 
     /**
+     * @return the formaPgto
+     */
+    public int getFormaPgto() {
+        return formaPgto;
+    }
+
+    /**
+     * @param formaPgto the formaPgto to set
+     */
+    public void setFormaPgto(int formaPgto) {
+        this.formaPgto = formaPgto;
+    }
+    
+    /**
      * Instancia um objeto recarga com a data atual e seu valor atualizado como false
      */
     public void iniciarRecarga() {
@@ -129,20 +150,32 @@ public class ControladorVenda {
     /**
      * Realiza a recarga para o cliente
      * @throws br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException Caso a matrícula informada não esteja cadastrada
+     * @throws br.edu.ifrs.restinga.sgru.excessao.ValorRecargaInvalidoException Caso o valor da recarga seja inválido
      */
-    public void realizarRecarga() throws MatriculaInvalidaException {
+    public void realizarRecarga() throws MatriculaInvalidaException,
+            ValorRecargaInvalidoException {
+        // Verifica valores invalidos para recarga
+        if (this.recarga.getValorRecarregado() <= 0) {
+            throw new ValorRecargaInvalidoException("Valor inválido de recarga!");
+        }
         // Recarga realizada no caixa
         if (this.operador != null) {
             ClienteDAO daoCliente = new ClienteDAO();
             this.cliente = daoCliente.carregar(this.cliente.getMatricula());
             // Seta o cartao da recarga
             this.recarga.setCartao(this.cliente.getCartao());
+            VendaTicketsRecargas vendaTicketsRecargas = new VendaTicketsRecargas();                
+            vendaTicketsRecargas.setCaixaRU(this.caixaRU);        
+            vendaTicketsRecargas.setRecarga(recarga);            
+            vendaTicketsRecargas.realizarRecargaCaixa();
+            this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecargas);
         } else {
             // Recarga realizada na pagina do cliente
             this.recarga.setCartao(this.cliente.getCartao());
-        }     
-        
-        this.caixaRU.realizarRecarga(this.recarga);
+            VendaTicketsRecargas vendaTicketsRecargas = new VendaTicketsRecargas();            
+            vendaTicketsRecargas.setRecarga(recarga);
+            vendaTicketsRecargas.realizarRecargaPaginaCliente();
+        }                     
     }    
     
     /**
@@ -166,8 +199,18 @@ public class ControladorVenda {
                 return "recarregarCartao";
             }
         }
+
         // Se nao encontrar o caixa, retorna null
         this.caixaRU = new CaixaRU();
+        
+        // Verifica qual lista instanciar: lstVendaAlmoco, para venda de almocos;
+        // e lstVendaTicketsRecargas, para venda de recargas
+         if (this.operador.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
+            this.caixaRU.setLstVendaAlmoco(new ArrayList());
+        } else if (this.operador.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_SISTEMA)) {
+            this.caixaRU.setLstVendaTicketsRecargas(new ArrayList());
+        }        
+                
         return null;        
     }
     
@@ -244,5 +287,5 @@ public class ControladorVenda {
     public void carregarCliente(String matricula) throws MatriculaInvalidaException {
         ClienteDAO dao = new ClienteDAO();                
         cliente = dao.carregar(matricula);
-   }
+   }        
 }

@@ -36,7 +36,7 @@ public class Conversor implements Converter {
             // Valor utilizado da recarga            
             if (component.getId().equals("ofUtilizado")) {
                 Boolean valor = (Boolean) modelValue;
-                return valor?"Sim":"Não";
+                return valor?"Sim":"Nao";
             }       
         }
         return "";

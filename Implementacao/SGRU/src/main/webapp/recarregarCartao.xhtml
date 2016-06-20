@@ -22,7 +22,12 @@
                                  required="true"
                                  value="#{vendaBean.controlador.recarga.valorRecarregado}">
                         <f:convertNumber type="currency" locale="pt_BR"/>
-                    </p:inputText>                                        
+                    </p:inputText> 
+                    <h:outputLabel for="sorFormaPgto" value="Forma de Pagamento:" rendered="#{autenticarBean.usuarioLogadoCliente}"/>
+                    <p:selectOneRadio id="sorFormaPgto" rendered="#{autenticarBean.usuarioLogadoCliente}" 
+                                      value="#{vendaBean.controlador.formaPgto}">
+                        <f:selectItem id="payPal" itemLabel="Pay Pal" itemValue="#{vendaBean.controlador.FORMA_PGTO_PAYPAL}"/>
+                    </p:selectOneRadio>
                 </h:panelGrid>
                 <p:commandButton ajax="false" value="Recarregar" style="width: 200px" action="#{vendaBean.realizarRecarga()}"/> 
             </h:form>

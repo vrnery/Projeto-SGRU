@@ -172,6 +172,8 @@ public class ControladorCadastro {
         cliente.getCartao().setDataCredito(Calendar.getInstance());
         cliente.getCartao().setSaldo(0);
         dao.salvar(cliente);
+        // Apaga os dados do formulário
+        this.cliente = new Cliente();
         // null carrega todos os clientes
         this.lstClientes = dao.carregarClientesPorTipo(null);    
     }
@@ -186,6 +188,8 @@ public class ControladorCadastro {
         
         FuncionarioDAO dao = new FuncionarioDAO();
         dao.salvar(funcionario);
+        // Apaga os dados do formulário
+        this.funcionario = new Funcionario();
         this.lstFuncionarios = dao.carregarFuncionariosPorTipo(null);
     }    
     

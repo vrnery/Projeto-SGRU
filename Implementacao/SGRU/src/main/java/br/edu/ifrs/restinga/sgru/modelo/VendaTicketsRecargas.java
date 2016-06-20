@@ -5,8 +5,10 @@
  */
 package br.edu.ifrs.restinga.sgru.modelo;
 
+import br.edu.ifrs.restinga.sgru.persistencia.VendaTicketsRecargasDAO;
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -33,7 +35,7 @@ public class VendaTicketsRecargas implements Serializable {
     @OneToOne
     @JoinColumn(name = "idTicket")
     private Ticket ticket;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "idRecarga")
     private Recarga recarga;    
     @ManyToOne
@@ -123,4 +125,28 @@ public class VendaTicketsRecargas implements Serializable {
     public void setCaixaRU(CaixaRU caixaRU) {
         this.caixaRU = caixaRU;
     }    
+    
+    /**
+     * Realiza uma recarga feita através do caixa
+     */
+    public void realizarRecargaCaixa() {
+        VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
+        this.setTicket(null);
+        this.setDataVenda(Calendar.getInstance());
+        this.setValorAlmoco(ValorAlmoco.carregarValorAtualAlmoco());
+        daoVendaTicketsRecargas.salvar(this);
+    }
+    
+    /**
+     * Realiza uma recarga feita através da página do cliente
+     */
+    public void realizarRecargaPaginaCliente() {
+        this.setCaixaRU(null);
+        this.setDataVenda(Calendar.getInstance());
+        this.setTicket(null);
+        this.setValorAlmoco(ValorAlmoco.carregarValorAtualAlmoco());
+        
+        VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
+        daoVendaTicketsRecargas.salvar(this);
+    }
 }

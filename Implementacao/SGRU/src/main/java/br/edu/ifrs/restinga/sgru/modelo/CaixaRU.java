@@ -16,10 +16,8 @@ import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaAlmocoDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.VendaTicketsRecargasDAO;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -42,8 +40,8 @@ public class CaixaRU implements Serializable {
     private double valorAbertura = 0;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar dataFechamento;
-    private double valorFechamento;        
-    @OneToOne(cascade = {CascadeType.ALL})
+    private double valorFechamento;            
+    @OneToOne
     @JoinColumn(name="idFuncionario")
     private Funcionario funcionario;                  
     // Atributos nao persistidos no banco
@@ -152,6 +150,13 @@ public class CaixaRU implements Serializable {
         return lstVendaTicketsRecargas;
     }    
     
+    /**     
+     * @param lstVendaTicketsRecargas the lstVendaTicketsRecargas to set
+     */
+    public void setLstVendaTicketsRecargas(List<VendaTicketsRecargas> lstVendaTicketsRecargas) {
+        this.lstVendaTicketsRecargas = lstVendaTicketsRecargas;
+    }        
+    
     /**
      * 
      * @param lstVendaAlmoco the lstVendaAlmoco to set
@@ -189,20 +194,10 @@ public class CaixaRU implements Serializable {
     }        
     
     /**
-     * Realiza um recarga em um determinado cartao
-     * @param recarga A recarga a ser realizada
+     * Adiciona uma vendaTicketsRecargas à lista lstVendaTicketsRecargas
+     * @param vendaTicketsRecargas A vendaTicketsRecargas a ser adicionada
      */
-    public void realizarRecarga(Recarga recarga) {
-        VendaTicketsRecargas vendaTicketsRecargas = new VendaTicketsRecargas();
-        VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
-        
-        vendaTicketsRecargas.setCaixaRU(this);        
-        vendaTicketsRecargas.setRecarga(recarga);
-        vendaTicketsRecargas.setTicket(null);
-        vendaTicketsRecargas.setDataVenda(Calendar.getInstance());
-        vendaTicketsRecargas.setValorAlmoco(this.valorAtualAlmoco);
-        daoVendaTicketsRecargas.salvar(vendaTicketsRecargas);
-        
+    public void atualizarLstVendaTicketsRecargas(VendaTicketsRecargas vendaTicketsRecargas) {                                
         this.lstVendaTicketsRecargas.add(vendaTicketsRecargas);
     }
     
@@ -217,16 +212,6 @@ public class CaixaRU implements Serializable {
         if (valorAbertura < 0) {
             throw new ValorAberturaCaixaInvalido("Valor inválido!");            
         }
-
-        /*
-        // Verifica qual lista instanciar: lstVendaAlmoco, para venda de almocos;
-        // e lstVendaTicketsRecargas, para venda de recargas
-        if (oper.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_CAIXA)) {
-            this.lstVendaAlmoco = new ArrayList();
-        } else if (oper.getTipoFuncionario().getCodigo().equals(Funcionario.OPERADOR_SISTEMA)) {
-            this.lstVendaTicketsRecargas = new ArrayList();
-        }
-        */
         
         setFuncionario(oper);
         setValorAbertura(valorAbertura);
