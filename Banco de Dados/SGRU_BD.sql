@@ -7,10 +7,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sgru
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema sgru
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
 USE `sgru` ;
 
@@ -239,7 +235,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `sgru`.`vendaticketsrecargas` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataVenda` DATETIME NOT NULL,
-  `idCaixaRU` INT(10) UNSIGNED NOT NULL,
+  `idCaixaRU` INT(10) UNSIGNED NULL,
   `idValorAlmoco` INT(10) UNSIGNED NULL DEFAULT NULL,
   `idTicket` INT(10) UNSIGNED NULL DEFAULT NULL,
   `idRecarga` INT(10) UNSIGNED NULL DEFAULT NULL,
@@ -275,7 +271,6 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
 
 -- Cria usuário da aplicação:
 
