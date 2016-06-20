@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.imageio.ImageIO;
@@ -29,7 +29,7 @@ import org.primefaces.model.UploadedFile;
  * @author marcelo.lima
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class CadastroBean {    
     // Caso nao consiga carregar foto do cliente
     private static final String CAMINHO_FOTO_DEFAULT = "/imagens/fotos/semFoto.png";
@@ -147,17 +147,9 @@ public class CadastroBean {
     }
     
     /**
-     * Efetua a recarga em um cartão do cliente
-     * @return A próxima página a ser visualizada pelo operador
-     */
-    public String efetuarRecarga() {
-        return null;
-    }
-    
-    /**
      * @return the foto
      */
-    public StreamedContent getFoto() {        
+    public StreamedContent getFoto() {                
         FacesContext context = FacesContext.getCurrentInstance();        
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.

@@ -6,7 +6,6 @@
 package br.edu.ifrs.restinga.sgru.modelo;
 
 import br.edu.ifrs.restinga.sgru.excessao.DadoPessoaInvalidoException;
-import br.edu.ifrs.restinga.sgru.excessao.MatriculaInvalidaException;
 import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.FuncionarioDAO;

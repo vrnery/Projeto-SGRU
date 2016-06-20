@@ -9,7 +9,7 @@
         <ui:define name="conteudo">
             <f:event listener="#{cadastroBean.controladorCadastro.setPessoa(autenticarBean.controlador.pessoa)}" type="preRenderView" />
             <p:messages/>
-            <h:form enctype="multipart/form-data">
+            <h:form>
                 <h:panelGrid columns="2">
                     <h:panelGrid columns="2">
                         <p:outputLabel for="txtMatricula" value="Matricula: "/>
@@ -21,21 +21,19 @@
                         <p:outputLabel for="txtTelefone" value="Telefone: "/>
                         <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.pessoa.telefone}"/>
                         <p:outputLabel for="txtSenha" value="Senha: "/>
-                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.pessoa.senha}" required="true"/>
+                        <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.pessoa.senha}" required="true"/>                        
+                        <p:outputLabel for="somTipoCliente" value="Tipo: "/>
+                        <p:selectOneMenu id="somTipoCliente" 
+                                         value="#{cadastroBean.controladorCadastro.tipoCliente}" 
+                                         required="true"
+                                         style="width: 190px">
+                            <f:selectItems var="tipoCliente" value="#{cadastroBean.controladorCadastro.lstTipoCliente}" 
+                                           itemLabel="#{tipoCliente.descricao}" itemValue="#{tipoCliente}"/>
+                        </p:selectOneMenu>                        
                     </h:panelGrid>
-                    <p:graphicImage cache="false" value="#{cadastrarBean.foto}" rendered="#{!autenticarBean.usuarioLogadoGerente}"/>
-                </h:panelGrid>
-                <h:panelGrid columns="2" rendered="#{!autenticarBean.usuarioLogadoGerente}">
-                    <p:outputLabel for="somTipoCliente" value="Tipo: "/>
-                    <p:selectOneMenu id="somTipoCliente" 
-                                     value="#{cadastroBean.controladorCadastro.tipoCliente}" 
-                                     required="true"
-                                     style="width: 190px">
-                        <f:selectItems var="tipoCliente" value="#{cadastroBean.controladorCadastro.lstTipoCliente}" 
-                                       itemLabel="#{tipoCliente.descricao}" itemValue="#{tipoCliente}"/>
-                    </p:selectOneMenu>
-                </h:panelGrid>
-                <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" rendered="#{!autenticarBean.usuarioLogadoGerente}"/><br /><br />
+                    <p:graphicImage width="130" height="150" cache="false" value="#{cadastroBean.foto}" rendered="#{autenticarBean.usuarioLogadoCliente}"/>
+                </h:panelGrid>                
+                <p:fileUpload value="#{cadastroBean.file}" mode="simple" label="Carregar Foto" rendered="#{autenticarBean.usuarioLogadoCliente}"/><br /><br />
                 <p:commandButton ajax="false" value="Salvar" style="width: 200px" actionListener="#{cadastroBean.editarCliente()}"/>
             </h:form>
         </ui:define>
