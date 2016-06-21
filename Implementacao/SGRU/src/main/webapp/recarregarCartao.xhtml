@@ -20,8 +20,9 @@
                     <h:outputLabel for="txtValor" value="Valor:"/>
                     <p:inputText id="txtValor" 
                                  required="true"
+                                 requiredMessage="Valor de recarga inválido!"
                                  value="#{vendaBean.controlador.recarga.valorRecarregado}">
-                        <f:convertNumber type="currency" locale="pt_BR"/>
+                        <f:converter converterId="conversorMonetario"/>
                     </p:inputText> 
                     <h:outputLabel for="sorFormaPgto" value="Forma de Pagamento:" rendered="#{autenticarBean.usuarioLogadoCliente}"/>
                     <p:selectOneRadio id="sorFormaPgto" rendered="#{autenticarBean.usuarioLogadoCliente}" 

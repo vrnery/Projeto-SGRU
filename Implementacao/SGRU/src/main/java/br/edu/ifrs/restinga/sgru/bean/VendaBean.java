@@ -68,18 +68,15 @@ public class VendaBean {
     }
     
     /**
-     * Realiza uma recarga para um cartão
-     * @return A próxima página a ser exibida para o usuário
+     * Realiza uma recarga para um cartão     
      */
-    public String realizarRecarga() {
+    public void realizarRecarga() {
         try {
             this.controlador.realizarRecarga();
             //enviarMensagem(FacesMessage.SEVERITY_INFO, "Recarga realizada com sucesso!");
         } catch (MatriculaInvalidaException | ValorRecargaInvalidoException ex) {
-            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-            return null;
-        }
-        return null;
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());            
+        }        
     }
     
     /**

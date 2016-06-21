@@ -57,7 +57,8 @@
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataInicialMax}" 
                                 mindate="#{relatorioBean.dataInicialMin}"
-                                required="true">
+                                required="true"
+                                requiredMessage="Data inicial inválida!">
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataInicial}" update="dataFinal"/>
                     </p:calendar>                                    
                     <p:outputLabel for="dataFinal" value="Data Final:"/>
@@ -66,7 +67,8 @@
                                 pattern="dd/MM/yyyy"
                                 maxdate="#{relatorioBean.dataFinalMax}" 
                                 mindate="#{relatorioBean.dataFinalMin}"                                
-                                required="true">
+                                required="true"
+                                requiredMessage="Data final inválida!">
                         <p:ajax event="dateSelect" listener="#{relatorioBean.tratarDataFinal}" update="dataInicial"/>
                     </p:calendar>
                 </h:panelGrid>

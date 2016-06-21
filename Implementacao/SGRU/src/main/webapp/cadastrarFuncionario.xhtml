@@ -11,17 +11,29 @@
             <h:form>
                 <h:panelGrid columns="2">                        
                     <p:outputLabel for="txtMatricula" value="Matricula: "/>
-                    <p:inputText id="txtMatricula" value="#{cadastroBean.controladorCadastro.funcionario.matricula}" required="true"/>
+                    <p:inputText id="txtMatricula" 
+                                 required="true"
+                                 requiredMessage="Matrícula inválida!"
+                                 value="#{cadastroBean.controladorCadastro.funcionario.matricula}"/>
                     <p:outputLabel for="txtNome" value="Nome: "/>
-                    <p:inputText id="txtNome" value="#{cadastroBean.controladorCadastro.funcionario.nome}" required="true"/>
+                    <p:inputText id="txtNome" 
+                                 required="true"
+                                 requiredMessage="Nome inválido!"
+                                 value="#{cadastroBean.controladorCadastro.funcionario.nome}"/>
                     <p:outputLabel for="txtEmail" value="Email: "/>
                     <p:inputText id="txtEmail" value="#{cadastroBean.controladorCadastro.funcionario.email}"/>
                     <p:outputLabel for="txtTelefone" value="Telefone: "/>
                     <p:inputMask mask="(99) 9999-9999" id="txtTelefone" value="#{cadastroBean.controladorCadastro.funcionario.telefone}"/>
                     <p:outputLabel for="txtLogin" value="Login: "/>
-                    <p:inputText id="txtLogin" value="#{cadastroBean.controladorCadastro.funcionario.login}" required="true"/>
+                    <p:inputText id="txtLogin" 
+                                 required="true"
+                                 requiredMessage="Login inválido!"
+                                 value="#{cadastroBean.controladorCadastro.funcionario.login}"/>
                     <p:outputLabel for="txtSenha" value="Senha: "/>
-                    <p:password id="txtSenha" value="#{cadastroBean.controladorCadastro.funcionario.senha}" required="true"/>
+                    <p:password id="txtSenha" 
+                                required="true"
+                                requiredMessage="Senha inválida!"
+                                value="#{cadastroBean.controladorCadastro.funcionario.senha}"/>
                 </h:panelGrid>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="somTipoFuncionario" value="Tipo: "/>
