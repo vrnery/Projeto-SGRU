@@ -17,11 +17,11 @@ insert into Funcionario values(6,1);
 insert into Funcionario values(7,2);
 insert into Funcionario values(8,3);
 
-insert into Cartao values(1,'2016-04-29',0);
-insert into Cartao values(2,'2016-04-29',0);
-insert into Cartao values(3,'2016-04-29',0);
-insert into Cartao values(4,'2016-04-29',0);
-insert into Cartao values(5,'2016-04-29',0);
+insert into Cartao values(1,'2016-04-29',0,0);
+insert into Cartao values(2,'2016-04-29',0,0);
+insert into Cartao values(3,'2016-04-29',0,0);
+insert into Cartao values(4,'2016-04-29',0,0);
+insert into Cartao values(5,'2016-04-29',0,0);
 
 insert into TipoCliente values(1,'Aluno','001');
 insert into TipoCliente values(2,'Professor','002');
@@ -37,22 +37,23 @@ insert into Recarga values(2,200,'2016-04-14',0,1);
 insert into Recarga values(3,300,'2016-04-15',0,1);
 insert into Recarga values(4,400,'2016-04-16',0,1);
 
-insert into Recarga values(5,100,'2016-04-19',0,2);
-insert into Recarga values(6,200,'2016-04-17',0,2);
-insert into Recarga values(7,300,'2016-04-18',0,2);
-insert into Recarga values(8,400,'2016-04-16',0,2);
+insert into Recarga values(5,10,'2016-04-17',0,2);
+-- insert into Recarga values(6,200,'2016-04-17',0,2);
+-- 'insert into Recarga values(7,300,'2016-04-18',0,2);
+-- 'insert into Recarga values(8,400,'2016-04-16',0,2);
 
-insert into Recarga values(9,100,'2016-04-29',0,3);
-insert into Recarga values(10,200,'2016-04-29',0,3);
-insert into Recarga values(11,300,'2016-04-29',0,3);
-insert into Recarga values(12,400,'2016-04-29',0,3);
+-- insert into Recarga values(9,100,'2016-04-29',0,3);
+-- insert into Recarga values(10,200,'2016-04-29',0,3);
+-- insert into Recarga values(11,300,'2016-04-29',0,3);
+-- insert into Recarga values(12,400,'2016-04-29',0,3);
 
-insert into Recarga values(13,100,'2016-04-14',0,4);
-insert into Recarga values(14,200,'2016-04-14',0,4);
-insert into Recarga values(15,300,'2016-04-15',0,4);
-insert into Recarga values(16,400,'2016-04-16',0,4);
+-- insert into Recarga values(13,100,'2016-04-14',0,4);
+-- insert into Recarga values(14,200,'2016-04-14',0,4);
+-- insert into Recarga values(15,300,'2016-04-15',0,4);
+-- insert into Recarga values(16,400,'2016-04-16',0,4);
 
-insert into ValorAlmoco values(1,1,'2016-04-14');
-insert into ValorAlmoco values(2,2,'2016-04-15');
-insert into ValorAlmoco values(3,3,'2016-04-16');
-insert into ValorAlmoco values(4,4,'2016-04-18');
+-- insert into ValorAlmoco values(1,1,'2016-04-14');
+-- insert into ValorAlmoco values(2,2,'2016-04-15');
+-- insert into ValorAlmoco values(3,3,'2016-04-16');
+insert into ValorAlmoco values(1,4,'2016-04-18');
+insert into ValorAlmoco values(2,5,'2016-06-20');

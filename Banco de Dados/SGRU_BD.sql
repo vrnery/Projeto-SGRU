@@ -7,6 +7,10 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sgru
 -- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema sgru
+-- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `sgru` DEFAULT CHARACTER SET utf8 ;
 USE `sgru` ;
 
@@ -93,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `sgru`.`cartao` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `dataCredito` DATETIME NOT NULL,
   `saldo` DECIMAL(6,2) NOT NULL DEFAULT '0.00',
+  `saldoUltimaRecarga` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 6
@@ -271,6 +276,7 @@ DEFAULT CHARACTER SET = utf8;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 
 -- Cria usuário da aplicação:
 
