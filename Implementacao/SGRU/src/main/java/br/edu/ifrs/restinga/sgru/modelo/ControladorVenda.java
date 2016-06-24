@@ -164,14 +164,30 @@ public class ControladorVenda {
             this.cliente = daoCliente.carregar(this.cliente.getMatricula());
             // Seta o cartao da recarga
             this.recarga.setCartao(this.cliente.getCartao());
+            // Atualiza o saldo do cartao
+            this.recarga.getCartao().setSaldo(this.recarga.getCartao().getSaldo() + this.recarga.getValorRecarregado());
+            // Caso o valor da ultima regarga seja menor ou igual a zero, deve-se atualizar o valor
+            if (this.recarga.getCartao().getSaldoUltimaRecarga() <= 0) {
+                this.recarga.getCartao().setSaldoUltimaRecarga(this.recarga.getCartao().getSaldoUltimaRecarga() + 
+                        this.recarga.getValorRecarregado());
+                this.recarga.setUtilizado(true);
+            }
             VendaTicketsRecargas vendaTicketsRecargas = new VendaTicketsRecargas();                
             vendaTicketsRecargas.setCaixaRU(this.caixaRU);        
             vendaTicketsRecargas.setRecarga(recarga);            
-            vendaTicketsRecargas.realizarRecargaCaixa();
+            vendaTicketsRecargas.realizarRecargaCaixa();            
             this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecargas);
         } else {
             // Recarga realizada na pagina do cliente
             this.recarga.setCartao(this.cliente.getCartao());
+            // Atualiza o saldo do cartao
+            this.recarga.getCartao().setSaldo(this.recarga.getCartao().getSaldo() + this.recarga.getValorRecarregado());
+            // Caso o valor da ultima regarga seja menor ou igual a zero, deve-se atualizar o valor
+            if (this.recarga.getCartao().getSaldoUltimaRecarga() <= 0) {
+                    this.recarga.getCartao().setSaldoUltimaRecarga(this.recarga.getCartao().getSaldoUltimaRecarga() + 
+                            this.recarga.getValorRecarregado());
+                    this.recarga.setUtilizado(true);
+            }            
             VendaTicketsRecargas vendaTicketsRecargas = new VendaTicketsRecargas();            
             vendaTicketsRecargas.setRecarga(recarga);
             vendaTicketsRecargas.realizarRecargaPaginaCliente();

@@ -73,7 +73,7 @@ public class VendaBean {
     public void realizarRecarga() {
         try {
             this.controlador.realizarRecarga();
-            //enviarMensagem(FacesMessage.SEVERITY_INFO, "Recarga realizada com sucesso!");
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Recarga realizada com sucesso!");
         } catch (MatriculaInvalidaException | ValorRecargaInvalidoException ex) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, ex.getMessage());            
         }        
@@ -146,7 +146,7 @@ public class VendaBean {
      */
     public String realizarVendaAlmocoCartao(String matricula) {        
         try {
-            controlador.realizarVendaAlmocoCartao(matricula);
+            controlador.realizarVendaAlmocoCartao(matricula);            
         } catch(MatriculaInvalidaException | UsuarioInvalidoException |
                 SaldoInsuficienteException | ValorAlmocoInvalidoException |
                 PeriodoEntreAlmocosInvalidoException e) {            
@@ -171,7 +171,7 @@ public class VendaBean {
     public String realizarVendaAlmocoTicket(int codigo) {
         String retorno = "confirmarVendaTicket";
         try {
-            controlador.realizarVendaAlmocoTicket(codigo);
+            controlador.realizarVendaAlmocoTicket(codigo);            
         } catch(TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             retorno = "caixa";
@@ -195,6 +195,7 @@ public class VendaBean {
     public String finalizarAlmoco(boolean confirmar) {
         try {
             controlador.finalizarAlmoco(confirmar);
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
         } catch (ValorAlmocoInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
             return "venda";

@@ -163,11 +163,13 @@ public class VendaAlmoco implements Serializable {
             // Adiciona os minutos ao horario atual
             horaPermitidaAlmoco.add(Calendar.MINUTE, numMinutos);
             // Verifica se o cliente pode efetuar a compra
+            /*            
             if (numMinutos <= NUM_MAX_MINUTOS_ULTIMO_ALMOCO) {
                 //throw new PeriodoEntreAlmocosInvalidoException("Compra permitida somente após " + (NUM_MAX_MINUTOS_ULTIMO_ALMOCO-numMinutos) + " minutos!");
                 SimpleDateFormat fmt = new SimpleDateFormat("HH'h'mm");
                 throw new PeriodoEntreAlmocosInvalidoException("Compra permitida somente a partir das " + fmt.format(horaPermitidaAlmoco.getTime()));
-            }            
+            } 
+            */
         }
     }    
 }

@@ -259,7 +259,7 @@ public class CaixaRU implements Serializable {
         vendaAlmoco.setValorAlmoco(ValorAlmoco.verificarValorPagarAlmoco(cliente.getCartao().getDataCredito(),
                 getValorAtualAlmoco()));
         vendaAlmoco.setDataVenda(Calendar.getInstance());
-        setVendaAlmoco(vendaAlmoco);               
+        setVendaAlmoco(vendaAlmoco);
     }        
     
     /**
@@ -303,6 +303,10 @@ public class CaixaRU implements Serializable {
             if(ultimoAlmocoVendido.getCartao() != null){                
                 // Desconta o valor do almoco do aluno
                 ultimoAlmocoVendido.getCartao().setSaldo(ultimoAlmocoVendido.getCartao().getSaldo() -
+                        ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
+                
+                // Atualiza o valor da ultima recarga
+                ultimoAlmocoVendido.getCartao().setSaldoUltimaRecarga(ultimoAlmocoVendido.getCartao().getSaldoUltimaRecarga() - 
                         ultimoAlmocoVendido.getValorAlmoco().getValorAlmoco());
             }else{
                 ultimoAlmocoVendido.getTicket().setDataUtilizado((Calendar) ultimoAlmocoVendido.getDataVenda());                    

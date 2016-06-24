@@ -7,7 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInternoComMenu.xhtml">
         <ui:define name="conteudo">
-            <p:messages/>            
+            <p:growl severity="info"/>
+            <p:messages severity="error"/>            
             <f:event listener="#{vendaBean.controlador.setClienteRecarga(autenticarBean.controlador.pessoa)}" type="preRenderView"/>            
             <f:event listener="#{vendaBean.iniciarRecarga()}" type="preRenderView"/>
             <h:form id="frmPrincipal">

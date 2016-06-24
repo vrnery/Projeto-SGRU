@@ -30,7 +30,8 @@ public class ValorAlmoco implements Serializable {
     // O valor do credito do cartao terah validade por 60 dias, apos isso serah cobrado
     // o valor atual do almoco
     @Transient
-    private static final int NUM_DIAS_VALIDADE_RECARGA = 60;
+    //private static final int NUM_DIAS_VALIDADE_RECARGA = 60;
+    private static final int NUM_DIAS_VALIDADE_RECARGA = 500;
 
     /**
      * @return the id

@@ -14,7 +14,7 @@
                 Caso não exista, redireciona o operador para a tela de abertura do caixa
             -->
             <f:event listener="#{vendaBean.isCaixaRUSet()}" type="preRenderView" />
-            <p:messages/>
+            <p:messages severity="error"/>
             <h:form>
                 <h:panelGrid columns="2">
                     <p:outputLabel for="txtCodigo" value="Código: "/>
