@@ -31,6 +31,7 @@ public class ControladorVenda {
     private Funcionario operador;        
     private Recarga recarga;
     private int formaPgto;
+    private int quantidade = 1;
 
     public ControladorVenda() {
         this.formaPgto = this.FORMA_PGTO_PAYPAL;
@@ -136,6 +137,20 @@ public class ControladorVenda {
      */
     public void setFormaPgto(int formaPgto) {
         this.formaPgto = formaPgto;
+    }
+
+    /**
+     * @return 
+     */
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    /**
+     * @param quantidade 
+     */
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
     
     /**

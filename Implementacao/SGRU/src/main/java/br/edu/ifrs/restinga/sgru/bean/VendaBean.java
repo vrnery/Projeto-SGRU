@@ -184,7 +184,13 @@ public class VendaBean {
      * @return A próxima página a ser visualizada pelo operador
      */
     public String realizarVendaTicket() {
-        return null;
+        try{
+            controlador.realizarVendaTicket();
+            enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
+        } catch (Exception e) {
+            enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
+        }
+        return "vendaTicket";
     }
     
     /**
