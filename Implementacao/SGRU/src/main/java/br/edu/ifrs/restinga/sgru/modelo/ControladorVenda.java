@@ -16,6 +16,12 @@ import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorRecargaInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfDocument;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -330,17 +336,38 @@ public class ControladorVenda {
 
     /**
      * Realiza a venda de um ticket para um cliente
+     *
+     * @throws br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException
      */
     public void realizarVendaTicket() throws TicketInvalidoException {
         if (this.quantidade <= 0) {
             throw new TicketInvalidoException("Venda de Quantidade invalida!");
         }
-        for (int i = 0; i < this.quantidade; i++) {
-            VendaTicketsRecargas vendaTicketsRecarga = new VendaTicketsRecargas();
-            vendaTicketsRecarga.setCaixaRU(this.caixaRU);
-            vendaTicketsRecarga.realizarVendaTicket();
-            this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecarga);
-        }
+
+//        try {
+//            PdfDocument pdfTicket = new PdfDocument();
+//            pdfTicket.setPageSize(PageSize.A4);
+//            pdfTicket.open();
+//
+//            Paragraph preface = new Paragraph();
+//            preface.setAlignment(Element.ALIGN_CENTER);
+
+            for (int i = 0; i < this.quantidade; i++) {
+                VendaTicketsRecargas vendaTicketsRecarga = new VendaTicketsRecargas();
+                vendaTicketsRecarga.setCaixaRU(this.caixaRU);
+                vendaTicketsRecarga.realizarVendaTicket();
+//                preface.add(new Paragraph("TICKET"));
+//                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getId())));
+//                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getValor())));
+//                preface.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
+                this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecarga);
+            }
+
+//            addEmptyLine(preface, 1);
+//            pdfTicket.add(preface);
+//        } catch (DocumentException ex) {
+//            throw new TicketInvalidoException(ex.getMessage());
+//        }
     }
 
     /**
@@ -374,5 +401,17 @@ public class ControladorVenda {
     public void carregarCliente(String matricula) throws MatriculaInvalidaException {
         ClienteDAO dao = new ClienteDAO();
         cliente = dao.carregar(matricula);
+    }
+
+    /**
+     * Adiciona uma linha no arquivo PDF
+     *
+     * @param paragraph
+     * @param number
+     */
+    private void addEmptyLine(Paragraph paragraph, int number) {
+        for (int i = 0; i < number; i++) {
+            paragraph.add(new Paragraph(" "));
+        }
     }
 }
