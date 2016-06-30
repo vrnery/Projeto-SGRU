@@ -83,6 +83,22 @@ public class Ticket implements Serializable {
     public void setDataUtilizado(Calendar dataUtilizado) {
         this.dataUtilizado = dataUtilizado;
     }
+
+    /**
+     * Construtor
+     */
+    public Ticket() {
+    }
+
+    /**
+     * Construtor para criar novo Ticket
+     * @param valor
+     * @param dataCriado 
+     */
+    public Ticket(double valor, Calendar dataCriado) {
+        this.valor = valor;
+        this.dataCriado = dataCriado;
+    }
     
     /**
      * Retorna o ticket do código informado

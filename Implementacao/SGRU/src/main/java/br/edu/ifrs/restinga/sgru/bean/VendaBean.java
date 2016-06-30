@@ -177,8 +177,15 @@ public class VendaBean {
             retorno = "caixa";
         }
         return retorno;
-    }        
-    
+    }
+
+    /**
+     * Calcular o valor total dos tickets
+     */
+    public void calcularVendaTicket() {
+        this.controlador.calcularVendaTicket();
+    }
+
     /**
      * Realiza a venda de um ticket para um cliente
      * @return A próxima página a ser visualizada pelo operador
@@ -187,9 +194,11 @@ public class VendaBean {
         try{
             controlador.realizarVendaTicket();
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
-        } catch (Exception e) {
+        } catch (TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
         }
+        this.controlador.setQuantidade(1);
+        this.controlador.calcularVendaTicket();
         return "vendaTicket";
     }
     

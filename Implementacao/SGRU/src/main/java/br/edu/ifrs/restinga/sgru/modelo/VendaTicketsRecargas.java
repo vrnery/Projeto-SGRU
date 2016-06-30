@@ -32,7 +32,7 @@ public class VendaTicketsRecargas implements Serializable {
     @OneToOne
     @JoinColumn(name = "idValorAlmoco")
     private ValorAlmoco valorAlmoco;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "idTicket")
     private Ticket ticket;
     @OneToOne(cascade = {CascadeType.ALL})
@@ -145,6 +145,17 @@ public class VendaTicketsRecargas implements Serializable {
         this.setDataVenda(Calendar.getInstance());
         this.setTicket(null);
         this.setValorAlmoco(ValorAlmoco.carregarValorAtualAlmoco());
+        
+        VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
+        daoVendaTicketsRecargas.salvar(this);
+    }
+
+    public void realizarVendaTicket() {
+        this.setDataVenda(Calendar.getInstance());
+        this.setValorAlmoco(this.caixaRU.getValorAtualAlmoco());
+        this.setRecarga(null);
+        Ticket ticket = new Ticket(this.getValorAlmoco().getValorAlmoco(), this.getDataVenda());
+        this.setTicket(ticket);
         
         VendaTicketsRecargasDAO daoVendaTicketsRecargas = new VendaTicketsRecargasDAO();
         daoVendaTicketsRecargas.salvar(this);

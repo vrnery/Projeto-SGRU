@@ -5,7 +5,6 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:outputScript name="js/calculos_js.js"/>
     <ui:composition template="padraoInternoComMenu.xhtml">
         <ui:define name="conteudo">
             <p:messages/>
@@ -13,31 +12,20 @@
                 <h:panelGrid columns="2">
                     <h:outputLabel for="txtQuantidade" value="Quantidade:"
                                    rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>
-                    <p:inputText id="txtQuantidade" value="#{vendaBean.controlador.quantidade}" rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>
+                    <p:inputText id="txtQuantidade" value="#{vendaBean.controlador.quantidade}" rendered="#{autenticarBean.usuarioLogadoOperadorSistema}">
+                        <p:ajax listener="#{vendaBean.calcularVendaTicket()}" update="txtTotal"/>
+                    </p:inputText>
                     <h:outputLabel for="txtValor" value="Valor: "/>
                     <p:inputText id="txtValor" value="#{vendaBean.controlador.caixaRU.valorAtualAlmoco.valorAlmoco}" disabled="true">
-                        <f:convertNumber type="currency" locale="pt_BR"/>
+                        <f:converter converterId="conversorMonetario"/>
                     </p:inputText>
                     <p:outputLabel for="txtTotal" value="Total: "/>
-                    <p:inputText id="txtTotal" value="" disabled="true"/>
+                    <p:inputText id="txtTotal" value="#{vendaBean.controlador.valorTickets}" disabled="true">
+                        <f:converter converterId="conversorMonetario"/>
+                    </p:inputText>
                 </h:panelGrid>
-                <p:commandButton ajax="true" type="button" value="Calcular" onclick="calcular()" update="txtTotal"/>
-                <p:commandButton ajax="true" value="Imprimir" style="width: 200px" actionListener="#{vendaBean.calcularTicket()}" oncomplete="PF('dlgTicketVenda').show()" update="dlgTicketVenda"/>
+                <p:commandButton ajax="false" value="Confirmar" style="width: 200px" action="#{vendaBean.realizarVendaTicket()}"/>
             </h:form>
-        </ui:define>
-        <ui:define name="dialogos">
-            <p:dialog header="Confirmar Venda" id="dlgTicketVenda" widgetVar="dlgTicketVenda" modal="true">
-                <p:messages/>
-                <h:form id="frmSecundario">
-                    <h:panelGrid columns="2">                        
-                        <p:outputLabel for="txtDinheiro" value="Dinheiro: "/>
-                        <p:inputText id="txtDinheiro" value="#{vendaBean.dinheiro}" required="true"/>
-                        <p:outputLabel for="txtTroco" value="Troco: "/>
-                        <p:outputLabel id="txtTroco" value="#{vendaBean.troco}"/>
-                    </h:panelGrid>
-                    <p:commandButton ajax="true" value="Gerar" oncomplete="#{vendaBean.calcularTroco()}" update="dlgTicketVenda"/>
-                </h:form>
-            </p:dialog>
         </ui:define>
     </ui:composition>
 </html>
