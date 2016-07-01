@@ -15,6 +15,8 @@ import br.edu.ifrs.restinga.sgru.excessao.UsuarioInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorAberturaCaixaInvalido;
 import br.edu.ifrs.restinga.sgru.excessao.ValorRecargaInvalidoException;
 import br.edu.ifrs.restinga.sgru.modelo.ControladorVenda;
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -188,18 +190,21 @@ public class VendaBean {
 
     /**
      * Realiza a venda de um ticket para um cliente
+     * @param document
      * @return A próxima página a ser visualizada pelo operador
      */
-    public String realizarVendaTicket() {
+    //public String realizarVendaTicket() {
+    public void realizarVendaTicket(Object document) {
         try{
-            controlador.realizarVendaTicket();
+            Document pdf = (Document) document;    
+            pdf = (Document) controlador.realizarVendaTicket(pdf);
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
         } catch (TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
         }
         this.controlador.setQuantidade(1);
         this.controlador.calcularVendaTicket();
-        return "vendaTicket";
+        //return "vendaTicket";
     }
     
     /**

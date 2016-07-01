@@ -7,7 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInternoComMenu.xhtml">
         <ui:define name="conteudo">
-            <p:messages/>
+            <p:growl severity="info"/>
+            <p:messages severity="error"/>            
             <h:form id="frmPrincipal">
                 <h:panelGrid columns="2">
                     <h:outputLabel for="txtQuantidade" value="Quantidade:"
@@ -24,7 +25,10 @@
                         <f:converter converterId="conversorMonetario"/>
                     </p:inputText>
                 </h:panelGrid>
-                <p:commandButton ajax="false" value="Confirmar" style="width: 200px" action="#{vendaBean.realizarVendaTicket()}"/>
+                <!--<p:commandButton ajax="false" value="Confirmar" style="width: 200px" action=""/>-->
+                <p:commandButton value="Confirmar" style="width: 200px" action="vendaTicket">
+                    <p:dataExporter type="pdf" target="" fileName="ticket.pdf" preProcessor="#{vendaBean.realizarVendaTicket}"/>
+                </p:commandButton>
             </h:form>
         </ui:define>
     </ui:composition>

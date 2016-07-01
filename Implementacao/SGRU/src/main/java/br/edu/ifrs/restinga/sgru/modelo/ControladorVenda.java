@@ -337,37 +337,40 @@ public class ControladorVenda {
     /**
      * Realiza a venda de um ticket para um cliente
      *
+     * @param documento
+     * @return 
      * @throws br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException
      */
-    public void realizarVendaTicket() throws TicketInvalidoException {
+    public Object realizarVendaTicket(Object documento) throws TicketInvalidoException {
         if (this.quantidade <= 0) {
             throw new TicketInvalidoException("Venda de Quantidade invalida!");
         }
 
-//        try {
-//            PdfDocument pdfTicket = new PdfDocument();
-//            pdfTicket.setPageSize(PageSize.A4);
-//            pdfTicket.open();
-//
-//            Paragraph preface = new Paragraph();
-//            preface.setAlignment(Element.ALIGN_CENTER);
+        try {
+            Document pdfTicket = (Document) documento;
+            pdfTicket.setPageSize(PageSize.A4);
+            pdfTicket.open();
+
+            Paragraph preface = new Paragraph();
+            preface.setAlignment(Element.ALIGN_CENTER);
 
             for (int i = 0; i < this.quantidade; i++) {
                 VendaTicketsRecargas vendaTicketsRecarga = new VendaTicketsRecargas();
                 vendaTicketsRecarga.setCaixaRU(this.caixaRU);
                 vendaTicketsRecarga.realizarVendaTicket();
-//                preface.add(new Paragraph("TICKET"));
-//                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getId())));
-//                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getValor())));
-//                preface.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
+                preface.add(new Paragraph("TICKET"));
+                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getId())));
+                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getValor())));
+                preface.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
                 this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecarga);
             }
 
-//            addEmptyLine(preface, 1);
-//            pdfTicket.add(preface);
-//        } catch (DocumentException ex) {
-//            throw new TicketInvalidoException(ex.getMessage());
-//        }
+            addEmptyLine(preface, 1);
+            pdfTicket.add(preface);
+            return (Object) pdfTicket;
+        } catch (DocumentException ex) {
+            throw new TicketInvalidoException(ex.getMessage());
+        }
     }
 
     /**
