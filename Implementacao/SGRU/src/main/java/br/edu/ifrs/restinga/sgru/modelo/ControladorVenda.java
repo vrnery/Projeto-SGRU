@@ -16,14 +16,28 @@ import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorRecargaInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
+import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
+import com.lowagie.text.Cell;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfDocument;
+import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfWriter;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Classe que implementa o padrão GRASP "Controlador" para as vendas realizadas
@@ -337,38 +351,61 @@ public class ControladorVenda {
     /**
      * Realiza a venda de um ticket para um cliente
      *
-     * @param documento
-     * @return 
+     * @param documento 
      * @throws br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException
      */
-    public Object realizarVendaTicket(Object documento) throws TicketInvalidoException {
+    //public void realizarVendaTicket(Object documento) throws TicketInvalidoException {
+    public void realizarVendaTicket() throws TicketInvalidoException {
         if (this.quantidade <= 0) {
             throw new TicketInvalidoException("Venda de Quantidade invalida!");
         }
 
+        //Document pdfTicket = (Document) documento;
+        Document pdfTicket = new Document();
+        File temp;
+
         try {
-            Document pdfTicket = (Document) documento;
-            pdfTicket.setPageSize(PageSize.A4);
+            temp = File.createTempFile("imp_ticket", ".pdf");
+            PdfWriter.getInstance(pdfTicket, new FileOutputStream(temp));
             pdfTicket.open();
+            pdfTicket.setPageSize(PageSize.A4);
 
-            Paragraph preface = new Paragraph();
-            preface.setAlignment(Element.ALIGN_CENTER);
-
+            Table tabela = new Table(1);
+            tabela.setWidth(100);
+            
             for (int i = 0; i < this.quantidade; i++) {
                 VendaTicketsRecargas vendaTicketsRecarga = new VendaTicketsRecargas();
                 vendaTicketsRecarga.setCaixaRU(this.caixaRU);
                 vendaTicketsRecarga.realizarVendaTicket();
-                preface.add(new Paragraph("TICKET"));
-                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getId())));
-                preface.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getValor())));
-                preface.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
+                
+                Cell celula = new Cell();
+                celula.setHorizontalAlignment(Element.ALIGN_CENTER);
+                celula.add(new Paragraph("SISTEMA DE GERENCIAMENTO DE RESTAURANTE UNIVERSITÁRIO"));
+                celula.add(new Paragraph("TICKET"));
+                celula.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getId())));
+                NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+                format.setMaximumFractionDigits(2);
+                celula.add(new Paragraph("VALOR " + format.format(vendaTicketsRecarga.getTicket().getValor())));
+                celula.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
+                celula.add(new Paragraph(" _ "));
+                tabela.addCell(celula);
+                
                 this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecarga);
             }
 
-            addEmptyLine(preface, 1);
-            pdfTicket.add(preface);
-            return (Object) pdfTicket;
-        } catch (DocumentException ex) {
+            pdfTicket.add(tabela);
+        } catch (DocumentException de) {
+            throw new TicketInvalidoException(de.getMessage());
+        } catch (IOException ie) {
+            throw new TicketInvalidoException(ie.getMessage());
+        } finally {
+            pdfTicket.close();
+        }
+        
+        try {
+            Desktop.getDesktop().open(temp);
+            temp.deleteOnExit();
+        } catch (IOException ex) {
             throw new TicketInvalidoException(ex.getMessage());
         }
     }
@@ -404,17 +441,5 @@ public class ControladorVenda {
     public void carregarCliente(String matricula) throws MatriculaInvalidaException {
         ClienteDAO dao = new ClienteDAO();
         cliente = dao.carregar(matricula);
-    }
-
-    /**
-     * Adiciona uma linha no arquivo PDF
-     *
-     * @param paragraph
-     * @param number
-     */
-    private void addEmptyLine(Paragraph paragraph, int number) {
-        for (int i = 0; i < number; i++) {
-            paragraph.add(new Paragraph(" "));
-        }
     }
 }

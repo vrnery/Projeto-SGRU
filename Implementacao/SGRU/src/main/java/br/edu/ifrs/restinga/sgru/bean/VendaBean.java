@@ -29,6 +29,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.PhaseId;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -193,18 +194,18 @@ public class VendaBean {
      * @param document
      * @return A próxima página a ser visualizada pelo operador
      */
-    //public String realizarVendaTicket() {
-    public void realizarVendaTicket(Object document) {
+    public String realizarVendaTicket() {
+    //public void realizarVendaTicket(Object document) {
         try{
-            Document pdf = (Document) document;    
-            pdf = (Document) controlador.realizarVendaTicket(pdf);
+            //controlador.realizarVendaTicket(document);
+            controlador.realizarVendaTicket();
             enviarMensagem(FacesMessage.SEVERITY_INFO, "Venda realizada com sucesso!");
         } catch (TicketInvalidoException e) {
             enviarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
         }
         this.controlador.setQuantidade(1);
         this.controlador.calcularVendaTicket();
-        //return "vendaTicket";
+        return "vendaTicket";
     }
     
     /**
