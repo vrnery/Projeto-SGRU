@@ -16,7 +16,6 @@ import br.edu.ifrs.restinga.sgru.excessao.ValorAlmocoInvalidoException;
 import br.edu.ifrs.restinga.sgru.excessao.ValorRecargaInvalidoException;
 import br.edu.ifrs.restinga.sgru.persistencia.CaixaRUDAO;
 import br.edu.ifrs.restinga.sgru.persistencia.ClienteDAO;
-import br.edu.ifrs.restinga.sgru.persistencia.HibernateUtil;
 import com.lowagie.text.Cell;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -30,14 +29,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Classe que implementa o padrão GRASP "Controlador" para as vendas realizadas
@@ -375,7 +369,7 @@ public class ControladorVenda {
             PdfWriter.getInstance(pdfTicket, new FileOutputStream(temp));
             pdfTicket.open();
             pdfTicket.setPageSize(PageSize.A4);
-
+            
             Table tabela = new Table(1);
             tabela.setWidth(100);
 
@@ -407,9 +401,6 @@ public class ControladorVenda {
                 NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                 format.setMaximumFractionDigits(2);
                 celula.add(new Paragraph("VALOR " + format.format(vendaTicketsRecarga.getTicket().getValor())));
-                //parag = new Paragraph();
-                //parag.getFont().setSize(size);
-                //parag.add("VALOR " + format.format(vendaTicketsRecarga.getTicket().getValor()));
                 celula.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
                 celula.add(new Paragraph(" _ "));
                 tabela.addCell(celula);
@@ -418,10 +409,8 @@ public class ControladorVenda {
             }
 
             pdfTicket.add(tabela);
-        } catch (DocumentException de) {
+        } catch (DocumentException | IOException de) {
             throw new TicketInvalidoException(de.getMessage());
-        } catch (IOException ie) {
-            throw new TicketInvalidoException(ie.getMessage());
         } finally {
             pdfTicket.close();
         }
