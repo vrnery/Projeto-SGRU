@@ -338,6 +338,13 @@ public class ControladorVenda {
      * ticket esteja vencido ou não seja encontrado
      */
     public void realizarVendaAlmocoTicket(int codigo) throws TicketInvalidoException {
+        String descodigo = Integer.toHexString(codigo);
+        descodigo = String.format("%07d", Integer.parseInt(descodigo));
+        String invcodigo = "";
+        for (char inv : descodigo.toCharArray()) {
+            invcodigo = inv + invcodigo;
+        }
+        codigo = Integer.parseInt(invcodigo);
         this.getCaixaRU().realizarVendaAlmocoTicket(codigo);
     }
 
@@ -351,7 +358,7 @@ public class ControladorVenda {
     /**
      * Realiza a venda de um ticket para um cliente
      *
-     * @param documento 
+     * @param documento
      * @throws br.edu.ifrs.restinga.sgru.excessao.TicketInvalidoException
      */
     //public void realizarVendaTicket(Object documento) throws TicketInvalidoException {
@@ -360,7 +367,6 @@ public class ControladorVenda {
             throw new TicketInvalidoException("Venda de Quantidade invalida!");
         }
 
-        //Document pdfTicket = (Document) documento;
         Document pdfTicket = new Document();
         File temp;
 
@@ -372,24 +378,42 @@ public class ControladorVenda {
 
             Table tabela = new Table(1);
             tabela.setWidth(100);
-            
+
             for (int i = 0; i < this.quantidade; i++) {
                 VendaTicketsRecargas vendaTicketsRecarga = new VendaTicketsRecargas();
                 vendaTicketsRecarga.setCaixaRU(this.caixaRU);
                 vendaTicketsRecarga.realizarVendaTicket();
-                
+
                 Cell celula = new Cell();
                 celula.setHorizontalAlignment(Element.ALIGN_CENTER);
                 celula.add(new Paragraph("SISTEMA DE GERENCIAMENTO DE RESTAURANTE UNIVERSITÁRIO"));
-                celula.add(new Paragraph("TICKET"));
-                celula.add(new Paragraph(String.valueOf(vendaTicketsRecarga.getTicket().getId())));
+                
+                Paragraph parag = new Paragraph();
+                parag.getFont().setSize(18);
+                parag.add("TICKET");
+                celula.add(parag);
+                
+                // Gerando o codigo convetido do ticket
+                String conversor = "";
+                for (char con : String.format("%07d", vendaTicketsRecarga.getTicket().getId()).toCharArray()) {
+                    conversor = con + conversor;
+                }
+                
+                parag = new Paragraph();
+                parag.getFont().setSize(20);
+                parag.add(String.valueOf(Integer.valueOf(conversor, 16)));
+                celula.add(parag);
+
                 NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
                 format.setMaximumFractionDigits(2);
                 celula.add(new Paragraph("VALOR " + format.format(vendaTicketsRecarga.getTicket().getValor())));
+                //parag = new Paragraph();
+                //parag.getFont().setSize(size);
+                //parag.add("VALOR " + format.format(vendaTicketsRecarga.getTicket().getValor()));
                 celula.add(new Paragraph(vendaTicketsRecarga.getTicket().getDataCriado().getTime().toString()));
                 celula.add(new Paragraph(" _ "));
                 tabela.addCell(celula);
-                
+
                 this.caixaRU.atualizarLstVendaTicketsRecargas(vendaTicketsRecarga);
             }
 
@@ -401,7 +425,8 @@ public class ControladorVenda {
         } finally {
             pdfTicket.close();
         }
-        
+
+        // Abrindo o pdf no pc
         try {
             Desktop.getDesktop().open(temp);
             temp.deleteOnExit();

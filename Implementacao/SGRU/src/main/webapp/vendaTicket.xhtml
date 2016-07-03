@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="padraoInternoComMenu.xhtml">
         <ui:define name="conteudo">
@@ -13,9 +14,9 @@
                 <h:panelGrid columns="2">
                     <h:outputLabel for="txtQuantidade" value="Quantidade:"
                                    rendered="#{autenticarBean.usuarioLogadoOperadorSistema}"/>
-                    <p:inputText id="txtQuantidade" value="#{vendaBean.controlador.quantidade}" rendered="#{autenticarBean.usuarioLogadoOperadorSistema}">
+                    <pe:inputNumber id="txtQuantidade" value="#{vendaBean.controlador.quantidade}" minValue="1" maxValue="7" rendered="#{autenticarBean.usuarioLogadoOperadorSistema}">  
                         <p:ajax listener="#{vendaBean.calcularVendaTicket()}" update="txtTotal"/>
-                    </p:inputText>
+                    </pe:inputNumber>
                     <h:outputLabel for="txtValor" value="Valor: "/>
                     <p:inputText id="txtValor" value="#{vendaBean.controlador.caixaRU.valorAtualAlmoco.valorAlmoco}" disabled="true">
                         <f:converter converterId="conversorMonetario"/>
